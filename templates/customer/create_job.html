@@ -13,7 +13,7 @@
                 <p class="mb-0 mt-2">No registration required - trades will contact you directly</p>
             </div>
             <div class="card-body p-4">
-                <form method="POST" enctype="multipart/form-data">
+                <form method="POST" enctype="multipart/form-data" id="jobCreationForm" data-no-auto-submit="true">
                     {{ form.hidden_tag() }}
                     
                     <!-- Contact Information -->
@@ -206,33 +206,60 @@
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Prevent form submission on Enter key (except for submit button and textarea)
-    const form = document.querySelector('form');
-    if (form) {
-        // Add a unique identifier to prevent main.js interference
-        form.setAttribute('data-no-auto-submit', 'true');
+// Completely isolate this form from any external JavaScript
+(function() {
+    'use strict';
+    
+    // Wait for DOM and disable main.js entirely for this page
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.getElementById('jobCreationForm');
+        if (!form) return;
         
-        form.addEventListener('keydown', function(e) {
-            if (e.key === 'Enter') {
-                const target = e.target;
-                // Allow Enter in textarea and on submit button
-                if (target.tagName !== 'TEXTAREA' && target.type !== 'submit') {
+        // Completely block all event propagation from form inputs
+        const allInputs = form.querySelectorAll('input, select, textarea');
+        allInputs.forEach(function(input) {
+            // Block all change events from bubbling up
+            input.addEventListener('change', function(e) {
+                e.stopPropagation();
+                e.stopImmediatePropagation();
+            }, { capture: true });
+            
+            input.addEventListener('input', function(e) {
+                e.stopPropagation(); 
+                e.stopImmediatePropagation();
+            }, { capture: true });
+            
+            // Block keydown/keyup that might trigger form submission
+            input.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' && input.tagName !== 'TEXTAREA' && input.type !== 'submit') {
                     e.preventDefault();
+                    e.stopPropagation();
+                    e.stopImmediatePropagation();
                     return false;
                 }
-            }
+            }, { capture: true });
         });
         
-        // Override any auto-submit behavior from main.js
+        // Block any programmatic form submission except from submit button
+        const originalSubmit = form.submit;
+        form.submit = function() {
+            console.log('Blocked programmatic form submission');
+            return false;
+        };
+        
+        // Only allow submission via submit button click
         form.addEventListener('submit', function(e) {
-            // Only allow submission if it's from the actual submit button
             if (!e.submitter || e.submitter.type !== 'submit') {
                 e.preventDefault();
+                e.stopPropagation();
+                e.stopImmediatePropagation();
+                console.log('Blocked non-button form submission');
                 return false;
             }
-        });
-    }
+            console.log('Allowing form submission from submit button');
+        }, { capture: true });
+    });
+})();
     
     // Character counter for description
     const descriptionField = document.getElementById('description');
