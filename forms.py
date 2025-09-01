@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed, MultipleFileField
-from wtforms import StringField, TextAreaField, PasswordField, SelectField, BooleanField, FloatField, IntegerField, SubmitField
+from wtforms import StringField, TextAreaField, PasswordField, SelectField, BooleanField, FloatField, IntegerField, SubmitField, RadioField
 from wtforms.validators import DataRequired, Email, EqualTo, Length, NumberRange, Optional, Regexp
 
 class LoginForm(FlaskForm):
@@ -82,7 +82,7 @@ class JobForm(FlaskForm):
         DataRequired(),
         Regexp(r'^[A-Z]{1,2}[0-9][A-Z0-9]?\s?[0-9][A-Z]{2}$', message='Invalid UK postcode format')
     ])
-    urgency = SelectField('Urgency', choices=[
+    urgency = RadioField('Urgency', choices=[
         ('emergency_now', 'Emergency Now (immediate response needed)'),
         ('urgent_2h', 'Urgent (within 2 hours)'),
         ('same_day', 'Same Day (within 8 hours)'),

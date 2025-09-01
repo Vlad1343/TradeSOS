@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}Page Not Found - TradeSOS{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6 text-center">
+        <div class="card shadow">
+            <div class="card-body p-5">
+                <i class="fas fa-exclamation-triangle fa-4x text-warning mb-3"></i>
+                <h1 class="display-4">404</h1>
+                <h4 class="mb-3">Page Not Found</h4>
+                <p class="text-muted mb-4">
+                    Sorry, the page you're looking for doesn't exist or has been moved.
+                </p>
+                <a href="{{ url_for('index') }}" class="btn btn-emergency">
+                    <i class="fas fa-home me-2"></i>Return Home
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
