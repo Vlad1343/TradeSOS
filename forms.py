@@ -41,7 +41,7 @@ class TradeProfileForm(FlaskForm):
     vat_number = StringField('VAT Number', validators=[Optional(), Length(max=20)])
     utr_number = StringField('UTR Number', validators=[Optional(), Length(max=20)])
     skills = StringField('Skills (comma-separated)', validators=[Optional()], 
-                        render_kw={'placeholder': 'e.g., plumbing, heating, boiler repair'})
+                        render_kw={'placeholder': 'e.g., plumbing, heating, roofing, glazing, security systems'})
     coverage_areas = StringField('Coverage Areas (comma-separated)', validators=[Optional()],
                                 render_kw={'placeholder': 'e.g., M, SK, WA'})
     coverage_districts = StringField('Coverage Districts (comma-separated)', validators=[Optional()],
@@ -52,6 +52,12 @@ class TradeProfileForm(FlaskForm):
     submit = SubmitField('Update Profile')
 
 class JobForm(FlaskForm):
+    # Customer Contact Information (for anonymous posting)
+    customer_name = StringField('Your Name', validators=[DataRequired(), Length(min=2, max=100)])
+    customer_phone = StringField('Your Phone Number', validators=[DataRequired(), Length(min=10, max=20)])
+    customer_email = StringField('Your Email', validators=[DataRequired(), Email()])
+    
+    # Job Details
     title = StringField('Job Title', validators=[DataRequired(), Length(min=5, max=200)])
     category = SelectField('Category', choices=[
         ('plumbing', 'Plumbing'),
@@ -61,6 +67,7 @@ class JobForm(FlaskForm):
         ('roofing', 'Roofing'),
         ('locksmith', 'Locksmith'),
         ('glazing', 'Glazing & Windows'),
+        ('security', 'Security Systems'),
         ('other', 'Other Emergency')
     ], validators=[DataRequired()])
     description = TextAreaField('Description', validators=[
@@ -81,7 +88,8 @@ class JobForm(FlaskForm):
         Optional(),
         FileAllowed(['jpg', 'jpeg', 'png', 'gif'], 'Images only!')
     ])
-    submit = SubmitField('Create Job')
+    accept_terms = BooleanField('I agree to the terms of service and privacy policy', validators=[DataRequired()])
+    submit = SubmitField('Get Emergency Trade Access')
 
 class ReviewForm(FlaskForm):
     rating = SelectField('Rating', choices=[

@@ -129,14 +129,9 @@ def customer_dashboard():
     
     return render_template('customer/dashboard.html', customer=customer, jobs=recent_jobs, ads=active_ads)
 
-@app.route('/customer/create-job', methods=['GET', 'POST'])
-@login_required
+# Public job creation (anonymous) - main entry point
+@app.route('/create-job', methods=['GET', 'POST'])
 def create_job():
-    if current_user.role != 'customer':
-        flash('Access denied.', 'danger')
-        return redirect(url_for('index'))
-    
-    customer = Customer.query.filter_by(user_id=current_user.id).first()
     form = JobForm()
     
     if form.validate_on_submit():
@@ -156,13 +151,15 @@ def create_job():
                 if photo and allowed_file(photo.filename):
                     filename = secure_filename(photo.filename)
                     filename = f"{datetime.utcnow().strftime('%Y%m%d_%H%M%S')}_{filename}"
-                    photo_path = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
+                    photo_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
                     photo.save(photo_path)
                     photo_urls.append(f"/uploads/{filename}")
         
-        # Create job
+        # Create job with anonymous customer information
         job = Job(
-            customer_id=customer.id,
+            customer_name=form.customer_name.data,
+            customer_phone=form.customer_phone.data,
+            customer_email=form.customer_email.data,
             title=form.title.data,
             category=form.category.data,
             description=form.description.data,
@@ -183,10 +180,27 @@ def create_job():
         matching_trades = find_matching_trades(job)
         send_job_notification(job, matching_trades)
         
-        flash('Job created successfully! Matching trades have been notified.', 'success')
-        return redirect(url_for('job_detail', job_id=job.id))
+        flash('Job created successfully! Matching trades have been notified and will contact you directly.', 'success')
+        return redirect(url_for('job_confirmation', job_id=job.id))
     
     return render_template('customer/create_job.html', form=form)
+
+# Existing customer route (for registered customers)
+@app.route('/customer/create-job', methods=['GET', 'POST'])
+@login_required
+def customer_create_job():
+    if current_user.role != 'customer':
+        flash('Access denied.', 'danger')
+        return redirect(url_for('index'))
+    
+    # Redirect to public job creation for simplicity
+    return redirect(url_for('create_job'))
+
+# Public job confirmation page
+@app.route('/job/<int:job_id>/confirmation')
+def job_confirmation(job_id):
+    job = Job.query.get_or_404(job_id)
+    return render_template('customer/job_confirmation.html', job=job)
 
 @app.route('/job/<int:job_id>')
 @login_required

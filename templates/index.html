@@ -5,18 +5,16 @@
     <div class="row align-items-center">
         <div class="col-lg-8">
             <h1 class="display-4 fw-bold">Emergency Trade Services</h1>
-            <p class="lead">Connect with verified trade professionals for urgent repairs and emergency callouts across the UK.</p>
+            <p class="lead">Connect instantly with verified trade professionals for urgent repairs and emergency callouts across the UK.</p>
             
-            {% if not current_user.is_authenticated %}
-                <div class="mt-4">
-                    <a href="{{ url_for('register') }}" class="btn btn-light btn-lg me-3">
-                        <i class="fas fa-user-plus me-2"></i>Get Started
-                    </a>
-                    <a href="{{ url_for('trade_directory') }}" class="btn btn-outline-light btn-lg">
-                        <i class="fas fa-search me-2"></i>Find Trades
-                    </a>
-                </div>
-            {% endif %}
+            <div class="mt-4">
+                <a href="{{ url_for('create_job') }}" class="btn btn-light btn-lg me-3">
+                    <i class="fas fa-tools me-2"></i>Get Emergency Trade Access
+                </a>
+                <a href="{{ url_for('trade_directory') }}" class="btn btn-outline-light btn-lg">
+                    <i class="fas fa-search me-2"></i>Find Trades
+                </a>
+            </div>
         </div>
         <div class="col-lg-4 text-center">
             <i class="fas fa-tools" style="font-size: 8rem; opacity: 0.3;"></i>
@@ -29,7 +27,7 @@
     <div class="col-12">
         <h2 class="text-center mb-4">Emergency Services Available</h2>
     </div>
-    <div class="col-md-3 mb-3">
+    <div class="col-lg-3 col-md-4 col-sm-6 mb-3">
         <div class="card service-card h-100 text-center">
             <div class="card-body">
                 <i class="fas fa-wrench text-emergency mb-3" style="font-size: 2.5rem;"></i>
@@ -38,7 +36,7 @@
             </div>
         </div>
     </div>
-    <div class="col-md-3 mb-3">
+    <div class="col-lg-3 col-md-4 col-sm-6 mb-3">
         <div class="card service-card h-100 text-center">
             <div class="card-body">
                 <i class="fas fa-bolt text-warning mb-3" style="font-size: 2.5rem;"></i>
@@ -47,7 +45,7 @@
             </div>
         </div>
     </div>
-    <div class="col-md-3 mb-3">
+    <div class="col-lg-3 col-md-4 col-sm-6 mb-3">
         <div class="card service-card h-100 text-center">
             <div class="card-body">
                 <i class="fas fa-fire text-danger mb-3" style="font-size: 2.5rem;"></i>
@@ -56,12 +54,39 @@
             </div>
         </div>
     </div>
-    <div class="col-md-3 mb-3">
+    <div class="col-lg-3 col-md-4 col-sm-6 mb-3">
         <div class="card service-card h-100 text-center">
             <div class="card-body">
                 <i class="fas fa-key text-info mb-3" style="font-size: 2.5rem;"></i>
                 <h5 class="card-title">Locksmith</h5>
                 <p class="card-text">Locked out, broken locks, security upgrades</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-4 col-sm-6 mb-3">
+        <div class="card service-card h-100 text-center">
+            <div class="card-body">
+                <i class="fas fa-home text-success mb-3" style="font-size: 2.5rem;"></i>
+                <h5 class="card-title">Roofing</h5>
+                <p class="card-text">Roof leaks, tile repairs, gutter problems, storm damage</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-4 col-sm-6 mb-3">
+        <div class="card service-card h-100 text-center">
+            <div class="card-body">
+                <i class="fas fa-cube text-primary mb-3" style="font-size: 2.5rem;"></i>
+                <h5 class="card-title">Glazier</h5>
+                <p class="card-text">Broken windows, glass repairs, emergency boarding</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-4 col-sm-6 mb-3">
+        <div class="card service-card h-100 text-center">
+            <div class="card-body">
+                <i class="fas fa-shield-alt text-dark mb-3" style="font-size: 2.5rem;"></i>
+                <h5 class="card-title">Security</h5>
+                <p class="card-text">Alarm systems, CCTV repairs, security door installation</p>
             </div>
         </div>
     </div>
@@ -194,18 +219,16 @@
 </div>
 
 <!-- Call to Action -->
-{% if not current_user.is_authenticated %}
 <div class="text-center bg-emergency text-white py-5 rounded">
-    <h2>Ready to Get Started?</h2>
-    <p class="lead">Join thousands of customers and trades using TradeSOS for emergency services.</p>
+    <h2>Need Emergency Help Now?</h2>
+    <p class="lead">Get connected with verified trade professionals instantly - no registration required.</p>
     <div class="mt-4">
-        <a href="{{ url_for('register') }}?role=customer" class="btn btn-light btn-lg me-3">
-            <i class="fas fa-home me-2"></i>I Need a Trade
+        <a href="{{ url_for('create_job') }}" class="btn btn-light btn-lg me-3">
+            <i class="fas fa-tools me-2"></i>Get Emergency Trade Access
         </a>
         <a href="{{ url_for('register') }}?role=trade" class="btn btn-outline-light btn-lg">
-            <i class="fas fa-tools me-2"></i>I Am a Trade
+            <i class="fas fa-briefcase me-2"></i>Join as a Trade Professional
         </a>
     </div>
 </div>
-{% endif %}
 {% endblock %}

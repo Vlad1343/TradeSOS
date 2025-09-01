@@ -8,13 +8,48 @@
         <div class="card shadow">
             <div class="card-header bg-emergency text-white">
                 <h3 class="mb-0">
-                    <i class="fas fa-exclamation-triangle me-2"></i>Create Emergency Job Request
+                    <i class="fas fa-exclamation-triangle me-2"></i>Get Emergency Trade Access
                 </h3>
-                <p class="mb-0 mt-2">Provide as much detail as possible to help trades assess your emergency</p>
+                <p class="mb-0 mt-2">No registration required - trades will contact you directly</p>
             </div>
             <div class="card-body p-4">
                 <form method="POST" enctype="multipart/form-data">
                     {{ form.hidden_tag() }}
+                    
+                    <!-- Contact Information -->
+                    <div class="alert alert-info mb-4">
+                        <h6><i class="fas fa-user me-2"></i>Your Contact Information</h6>
+                        <p class="mb-3 small">This information will be shared with verified trades so they can contact you directly</p>
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                {{ form.customer_name.label(class="form-label fw-bold") }}
+                                {{ form.customer_name(class="form-control" + (" is-invalid" if form.customer_name.errors else ""), placeholder="Your full name") }}
+                                {% if form.customer_name.errors %}
+                                    <div class="invalid-feedback">
+                                        {% for error in form.customer_name.errors %}{{ error }}{% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                {{ form.customer_phone.label(class="form-label fw-bold") }}
+                                {{ form.customer_phone(class="form-control" + (" is-invalid" if form.customer_phone.errors else ""), placeholder="07123 456789") }}
+                                {% if form.customer_phone.errors %}
+                                    <div class="invalid-feedback">
+                                        {% for error in form.customer_phone.errors %}{{ error }}{% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                {{ form.customer_email.label(class="form-label fw-bold") }}
+                                {{ form.customer_email(class="form-control" + (" is-invalid" if form.customer_email.errors else ""), placeholder="your.email@example.com") }}
+                                {% if form.customer_email.errors %}
+                                    <div class="invalid-feedback">
+                                        {% for error in form.customer_email.errors %}{{ error }}{% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
                     
                     <!-- Urgency Level - Most Important -->
                     <div class="alert alert-warning mb-4">
@@ -149,14 +184,27 @@
                         </ul>
                     </div>
                     
+                    <!-- Terms and Conditions -->
+                    <div class="mb-4">
+                        <div class="form-check">
+                            {{ form.accept_terms(class="form-check-input" + (" is-invalid" if form.accept_terms.errors else "")) }}
+                            {{ form.accept_terms.label(class="form-check-label small") }}
+                            {% if form.accept_terms.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.accept_terms.errors %}{{ error }}{% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
                     <div class="d-grid">
                         {{ form.submit(class="btn btn-emergency btn-lg") }}
                     </div>
                     
-                    <div class="alert alert-info mt-3 small">
-                        <i class="fas fa-info-circle me-2"></i>
-                        After submitting, verified trades in your area will be notified immediately. 
-                        The first trade to accept your job will contact you directly.
+                    <div class="alert alert-success mt-3 small">
+                        <i class="fas fa-check-circle me-2"></i>
+                        After submitting, verified trades in your area will receive instant notifications and call you directly. 
+                        No registration required - emergency help is just one click away!
                     </div>
                 </form>
             </div>

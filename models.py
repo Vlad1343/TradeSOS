@@ -96,7 +96,12 @@ class Job(db.Model):
     __tablename__ = 'jobs'
     
     id = db.Column(db.Integer, primary_key=True)
-    customer_id = db.Column(db.Integer, db.ForeignKey('customers.id'), nullable=False)
+    customer_id = db.Column(db.Integer, db.ForeignKey('customers.id'), nullable=True)
+    
+    # Anonymous customer fields (when no account exists)
+    customer_name = db.Column(db.String(100))
+    customer_phone = db.Column(db.String(20))
+    customer_email = db.Column(db.String(120))
     title = db.Column(db.String(200), nullable=False)
     category = db.Column(db.String(50), nullable=False)
     description = db.Column(db.Text, nullable=False)
