@@ -207,6 +207,21 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    // Prevent form submission on Enter key (except for submit button and textarea)
+    const form = document.querySelector('form');
+    if (form) {
+        form.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                const target = e.target;
+                // Allow Enter in textarea and on submit button
+                if (target.tagName !== 'TEXTAREA' && target.type !== 'submit') {
+                    e.preventDefault();
+                    return false;
+                }
+            }
+        });
+    }
+    
     // Character counter for description
     const descriptionField = document.getElementById('description');
     const charCount = document.getElementById('charCount');
