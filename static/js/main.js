@@ -174,7 +174,7 @@ function initializeNotifications() {
 // Search and Filter Enhancement
 function initializeSearchFilters() {
     const searchForm = document.querySelector('form[method="GET"]');
-    if (searchForm) {
+    if (searchForm && !searchForm.hasAttribute('data-no-auto-submit')) {
         const inputs = searchForm.querySelectorAll('input, select');
         inputs.forEach(input => {
             input.addEventListener('change', debounce(function() {

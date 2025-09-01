@@ -210,6 +210,9 @@ document.addEventListener('DOMContentLoaded', function() {
     // Prevent form submission on Enter key (except for submit button and textarea)
     const form = document.querySelector('form');
     if (form) {
+        // Add a unique identifier to prevent main.js interference
+        form.setAttribute('data-no-auto-submit', 'true');
+        
         form.addEventListener('keydown', function(e) {
             if (e.key === 'Enter') {
                 const target = e.target;
@@ -218,6 +221,15 @@ document.addEventListener('DOMContentLoaded', function() {
                     e.preventDefault();
                     return false;
                 }
+            }
+        });
+        
+        // Override any auto-submit behavior from main.js
+        form.addEventListener('submit', function(e) {
+            // Only allow submission if it's from the actual submit button
+            if (!e.submitter || e.submitter.type !== 'submit') {
+                e.preventDefault();
+                return false;
             }
         });
     }
