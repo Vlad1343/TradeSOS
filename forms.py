@@ -24,6 +24,8 @@ class RegisterForm(FlaskForm):
         ('trade', 'Trade Professional (provide services)')
     ], validators=[DataRequired()])
     name = StringField('Full Name / Company Name', validators=[DataRequired(), Length(min=2, max=100)])
+    companies_house_number = StringField('Companies House Registration Number', validators=[Optional(), Length(max=20)], 
+                                        render_kw={'placeholder': 'e.g., 12345678'})
     phone = StringField('Phone Number', validators=[Optional(), Length(max=20)])
     submit = SubmitField('Register')
 
@@ -38,6 +40,8 @@ class CustomerProfileForm(FlaskForm):
 
 class TradeProfileForm(FlaskForm):
     company = StringField('Company Name', validators=[DataRequired(), Length(min=2, max=100)])
+    companies_house_number = StringField('Companies House Registration Number', validators=[DataRequired(), Length(max=20)], 
+                                        render_kw={'placeholder': 'e.g., 12345678'})
     vat_number = StringField('VAT Number', validators=[Optional(), Length(max=20)])
     utr_number = StringField('UTR Number', validators=[Optional(), Length(max=20)])
     skills = StringField('Skills (comma-separated)', validators=[Optional()], 

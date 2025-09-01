@@ -88,7 +88,12 @@ def register():
             customer = Customer(user_id=user.id, name=form.name.data, phone=form.phone.data)
             db.session.add(customer)
         elif form.role.data == 'trade':
-            trade = Trade(user_id=user.id, company=form.name.data)
+            companies_house_num = form.companies_house_number.data or None
+            trade = Trade(
+                user_id=user.id, 
+                company=form.name.data,
+                companies_house_number=companies_house_num
+            )
             db.session.add(trade)
         
         db.session.commit()
@@ -276,6 +281,7 @@ def trade_profile():
     
     if form.validate_on_submit():
         trade.company = form.company.data
+        trade.companies_house_number = form.companies_house_number.data
         trade.vat_number = form.vat_number.data
         trade.utr_number = form.utr_number.data
         trade.set_skills(form.skills.data.split(',') if form.skills.data else [])

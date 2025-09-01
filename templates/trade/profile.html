@@ -63,6 +63,23 @@
                                 </div>
                             {% endif %}
                         </div>
+                        <div class="col-md-6 mb-3">
+                            {{ form.companies_house_number.label(class="form-label fw-bold required") }}
+                            {{ form.companies_house_number(class="form-control" + (" is-invalid" if form.companies_house_number.errors else "")) }}
+                            {% if form.companies_house_number.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.companies_house_number.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            <div class="form-text">
+                                <i class="fas fa-info-circle me-1"></i>
+                                Find your number at <a href="https://find-and-update.company-information.service.gov.uk/" target="_blank">Companies House</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-4">
                         <div class="col-md-3 mb-3">
                             {{ form.vat_number.label(class="form-label") }}
                             <small class="text-muted">(Optional)</small>

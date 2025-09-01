@@ -106,6 +106,24 @@
                         </div>
                     </div>
                     
+                    <!-- Companies House Number - Only show for trades -->
+                    <div class="mb-3" id="companiesHouseField" style="display: none;">
+                        {{ form.companies_house_number.label(class="form-label") }}
+                        <small class="text-muted">(Required for trade professionals)</small>
+                        {{ form.companies_house_number(class="form-control" + (" is-invalid" if form.companies_house_number.errors else "")) }}
+                        {% if form.companies_house_number.errors %}
+                            <div class="invalid-feedback">
+                                {% for error in form.companies_house_number.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                        <div class="form-text">
+                            <i class="fas fa-info-circle me-1"></i>
+                            Enter your company's registration number from Companies House
+                        </div>
+                    </div>
+                    
                     <div class="mb-3">
                         {{ form.phone.label(class="form-label") }}
                         {{ form.phone(class="form-control", placeholder="Optional - for emergency contact") }}
@@ -140,28 +158,34 @@
 </div>
 
 <script>
-// Update name field helper text based on role selection
+// Update name field helper text and show/hide fields based on role selection
 document.addEventListener('DOMContentLoaded', function() {
     const roleRadios = document.querySelectorAll('input[name="role"]');
     const nameHelp = document.getElementById('nameHelp');
+    const companiesHouseField = document.getElementById('companiesHouseField');
+    const companiesHouseInput = document.getElementById('companies_house_number');
     
-    function updateNameHelper() {
+    function updateFieldsForRole() {
         const selectedRole = document.querySelector('input[name="role"]:checked');
         if (selectedRole) {
             if (selectedRole.value === 'customer') {
                 nameHelp.textContent = '(Your full name)';
+                companiesHouseField.style.display = 'none';
+                companiesHouseInput.removeAttribute('required');
             } else if (selectedRole.value === 'trade') {
                 nameHelp.textContent = '(Your company name)';
+                companiesHouseField.style.display = 'block';
+                companiesHouseInput.setAttribute('required', 'required');
             }
         }
     }
     
     roleRadios.forEach(radio => {
-        radio.addEventListener('change', updateNameHelper);
+        radio.addEventListener('change', updateFieldsForRole);
     });
     
     // Initialize
-    updateNameHelper();
+    updateFieldsForRole();
 });
 </script>
 {% endblock %}

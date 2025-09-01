@@ -54,6 +54,7 @@ class Trade(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     company = db.Column(db.String(100), nullable=False)
+    companies_house_number = db.Column(db.String(20), nullable=False)
     vat_number = db.Column(db.String(20))
     utr_number = db.Column(db.String(20))
     skills = db.Column(db.Text)  # JSON array of skills
