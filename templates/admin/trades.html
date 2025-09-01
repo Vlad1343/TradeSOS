@@ -1,0 +1,359 @@
+{% extends "base.html" %}
+
+{% block title %}Manage Trades - Admin - TradeSOS{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12 d-flex justify-content-between align-items-center">
+        <div>
+            <h1>Manage Trade Professionals</h1>
+            <p class="text-muted">Verify and manage trade professional accounts</p>
+        </div>
+        <a href="{{ url_for('admin_dashboard') }}" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-1"></i>Back to Dashboard
+        </a>
+    </div>
+</div>
+
+<!-- Filters and Search -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <form method="GET" class="row align-items-end">
+                    <div class="col-md-4 mb-2">
+                        <label class="form-label">Search</label>
+                        <input type="text" name="search" class="form-control" 
+                               placeholder="Company name or email" 
+                               value="{{ request.args.get('search', '') }}">
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <label class="form-label">Verification Status</label>
+                        <select name="verified" class="form-select">
+                            <option value="">All</option>
+                            <option value="true" {{ 'selected' if request.args.get('verified') == 'true' }}>Verified</option>
+                            <option value="false" {{ 'selected' if request.args.get('verified') == 'false' }}>Pending</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <label class="form-label">Plan Type</label>
+                        <select name="plan" class="form-select">
+                            <option value="">All Plans</option>
+                            <option value="standard" {{ 'selected' if request.args.get('plan') == 'standard' }}>Standard</option>
+                            <option value="premium" {{ 'selected' if request.args.get('plan') == 'premium' }}>Premium</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2 mb-2">
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="fas fa-search me-1"></i>Filter
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Trades List -->
+<div class="row">
+    <div class="col-12">
+        <div class="card shadow">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">
+                    <i class="fas fa-users me-2"></i>Trade Professionals
+                    <span class="badge bg-secondary ms-2">{{ trades.total }}</span>
+                </h5>
+                <div>
+                    <button class="btn btn-outline-success btn-sm" onclick="verifySelected()">
+                        <i class="fas fa-check me-1"></i>Verify Selected
+                    </button>
+                    <button class="btn btn-outline-warning btn-sm" onclick="unverifySelected()">
+                        <i class="fas fa-times me-1"></i>Unverify Selected
+                    </button>
+                </div>
+            </div>
+            <div class="card-body p-0">
+                {% if trades.items %}
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th width="30">
+                                        <input type="checkbox" id="selectAll" onchange="toggleAll()">
+                                    </th>
+                                    <th>Company</th>
+                                    <th>Contact</th>
+                                    <th>Skills</th>
+                                    <th>Coverage</th>
+                                    <th>Status</th>
+                                    <th>Plan</th>
+                                    <th>Rating</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for trade in trades.items %}
+                                <tr>
+                                    <td>
+                                        <input type="checkbox" class="trade-checkbox" value="{{ trade.id }}">
+                                    </td>
+                                    <td>
+                                        <div>
+                                            <strong>{{ trade.company }}</strong>
+                                            {% if trade.vat_number %}
+                                                <br><small class="text-muted">VAT: {{ trade.vat_number }}</small>
+                                            {% endif %}
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div>
+                                            {{ trade.user.email if trade.user else 'N/A' }}
+                                            <br><small class="text-muted">Reg: {{ trade.created_at.strftime('%d/%m/%Y') }}</small>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        {% if trade.get_skills() %}
+                                            {% for skill in trade.get_skills()[:2] %}
+                                                <span class="badge bg-secondary me-1">{{ skill }}</span>
+                                            {% endfor %}
+                                            {% if trade.get_skills()|length > 2 %}
+                                                <span class="text-muted">+{{ trade.get_skills()|length - 2 }}</span>
+                                            {% endif %}
+                                        {% else %}
+                                            <span class="text-muted">None listed</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if trade.get_coverage_areas() %}
+                                            {% for area in trade.get_coverage_areas()[:3] %}
+                                                <span class="badge bg-info me-1">{{ area }}</span>
+                                            {% endfor %}
+                                            {% if trade.get_coverage_areas()|length > 3 %}
+                                                <span class="text-muted">+{{ trade.get_coverage_areas()|length - 3 }}</span>
+                                            {% endif %}
+                                        {% else %}
+                                            <span class="text-muted">Not set</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <div class="d-flex flex-column gap-1">
+                                            {% if trade.verified %}
+                                                <span class="badge bg-success">
+                                                    <i class="fas fa-check-circle me-1"></i>Verified
+                                                </span>
+                                            {% else %}
+                                                <span class="badge bg-warning">
+                                                    <i class="fas fa-clock me-1"></i>Pending
+                                                </span>
+                                            {% endif %}
+                                            
+                                            {% if trade.insurance_document_url %}
+                                                <span class="badge bg-info">
+                                                    <i class="fas fa-shield-alt me-1"></i>Insured
+                                                </span>
+                                            {% else %}
+                                                <span class="badge bg-danger">
+                                                    <i class="fas fa-exclamation-triangle me-1"></i>No Insurance
+                                                </span>
+                                            {% endif %}
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <span class="badge {{ 'bg-warning text-dark' if trade.plan_tier == 'premium' else 'bg-secondary' }}">
+                                            {% if trade.plan_tier == 'premium' %}
+                                                <i class="fas fa-crown me-1"></i>Premium
+                                            {% else %}
+                                                <i class="fas fa-user me-1"></i>Standard
+                                            {% endif %}
+                                        </span>
+                                        {% if trade.subscription_status %}
+                                            <br><small class="text-muted">{{ trade.subscription_status.title() }}</small>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if trade.review_count > 0 %}
+                                            <div class="rating small">
+                                                {% for i in range(1, 6) %}
+                                                    {% if i <= trade.rating_avg %}
+                                                        <i class="fas fa-star text-warning"></i>
+                                                    {% else %}
+                                                        <i class="far fa-star text-muted"></i>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </div>
+                                            <small class="text-muted">{{ "%.1f"|format(trade.rating_avg) }} ({{ trade.review_count }})</small>
+                                        {% else %}
+                                            <span class="text-muted">No reviews</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <div class="btn-group-vertical btn-group-sm">
+                                            <a href="{{ url_for('verify_trade', trade_id=trade.id) }}" 
+                                               class="btn btn-outline-{{ 'warning' if trade.verified else 'success' }}"
+                                               onclick="return confirm('{{ 'Unverify' if trade.verified else 'Verify' }} {{ trade.company }}?')"
+                                               title="{{ 'Unverify' if trade.verified else 'Verify' }} Trade">
+                                                <i class="fas fa-{{ 'times' if trade.verified else 'check' }}"></i>
+                                            </a>
+                                            
+                                            {% if trade.insurance_document_url %}
+                                                <a href="{{ trade.insurance_document_url }}" 
+                                                   class="btn btn-outline-info" 
+                                                   target="_blank"
+                                                   title="View Insurance Document">
+                                                    <i class="fas fa-file-alt"></i>
+                                                </a>
+                                            {% endif %}
+                                            
+                                            <button class="btn btn-outline-secondary" 
+                                                    onclick="viewTradeDetails({{ trade.id }})"
+                                                    title="View Details">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Pagination -->
+                    {% if trades.pages > 1 %}
+                    <div class="card-footer">
+                        <nav aria-label="Trade pagination">
+                            <ul class="pagination justify-content-center mb-0">
+                                {% if trades.has_prev %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="{{ url_for('admin_trades', page=trades.prev_num, **request.args) }}">
+                                            <i class="fas fa-chevron-left"></i>
+                                        </a>
+                                    </li>
+                                {% endif %}
+                                
+                                {% for page_num in trades.iter_pages() %}
+                                    {% if page_num %}
+                                        {% if page_num != trades.page %}
+                                            <li class="page-item">
+                                                <a class="page-link" href="{{ url_for('admin_trades', page=page_num, **request.args) }}">
+                                                    {{ page_num }}
+                                                </a>
+                                            </li>
+                                        {% else %}
+                                            <li class="page-item active">
+                                                <span class="page-link">{{ page_num }}</span>
+                                            </li>
+                                        {% endif %}
+                                    {% else %}
+                                        <li class="page-item disabled">
+                                            <span class="page-link">...</span>
+                                        </li>
+                                    {% endif %}
+                                {% endfor %}
+                                
+                                {% if trades.has_next %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="{{ url_for('admin_trades', page=trades.next_num, **request.args) }}">
+                                            <i class="fas fa-chevron-right"></i>
+                                        </a>
+                                    </li>
+                                {% endif %}
+                            </ul>
+                        </nav>
+                    </div>
+                    {% endif %}
+
+                {% else %}
+                    <div class="text-center py-5">
+                        <i class="fas fa-users text-muted" style="font-size: 3rem;"></i>
+                        <h5 class="mt-3 text-muted">No trades found</h5>
+                        <p class="text-muted">Try adjusting your search filters.</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Trade Details Modal -->
+<div class="modal fade" id="tradeDetailsModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Trade Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="tradeDetailsContent">
+                <!-- Content loaded via JavaScript -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function toggleAll() {
+    const selectAll = document.getElementById('selectAll');
+    const checkboxes = document.querySelectorAll('.trade-checkbox');
+    
+    checkboxes.forEach(checkbox => {
+        checkbox.checked = selectAll.checked;
+    });
+}
+
+function getSelectedTrades() {
+    const checkboxes = document.querySelectorAll('.trade-checkbox:checked');
+    return Array.from(checkboxes).map(cb => cb.value);
+}
+
+function verifySelected() {
+    const selected = getSelectedTrades();
+    if (selected.length === 0) {
+        alert('Please select trades to verify.');
+        return;
+    }
+    
+    if (confirm(`Verify ${selected.length} selected trade(s)?`)) {
+        // In a real app, this would send an AJAX request
+        alert(`Would verify trades: ${selected.join(', ')}`);
+    }
+}
+
+function unverifySelected() {
+    const selected = getSelectedTrades();
+    if (selected.length === 0) {
+        alert('Please select trades to unverify.');
+        return;
+    }
+    
+    if (confirm(`Unverify ${selected.length} selected trade(s)?`)) {
+        // In a real app, this would send an AJAX request
+        alert(`Would unverify trades: ${selected.join(', ')}`);
+    }
+}
+
+function viewTradeDetails(tradeId) {
+    // In a real app, this would load trade details via AJAX
+    const modalContent = document.getElementById('tradeDetailsContent');
+    modalContent.innerHTML = `
+        <div class="text-center">
+            <div class="spinner-border" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <p class="mt-2">Loading trade details...</p>
+        </div>
+    `;
+    
+    const modal = new bootstrap.Modal(document.getElementById('tradeDetailsModal'));
+    modal.show();
+    
+    // Simulate loading
+    setTimeout(() => {
+        modalContent.innerHTML = `
+            <div class="alert alert-info">
+                <i class="fas fa-info-circle me-2"></i>
+                Trade details for ID: ${tradeId} would be displayed here in a real implementation.
+            </div>
+        `;
+    }, 1000);
+}
+</script>
+{% endblock %}

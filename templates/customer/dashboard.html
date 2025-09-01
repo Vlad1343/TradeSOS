@@ -1,0 +1,196 @@
+{% extends "base.html" %}
+
+{% block title %}Customer Dashboard - TradeSOS{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <h1>Customer Dashboard</h1>
+        <p class="text-muted">Welcome back, {{ customer.name }}!</p>
+    </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="row mb-4">
+    <div class="col-md-6 mb-3">
+        <div class="card bg-emergency text-white">
+            <div class="card-body text-center">
+                <i class="fas fa-exclamation-triangle fa-3x mb-3"></i>
+                <h4>Emergency Callout</h4>
+                <p>Need immediate assistance? Create an emergency job request.</p>
+                <a href="{{ url_for('create_job') }}" class="btn btn-light btn-lg">
+                    <i class="fas fa-plus-circle me-2"></i>Create Emergency Job
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 mb-3">
+        <div class="card bg-info text-white">
+            <div class="card-body text-center">
+                <i class="fas fa-search fa-3x mb-3"></i>
+                <h4>Find Trades</h4>
+                <p>Browse verified trade professionals in your area.</p>
+                <a href="{{ url_for('trade_directory') }}" class="btn btn-light btn-lg">
+                    <i class="fas fa-users me-2"></i>Browse Directory
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Jobs -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">
+                    <i class="fas fa-clipboard-list me-2"></i>Recent Jobs
+                </h5>
+                <a href="{{ url_for('create_job') }}" class="btn btn-emergency btn-sm">
+                    <i class="fas fa-plus me-1"></i>New Job
+                </a>
+            </div>
+            <div class="card-body">
+                {% if jobs %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Job</th>
+                                    <th>Category</th>
+                                    <th>Urgency</th>
+                                    <th>Status</th>
+                                    <th>Created</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for job in jobs %}
+                                <tr>
+                                    <td>
+                                        <strong>{{ job.title }}</strong><br>
+                                        <small class="text-muted">{{ job.postcode_full }}</small>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-secondary">{{ job.category.title() }}</span>
+                                    </td>
+                                    <td>
+                                        {% set urgency_info = job.urgency %}
+                                        {% if job.urgency == 'emergency_now' %}
+                                            <span class="badge bg-danger">Emergency Now</span>
+                                        {% elif job.urgency == 'urgent_2h' %}
+                                            <span class="badge bg-warning">Urgent (2h)</span>
+                                        {% elif job.urgency == 'same_day' %}
+                                            <span class="badge bg-info">Same Day</span>
+                                        {% elif job.urgency == 'next_day' %}
+                                            <span class="badge bg-success">Next Day</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if job.status == 'posted' %}
+                                            <span class="badge bg-primary">Posted</span>
+                                        {% elif job.status == 'accepted' %}
+                                            <span class="badge bg-warning">Accepted</span>
+                                        {% elif job.status == 'in_progress' %}
+                                            <span class="badge bg-info">In Progress</span>
+                                        {% elif job.status == 'completed' %}
+                                            <span class="badge bg-success">Completed</span>
+                                        {% elif job.status == 'canceled' %}
+                                            <span class="badge bg-danger">Canceled</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <small>{{ job.created_at.strftime('%d/%m/%Y %H:%M') }}</small>
+                                    </td>
+                                    <td>
+                                        <a href="{{ url_for('job_detail', job_id=job.id) }}" class="btn btn-outline-primary btn-sm">
+                                            <i class="fas fa-eye me-1"></i>View
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="text-center py-4">
+                        <i class="fas fa-clipboard text-muted" style="font-size: 3rem;"></i>
+                        <h5 class="mt-3 text-muted">No jobs yet</h5>
+                        <p class="text-muted">Create your first emergency job request to get started.</p>
+                        <a href="{{ url_for('create_job') }}" class="btn btn-emergency">
+                            <i class="fas fa-plus-circle me-2"></i>Create First Job
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Active Advertisements -->
+{% if ads %}
+<div class="row mb-4">
+    <div class="col-12">
+        <h5>Recommended Services</h5>
+    </div>
+    {% for ad in ads %}
+    <div class="col-md-6 mb-3">
+        <div class="card border-warning">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <h6 class="card-title">{{ ad.name }}</h6>
+                        <p class="card-text small">Sponsored Content</p>
+                    </div>
+                    <span class="badge bg-warning text-dark">Ad</span>
+                </div>
+                {% if ad.image_url %}
+                    <img src="{{ ad.image_url }}" class="img-fluid rounded mb-2" alt="{{ ad.name }}">
+                {% endif %}
+                {% if ad.link_url %}
+                    <a href="{{ ad.link_url }}" class="btn btn-outline-warning btn-sm" target="_blank">
+                        Learn More
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+<!-- Emergency Guidelines -->
+<div class="row">
+    <div class="col-12">
+        <div class="card border-info">
+            <div class="card-header bg-info text-white">
+                <h6 class="mb-0">
+                    <i class="fas fa-info-circle me-2"></i>Emergency Guidelines
+                </h6>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6>When to Use TradeSOS:</h6>
+                        <ul class="small">
+                            <li>Non-life threatening emergencies</li>
+                            <li>Urgent repairs needed within 24 hours</li>
+                            <li>Property damage that needs immediate attention</li>
+                            <li>Security issues (broken locks, windows)</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <h6>Safety First:</h6>
+                        <ul class="small">
+                            <li>For immediate danger, call 999 first</li>
+                            <li>Gas leaks: Call National Gas Emergency (0800 111 999)</li>
+                            <li>Turn off mains if safe to do so</li>
+                            <li>Keep the area clear and safe</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

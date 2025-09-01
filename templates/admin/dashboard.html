@@ -1,0 +1,363 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard - TradeSOS{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <h1>Admin Dashboard</h1>
+        <p class="text-muted">Manage TradeSOS platform operations and users</p>
+    </div>
+</div>
+
+<!-- Statistics Overview -->
+<div class="row mb-4">
+    <div class="col-md-3 mb-3">
+        <div class="card bg-primary text-white">
+            <div class="card-body text-center">
+                <i class="fas fa-users fa-2x mb-2"></i>
+                <h4>{{ stats.total_users }}</h4>
+                <p class="mb-0">Total Users</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="card bg-info text-white">
+            <div class="card-body text-center">
+                <i class="fas fa-home fa-2x mb-2"></i>
+                <h4>{{ stats.total_customers }}</h4>
+                <p class="mb-0">Customers</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="card bg-warning text-dark">
+            <div class="card-body text-center">
+                <i class="fas fa-tools fa-2x mb-2"></i>
+                <h4>{{ stats.total_trades }}</h4>
+                <p class="mb-0">Trade Professionals</p>
+                <small>({{ stats.verified_trades }} verified)</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="card bg-success text-white">
+            <div class="card-body text-center">
+                <i class="fas fa-clipboard-list fa-2x mb-2"></i>
+                <h4>{{ stats.total_jobs }}</h4>
+                <p class="mb-0">Total Jobs</p>
+                <small>({{ stats.active_jobs }} active)</small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card shadow">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-bolt me-2"></i>Quick Actions
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3 mb-2">
+                        <a href="{{ url_for('admin_trades') }}" class="btn btn-outline-primary w-100">
+                            <i class="fas fa-users me-2"></i>Manage Trades
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <button class="btn btn-outline-secondary w-100" onclick="alert('Job management feature coming soon')">
+                            <i class="fas fa-clipboard-list me-2"></i>Manage Jobs
+                        </button>
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <button class="btn btn-outline-warning w-100" onclick="alert('Ad management feature coming soon')">
+                            <i class="fas fa-ad me-2"></i>Manage Ads
+                        </button>
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <button class="btn btn-outline-info w-100" onclick="alert('Reports feature coming soon')">
+                            <i class="fas fa-chart-bar me-2"></i>View Reports
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Recent Jobs -->
+    <div class="col-lg-6">
+        <div class="card shadow mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-clock me-2"></i>Recent Jobs
+                </h5>
+            </div>
+            <div class="card-body">
+                {% if recent_jobs %}
+                    <div class="table-responsive">
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Job</th>
+                                    <th>Customer</th>
+                                    <th>Urgency</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for job in recent_jobs %}
+                                <tr>
+                                    <td>
+                                        <strong>{{ job.title[:30] }}{% if job.title|length > 30 %}...{% endif %}</strong><br>
+                                        <small class="text-muted">{{ job.postcode_full }}</small>
+                                    </td>
+                                    <td>
+                                        <small>{{ job.customer.name if job.customer else 'N/A' }}</small>
+                                    </td>
+                                    <td>
+                                        {% if job.urgency == 'emergency_now' %}
+                                            <span class="badge bg-danger">Emergency</span>
+                                        {% elif job.urgency == 'urgent_2h' %}
+                                            <span class="badge bg-warning">Urgent</span>
+                                        {% elif job.urgency == 'same_day' %}
+                                            <span class="badge bg-info">Same Day</span>
+                                        {% else %}
+                                            <span class="badge bg-success">Next Day</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if job.status == 'posted' %}
+                                            <span class="badge bg-primary">Posted</span>
+                                        {% elif job.status == 'accepted' %}
+                                            <span class="badge bg-warning">Accepted</span>
+                                        {% elif job.status == 'completed' %}
+                                            <span class="badge bg-success">Completed</span>
+                                        {% elif job.status == 'canceled' %}
+                                            <span class="badge bg-danger">Canceled</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <a href="{{ url_for('job_detail', job_id=job.id) }}" class="btn btn-outline-primary btn-sm">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <p class="text-muted text-center">No recent jobs</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Trades -->
+    <div class="col-lg-6">
+        <div class="card shadow mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-user-plus me-2"></i>Recent Trade Registrations
+                </h5>
+            </div>
+            <div class="card-body">
+                {% if recent_trades %}
+                    <div class="table-responsive">
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Company</th>
+                                    <th>Verified</th>
+                                    <th>Plan</th>
+                                    <th>Registered</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for trade in recent_trades %}
+                                <tr>
+                                    <td>
+                                        <strong>{{ trade.company }}</strong><br>
+                                        <small class="text-muted">{{ trade.user.email if trade.user else 'N/A' }}</small>
+                                    </td>
+                                    <td>
+                                        {% if trade.verified %}
+                                            <span class="badge bg-success">
+                                                <i class="fas fa-check"></i>
+                                            </span>
+                                        {% else %}
+                                            <span class="badge bg-warning">
+                                                <i class="fas fa-clock"></i>
+                                            </span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <span class="badge {{ 'bg-warning text-dark' if trade.plan_tier == 'premium' else 'bg-secondary' }}">
+                                            {{ trade.plan_tier.title() }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <small>{{ trade.created_at.strftime('%d/%m/%Y') }}</small>
+                                    </td>
+                                    <td>
+                                        <a href="{{ url_for('verify_trade', trade_id=trade.id) }}" 
+                                           class="btn btn-outline-{{ 'warning' if trade.verified else 'success' }} btn-sm"
+                                           onclick="return confirm('{{ 'Unverify' if trade.verified else 'Verify' }} this trade?')">
+                                            <i class="fas fa-{{ 'times' if trade.verified else 'check' }}"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <p class="text-muted text-center">No recent trade registrations</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Platform Health -->
+<div class="row">
+    <div class="col-12">
+        <div class="card shadow">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-heartbeat me-2"></i>Platform Health
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3 text-center mb-3">
+                        <div class="border rounded p-3">
+                            <i class="fas fa-percentage fa-2x text-success mb-2"></i>
+                            <h6>Verification Rate</h6>
+                            <p class="mb-0">
+                                {% if stats.total_trades > 0 %}
+                                    {{ (stats.verified_trades / stats.total_trades * 100)|round(1) }}%
+                                {% else %}
+                                    0%
+                                {% endif %}
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-md-3 text-center mb-3">
+                        <div class="border rounded p-3">
+                            <i class="fas fa-chart-line fa-2x text-info mb-2"></i>
+                            <h6>Job Completion Rate</h6>
+                            <p class="mb-0">
+                                {% if stats.total_jobs > 0 %}
+                                    {{ ((stats.total_jobs - stats.active_jobs) / stats.total_jobs * 100)|round(1) }}%
+                                {% else %}
+                                    0%
+                                {% endif %}
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-md-3 text-center mb-3">
+                        <div class="border rounded p-3">
+                            <i class="fas fa-users fa-2x text-warning mb-2"></i>
+                            <h6>Customer to Trade Ratio</h6>
+                            <p class="mb-0">
+                                {% if stats.total_trades > 0 %}
+                                    {{ (stats.total_customers / stats.total_trades)|round(1) }}:1
+                                {% else %}
+                                    N/A
+                                {% endif %}
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-md-3 text-center mb-3">
+                        <div class="border rounded p-3">
+                            <i class="fas fa-clock fa-2x text-primary mb-2"></i>
+                            <h6>System Status</h6>
+                            <p class="mb-0">
+                                <span class="badge bg-success">Online</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Activity Log -->
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card shadow">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-list me-2"></i>Recent Platform Activity
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="timeline">
+                    {% for job in recent_jobs[:3] %}
+                    <div class="timeline-item">
+                        <div class="timeline-marker bg-{{ 'danger' if job.urgency == 'emergency_now' else 'info' }}"></div>
+                        <div class="timeline-content">
+                            <h6 class="mb-1">New {{ job.urgency.replace('_', ' ').title() }} Job Posted</h6>
+                            <p class="mb-1 small">{{ job.title }} in {{ job.postcode_full }}</p>
+                            <small class="text-muted">{{ job.created_at.strftime('%d/%m/%Y %H:%M') }}</small>
+                        </div>
+                    </div>
+                    {% endfor %}
+                    
+                    {% for trade in recent_trades[:2] %}
+                    <div class="timeline-item">
+                        <div class="timeline-marker bg-success"></div>
+                        <div class="timeline-content">
+                            <h6 class="mb-1">New Trade Registration</h6>
+                            <p class="mb-1 small">{{ trade.company }} registered</p>
+                            <small class="text-muted">{{ trade.created_at.strftime('%d/%m/%Y %H:%M') }}</small>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.timeline {
+    position: relative;
+    padding-left: 30px;
+}
+
+.timeline-item {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.timeline-marker {
+    position: absolute;
+    left: -35px;
+    top: 5px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+}
+
+.timeline::before {
+    content: '';
+    position: absolute;
+    left: -31px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: #e9ecef;
+}
+</style>
+{% endblock %}

@@ -1,0 +1,189 @@
+{% extends "base.html" %}
+
+{% block title %}Leave Review - {{ job.title }} - TradeSOS{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card shadow">
+            <div class="card-header bg-success text-white">
+                <h3 class="mb-0">
+                    <i class="fas fa-star me-2"></i>Leave a Review
+                </h3>
+                <p class="mb-0 mt-2">Help other customers by sharing your experience</p>
+            </div>
+            <div class="card-body p-4">
+                <!-- Job Summary -->
+                <div class="alert alert-light border mb-4">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <h5 class="mb-1">{{ job.title }}</h5>
+                            <p class="text-muted mb-1">{{ job.category.title() }} • {{ job.postcode_full }}</p>
+                            <small class="text-muted">Completed by {{ job.accepted_trade.company }}</small>
+                        </div>
+                        <div class="col-md-4 text-md-end">
+                            <span class="badge bg-success">
+                                <i class="fas fa-check-circle me-1"></i>Completed
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <form method="POST">
+                    {{ form.hidden_tag() }}
+                    
+                    <!-- Rating Selection -->
+                    <div class="mb-4">
+                        {{ form.rating.label(class="form-label fw-bold") }}
+                        <div class="rating-selection">
+                            {% for value, label in form.rating.choices %}
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="radio" name="rating" id="rating{{ value }}" value="{{ value }}" 
+                                       onchange="updateRatingStars({{ value }})">
+                                <label class="form-check-label d-flex align-items-center" for="rating{{ value }}">
+                                    <div class="rating-stars me-3">
+                                        {% for i in range(1, 6) %}
+                                            <i class="fa-star {{ 'fas text-warning' if i <= value else 'far text-muted' }}" 
+                                               data-rating="{{ value }}" data-star="{{ i }}"></i>
+                                        {% endfor %}
+                                    </div>
+                                    <span>{{ label }}</span>
+                                </label>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {% if form.rating.errors %}
+                            <div class="text-danger small mt-1">
+                                {% for error in form.rating.errors %}
+                                    <i class="fas fa-exclamation-triangle me-1"></i>{{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Review Text -->
+                    <div class="mb-4">
+                        {{ form.text.label(class="form-label fw-bold") }}
+                        <small class="text-muted">(Optional but helpful for other customers)</small>
+                        {{ form.text(class="form-control" + (" is-invalid" if form.text.errors else ""), 
+                            placeholder="Describe your experience: Was the trade professional punctual, professional, and did they solve your problem effectively?") }}
+                        {% if form.text.errors %}
+                            <div class="invalid-feedback">
+                                {% for error in form.text.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                        <div class="form-text">
+                            <span id="reviewCharCount">0</span> / 500 characters
+                        </div>
+                    </div>
+                    
+                    <!-- Review Guidelines -->
+                    <div class="alert alert-info mb-4">
+                        <h6><i class="fas fa-info-circle me-2"></i>Review Guidelines</h6>
+                        <ul class="small mb-0">
+                            <li>Be honest and constructive in your feedback</li>
+                            <li>Focus on the quality of work and professionalism</li>
+                            <li>Mention specific aspects like punctuality, cleanliness, communication</li>
+                            <li>Avoid personal information or contact details</li>
+                            <li>Reviews help other customers and improve our service</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a href="{{ url_for('job_detail', job_id=job.id) }}" class="btn btn-secondary me-2">
+                            <i class="fas fa-arrow-left me-1"></i>Back to Job
+                        </a>
+                        {{ form.submit(class="btn btn-success btn-lg") }}
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Trade Information -->
+        <div class="card shadow mt-4">
+            <div class="card-header">
+                <h6 class="mb-0">Trade Professional Details</h6>
+            </div>
+            <div class="card-body">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <h5>{{ job.accepted_trade.company }}</h5>
+                        {% if job.accepted_trade.get_skills() %}
+                            <div class="mb-2">
+                                {% for skill in job.accepted_trade.get_skills()[:5] %}
+                                    <span class="badge bg-secondary me-1">{{ skill }}</span>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                        {% if job.accepted_trade.rating_avg > 0 %}
+                            <div class="rating">
+                                {% for i in range(1, 6) %}
+                                    {% if i <= job.accepted_trade.rating_avg %}
+                                        <i class="fas fa-star text-warning"></i>
+                                    {% else %}
+                                        <i class="far fa-star text-muted"></i>
+                                    {% endif %}
+                                {% endfor %}
+                                <span class="ms-1 text-muted">
+                                    {{ "%.1f"|format(job.accepted_trade.rating_avg) }} 
+                                    ({{ job.accepted_trade.review_count }} reviews)
+                                </span>
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-4 text-md-end">
+                        {% if job.accepted_trade.verified %}
+                            <span class="badge bg-success mb-2">
+                                <i class="fas fa-check-circle me-1"></i>Verified
+                            </span>
+                        {% endif %}
+                        {% if job.accepted_trade.plan_tier == 'premium' %}
+                            <span class="badge bg-warning">
+                                <i class="fas fa-crown me-1"></i>Premium
+                            </span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Character counter for review text
+    const reviewField = document.getElementById('text');
+    const charCount = document.getElementById('reviewCharCount');
+    
+    if (reviewField && charCount) {
+        function updateCharCount() {
+            const count = reviewField.value.length;
+            charCount.textContent = count;
+            charCount.className = count > 400 ? 'text-warning' : count > 450 ? 'text-danger' : '';
+        }
+        
+        reviewField.addEventListener('input', updateCharCount);
+        updateCharCount(); // Initialize
+    }
+});
+
+function updateRatingStars(selectedRating) {
+    // Update all star displays to reflect the selected rating
+    const allStars = document.querySelectorAll('.rating-stars .fa-star');
+    allStars.forEach(star => {
+        const rating = parseInt(star.dataset.rating);
+        const starNum = parseInt(star.dataset.star);
+        
+        if (rating === selectedRating) {
+            if (starNum <= selectedRating) {
+                star.className = 'fas fa-star text-warning';
+            } else {
+                star.className = 'far fa-star text-muted';
+            }
+        }
+    });
+}
+</script>
+{% endblock %}

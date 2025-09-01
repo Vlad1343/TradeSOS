@@ -1,0 +1,299 @@
+{% extends "base.html" %}
+
+{% block title %}Billing & Subscriptions - TradeSOS{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-10">
+        <div class="row mb-4">
+            <div class="col-12">
+                <h1>Billing & Subscriptions</h1>
+                <p class="text-muted">Manage your TradeSOS subscription and billing information</p>
+            </div>
+        </div>
+
+        <!-- Success/Cancel Messages -->
+        {% if request.args.get('success') %}
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle me-2"></i>
+            <strong>Subscription Updated!</strong> Your premium subscription is now active.
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        {% elif request.args.get('canceled') %}
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-triangle me-2"></i>
+            <strong>Subscription Canceled</strong> You can try again anytime.
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        {% endif %}
+
+        <!-- Current Plan -->
+        <div class="row mb-4">
+            <div class="col-md-8">
+                <div class="card shadow">
+                    <div class="card-header {{ 'bg-warning text-dark' if trade.plan_tier == 'premium' else 'bg-secondary text-white' }}">
+                        <h5 class="mb-0">
+                            <i class="fas {{ 'fa-crown' if trade.plan_tier == 'premium' else 'fa-user' }} me-2"></i>
+                            Current Plan: {{ trade.plan_tier.title() }}
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        {% if trade.plan_tier == 'premium' %}
+                            <h4 class="text-warning">
+                                <i class="fas fa-crown me-2"></i>Premium Subscription
+                            </h4>
+                            <p class="lead">£80.00 per month</p>
+                            
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h6>Premium Benefits:</h6>
+                                    <ul class="list-unstyled">
+                                        <li><i class="fas fa-check text-success me-2"></i>Priority job notifications</li>
+                                        <li><i class="fas fa-check text-success me-2"></i>First access window (3 minutes early)</li>
+                                        <li><i class="fas fa-check text-success me-2"></i>Higher ranking in search results</li>
+                                        <li><i class="fas fa-check text-success me-2"></i>Access to enterprise jobs</li>
+                                        <li><i class="fas fa-check text-success me-2"></i>Premium support</li>
+                                    </ul>
+                                </div>
+                                <div class="col-md-6">
+                                    <h6>Subscription Status:</h6>
+                                    <p class="mb-1">
+                                        <span class="badge {{ 'bg-success' if trade.subscription_status == 'active' else 'bg-warning' }}">
+                                            {{ trade.subscription_status.title() }}
+                                        </span>
+                                    </p>
+                                    {% if trade.stripe_subscription_id %}
+                                        <small class="text-muted">Managed via Stripe</small>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            {% if trade.subscription_status == 'active' %}
+                                <div class="alert alert-info mt-3">
+                                    <i class="fas fa-info-circle me-2"></i>
+                                    To manage your subscription, cancel, or update payment methods, 
+                                    please contact our support team or manage through your Stripe customer portal.
+                                </div>
+                            {% endif %}
+
+                        {% else %}
+                            <h4 class="text-secondary">
+                                <i class="fas fa-user me-2"></i>Standard Plan
+                            </h4>
+                            <p class="lead">Free</p>
+                            
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h6>Standard Features:</h6>
+                                    <ul class="list-unstyled">
+                                        <li><i class="fas fa-check text-success me-2"></i>Receive job notifications</li>
+                                        <li><i class="fas fa-check text-success me-2"></i>Accept emergency jobs</li>
+                                        <li><i class="fas fa-check text-success me-2"></i>Customer messaging</li>
+                                        <li><i class="fas fa-check text-success me-2"></i>Review system</li>
+                                        <li><i class="fas fa-check text-success me-2"></i>Basic support</li>
+                                    </ul>
+                                </div>
+                                <div class="col-md-6">
+                                    <h6>Missing Premium Benefits:</h6>
+                                    <ul class="list-unstyled text-muted">
+                                        <li><i class="fas fa-times text-danger me-2"></i>Priority notifications</li>
+                                        <li><i class="fas fa-times text-danger me-2"></i>First access window</li>
+                                        <li><i class="fas fa-times text-danger me-2"></i>Higher search ranking</li>
+                                        <li><i class="fas fa-times text-danger me-2"></i>Enterprise jobs</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Plan Comparison -->
+            <div class="col-md-4">
+                {% if trade.plan_tier == 'standard' %}
+                    <div class="card shadow border-warning">
+                        <div class="card-header bg-warning text-dark text-center">
+                            <h6 class="mb-0">
+                                <i class="fas fa-crown me-2"></i>Upgrade to Premium
+                            </h6>
+                        </div>
+                        <div class="card-body text-center">
+                            <h3 class="text-warning">£80<small class="text-muted">/month</small></h3>
+                            
+                            <div class="mb-3">
+                                <small class="text-success">
+                                    <i class="fas fa-arrow-up me-1"></i>
+                                    Get 3-minute early access to new jobs
+                                </small>
+                            </div>
+                            
+                            <a href="{{ url_for('upgrade_to_premium') }}" class="btn btn-warning btn-lg w-100">
+                                <i class="fas fa-crown me-2"></i>Upgrade Now
+                            </a>
+                            
+                            <div class="mt-3">
+                                <small class="text-muted">
+                                    Cancel anytime • Secure payment via Stripe
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="card shadow border-success">
+                        <div class="card-header bg-success text-white text-center">
+                            <h6 class="mb-0">
+                                <i class="fas fa-trophy me-2"></i>Premium Member
+                            </h6>
+                        </div>
+                        <div class="card-body text-center">
+                            <i class="fas fa-check-circle text-success fa-3x mb-3"></i>
+                            <h5>You're Premium!</h5>
+                            <p class="text-muted">Enjoying all premium benefits including priority job access.</p>
+                            
+                            <div class="mt-3">
+                                <small class="text-muted">
+                                    Next billing: {{ "Next month" }}<!-- Would show actual date in real app -->
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Plan Comparison Table -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card shadow">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-list-alt me-2"></i>Plan Comparison
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Feature</th>
+                                        <th class="text-center">Standard<br><small class="text-muted">Free</small></th>
+                                        <th class="text-center">Premium<br><small class="text-muted">£80/month</small></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><i class="fas fa-bell me-2"></i>Job Notifications</td>
+                                        <td class="text-center"><i class="fas fa-check text-success"></i></td>
+                                        <td class="text-center"><i class="fas fa-check text-success"></i></td>
+                                    </tr>
+                                    <tr>
+                                        <td><i class="fas fa-handshake me-2"></i>Accept Jobs</td>
+                                        <td class="text-center"><i class="fas fa-check text-success"></i></td>
+                                        <td class="text-center"><i class="fas fa-check text-success"></i></td>
+                                    </tr>
+                                    <tr>
+                                        <td><i class="fas fa-comments me-2"></i>Customer Messaging</td>
+                                        <td class="text-center"><i class="fas fa-check text-success"></i></td>
+                                        <td class="text-center"><i class="fas fa-check text-success"></i></td>
+                                    </tr>
+                                    <tr class="table-warning">
+                                        <td><i class="fas fa-clock me-2"></i>Priority Access (3 min early)</td>
+                                        <td class="text-center"><i class="fas fa-times text-danger"></i></td>
+                                        <td class="text-center"><i class="fas fa-check text-success"></i></td>
+                                    </tr>
+                                    <tr class="table-warning">
+                                        <td><i class="fas fa-arrow-up me-2"></i>Higher Search Ranking</td>
+                                        <td class="text-center"><i class="fas fa-times text-danger"></i></td>
+                                        <td class="text-center"><i class="fas fa-check text-success"></i></td>
+                                    </tr>
+                                    <tr class="table-warning">
+                                        <td><i class="fas fa-building me-2"></i>Enterprise Jobs Access</td>
+                                        <td class="text-center"><i class="fas fa-times text-danger"></i></td>
+                                        <td class="text-center"><i class="fas fa-check text-success"></i></td>
+                                    </tr>
+                                    <tr>
+                                        <td><i class="fas fa-headset me-2"></i>Support</td>
+                                        <td class="text-center">Basic</td>
+                                        <td class="text-center">Priority</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- FAQ -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card shadow">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-question-circle me-2"></i>Billing FAQ
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="accordion" id="billingFAQ">
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="faq1">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse1">
+                                        How does the 3-minute premium early access work?
+                                    </button>
+                                </h2>
+                                <div id="collapse1" class="accordion-collapse collapse" data-bs-parent="#billingFAQ">
+                                    <div class="accordion-body">
+                                        When a new emergency job is posted, Premium members receive notifications 3 minutes before Standard members. 
+                                        This gives you first chance to accept high-value emergency jobs.
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="faq2">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse2">
+                                        Can I cancel my premium subscription anytime?
+                                    </button>
+                                </h2>
+                                <div id="collapse2" class="accordion-collapse collapse" data-bs-parent="#billingFAQ">
+                                    <div class="accordion-body">
+                                        Yes, you can cancel your premium subscription at any time. You'll continue to have premium access until the end of your current billing period.
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="faq3">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse3">
+                                        How is payment processed?
+                                    </button>
+                                </h2>
+                                <div id="collapse3" class="accordion-collapse collapse" data-bs-parent="#billingFAQ">
+                                    <div class="accordion-body">
+                                        All payments are securely processed through Stripe. We accept all major credit and debit cards. 
+                                        Billing is monthly and automatic.
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="faq4">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse4">
+                                        What if I need to update my payment method?
+                                    </button>
+                                </h2>
+                                <div id="collapse4" class="accordion-collapse collapse" data-bs-parent="#billingFAQ">
+                                    <div class="accordion-body">
+                                        Contact our support team to update your payment method or access your Stripe customer portal 
+                                        where you can manage your billing information directly.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

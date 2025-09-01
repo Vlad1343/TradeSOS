@@ -1,0 +1,167 @@
+{% extends "base.html" %}
+
+{% block title %}Register - TradeSOS{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8 col-md-10">
+        <div class="card shadow">
+            <div class="card-header bg-emergency text-white text-center">
+                <h3 class="mb-0">
+                    <i class="fas fa-user-plus me-2"></i>Join TradeSOS
+                </h3>
+                <p class="mb-0 mt-2">Connect with emergency trade services across the UK</p>
+            </div>
+            <div class="card-body p-4">
+                <form method="POST">
+                    {{ form.hidden_tag() }}
+                    
+                    <!-- Role Selection -->
+                    <div class="mb-4">
+                        {{ form.role.label(class="form-label fw-bold") }}
+                        <div class="row">
+                            <div class="col-md-6 mb-2">
+                                <div class="form-check p-3 border rounded {{ 'border-emergency' if form.role.data == 'customer' else '' }}">
+                                    <input class="form-check-input" type="radio" name="role" id="customer" value="customer" 
+                                           {{ 'checked' if form.role.data == 'customer' else '' }}>
+                                    <label class="form-check-label w-100" for="customer">
+                                        <i class="fas fa-home text-info me-2"></i>
+                                        <strong>Customer</strong><br>
+                                        <small class="text-muted">I need emergency trade services</small>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-2">
+                                <div class="form-check p-3 border rounded {{ 'border-emergency' if form.role.data == 'trade' else '' }}">
+                                    <input class="form-check-input" type="radio" name="role" id="trade" value="trade"
+                                           {{ 'checked' if form.role.data == 'trade' else '' }}>
+                                    <label class="form-check-label w-100" for="trade">
+                                        <i class="fas fa-tools text-warning me-2"></i>
+                                        <strong>Trade Professional</strong><br>
+                                        <small class="text-muted">I provide emergency trade services</small>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        {% if form.role.errors %}
+                            <div class="text-danger small mt-1">
+                                {% for error in form.role.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            {{ form.email.label(class="form-label") }}
+                            {{ form.email(class="form-control" + (" is-invalid" if form.email.errors else "")) }}
+                            {% if form.email.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.email.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            {{ form.name.label(class="form-label") }}
+                            <small class="text-muted" id="nameHelp"></small>
+                            {{ form.name(class="form-control" + (" is-invalid" if form.name.errors else "")) }}
+                            {% if form.name.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.name.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            {{ form.password.label(class="form-label") }}
+                            {{ form.password(class="form-control" + (" is-invalid" if form.password.errors else "")) }}
+                            {% if form.password.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.password.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            <div class="form-text">Must be at least 8 characters long</div>
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            {{ form.password2.label(class="form-label") }}
+                            {{ form.password2(class="form-control" + (" is-invalid" if form.password2.errors else "")) }}
+                            {% if form.password2.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.password2.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        {{ form.phone.label(class="form-label") }}
+                        {{ form.phone(class="form-control", placeholder="Optional - for emergency contact") }}
+                        {% if form.phone.errors %}
+                            <div class="text-danger small mt-1">
+                                {% for error in form.phone.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="d-grid mb-3">
+                        {{ form.submit(class="btn btn-emergency btn-lg") }}
+                    </div>
+                    
+                    <div class="alert alert-light small">
+                        <i class="fas fa-info-circle me-2"></i>
+                        By registering, you agree to our terms of service and privacy policy. 
+                        All trade professionals must be verified before accepting jobs.
+                    </div>
+                </form>
+            </div>
+            <div class="card-footer text-center">
+                <p class="mb-0">
+                    Already have an account? 
+                    <a href="{{ url_for('login') }}" class="text-emergency">Sign in here</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Update name field helper text based on role selection
+document.addEventListener('DOMContentLoaded', function() {
+    const roleRadios = document.querySelectorAll('input[name="role"]');
+    const nameHelp = document.getElementById('nameHelp');
+    
+    function updateNameHelper() {
+        const selectedRole = document.querySelector('input[name="role"]:checked');
+        if (selectedRole) {
+            if (selectedRole.value === 'customer') {
+                nameHelp.textContent = '(Your full name)';
+            } else if (selectedRole.value === 'trade') {
+                nameHelp.textContent = '(Your company name)';
+            }
+        }
+    }
+    
+    roleRadios.forEach(radio => {
+        radio.addEventListener('change', updateNameHelper);
+    });
+    
+    // Initialize
+    updateNameHelper();
+});
+</script>
+{% endblock %}

@@ -1,0 +1,11 @@
+# This file ensures the uploads directory is tracked by git
+# The uploads directory is used for storing user-uploaded files like:
+# - Insurance documents for trade professionals
+# - Job photos from customers
+# - Profile pictures (future feature)
+
+# Files in this directory are served by the Flask application
+# through the /uploads/<filename> route
+
+# In production, consider using cloud storage (S3, Azure Blob, etc.)
+# instead of local file storage for better scalability and reliability

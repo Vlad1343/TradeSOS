@@ -1,0 +1,304 @@
+{% extends "base.html" %}
+
+{% block title %}Trade Profile - TradeSOS{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-10">
+        <div class="card shadow">
+            <div class="card-header bg-emergency text-white">
+                <h3 class="mb-0">
+                    <i class="fas fa-user-cog me-2"></i>Trade Professional Profile
+                </h3>
+                <p class="mb-0 mt-2">Complete your profile to start receiving job notifications</p>
+            </div>
+            <div class="card-body p-4">
+                <!-- Verification Status -->
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <div class="alert {{ 'alert-success' if trade and trade.verified else 'alert-warning' }}">
+                            <div class="d-flex align-items-center">
+                                <div class="me-3">
+                                    <i class="fas {{ 'fa-check-circle' if trade and trade.verified else 'fa-clock' }} fa-2x"></i>
+                                </div>
+                                <div>
+                                    <h6 class="mb-1">
+                                        {% if trade and trade.verified %}
+                                            <i class="fas fa-check me-1"></i>Verified Professional
+                                        {% else %}
+                                            <i class="fas fa-clock me-1"></i>Verification Pending
+                                        {% endif %}
+                                    </h6>
+                                    <p class="mb-0 small">
+                                        {% if trade and trade.verified %}
+                                            Your account has been verified. You can now receive job notifications.
+                                        {% else %}
+                                            Complete all required fields and upload insurance documents for verification.
+                                        {% endif %}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <form method="POST" enctype="multipart/form-data">
+                    {{ form.hidden_tag() }}
+                    
+                    <!-- Company Information -->
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <h5 class="text-emergency border-bottom pb-2 mb-3">
+                                <i class="fas fa-building me-2"></i>Company Information
+                            </h5>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            {{ form.company.label(class="form-label fw-bold required") }}
+                            {{ form.company(class="form-control form-control-lg" + (" is-invalid" if form.company.errors else "")) }}
+                            {% if form.company.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.company.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            {{ form.vat_number.label(class="form-label") }}
+                            <small class="text-muted">(Optional)</small>
+                            {{ form.vat_number(class="form-control", placeholder="GB123456789") }}
+                            {% if form.vat_number.errors %}
+                                <div class="text-danger small mt-1">
+                                    {% for error in form.vat_number.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            {{ form.utr_number.label(class="form-label") }}
+                            <small class="text-muted">(Optional)</small>
+                            {{ form.utr_number(class="form-control", placeholder="1234567890") }}
+                            {% if form.utr_number.errors %}
+                                <div class="text-danger small mt-1">
+                                    {% for error in form.utr_number.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- Skills & Services -->
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <h5 class="text-emergency border-bottom pb-2 mb-3">
+                                <i class="fas fa-tools me-2"></i>Skills & Services
+                            </h5>
+                        </div>
+                        <div class="col-md-12 mb-3">
+                            {{ form.skills.label(class="form-label fw-bold required") }}
+                            {{ form.skills(class="form-control" + (" is-invalid" if form.skills.errors else "")) }}
+                            {% if form.skills.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.skills.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            <div class="form-text">
+                                <i class="fas fa-info-circle me-1"></i>
+                                List your skills separated by commas. This helps match you with relevant jobs.
+                            </div>
+                            <div class="mt-2">
+                                <small class="text-muted">Common skills:</small>
+                                <div class="mt-1">
+                                    <span class="badge bg-light text-dark border me-1 skill-suggestion" onclick="addSkill('plumbing')">plumbing</span>
+                                    <span class="badge bg-light text-dark border me-1 skill-suggestion" onclick="addSkill('heating')">heating</span>
+                                    <span class="badge bg-light text-dark border me-1 skill-suggestion" onclick="addSkill('electrical')">electrical</span>
+                                    <span class="badge bg-light text-dark border me-1 skill-suggestion" onclick="addSkill('gas safety')">gas safety</span>
+                                    <span class="badge bg-light text-dark border me-1 skill-suggestion" onclick="addSkill('locksmith')">locksmith</span>
+                                    <span class="badge bg-light text-dark border me-1 skill-suggestion" onclick="addSkill('glazing')">glazing</span>
+                                    <span class="badge bg-light text-dark border me-1 skill-suggestion" onclick="addSkill('roofing')">roofing</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Coverage Areas -->
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <h5 class="text-emergency border-bottom pb-2 mb-3">
+                                <i class="fas fa-map-marked-alt me-2"></i>Coverage Areas
+                            </h5>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            {{ form.coverage_areas.label(class="form-label fw-bold required") }}
+                            {{ form.coverage_areas(class="form-control" + (" is-invalid" if form.coverage_areas.errors else "")) }}
+                            {% if form.coverage_areas.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.coverage_areas.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            <div class="form-text">
+                                <i class="fas fa-info-circle me-1"></i>
+                                Postcode areas you cover (e.g., M, B, L for Manchester, Birmingham, Liverpool)
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            {{ form.coverage_districts.label(class="form-label") }}
+                            <small class="text-muted">(Optional - for specific districts)</small>
+                            {{ form.coverage_districts(class="form-control" + (" is-invalid" if form.coverage_districts.errors else "")) }}
+                            {% if form.coverage_districts.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.coverage_districts.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            <div class="form-text">
+                                <i class="fas fa-info-circle me-1"></i>
+                                Specific districts (e.g., M1, M3, B1 for more precise targeting)
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            {{ form.radius_km.label(class="form-label") }}
+                            <small class="text-muted">(Optional - additional radius filter)</small>
+                            <div class="input-group">
+                                {{ form.radius_km(class="form-control", min="0", max="100", step="0.5") }}
+                                <span class="input-group-text">km</span>
+                            </div>
+                            {% if form.radius_km.errors %}
+                                <div class="text-danger small mt-1">
+                                    {% for error in form.radius_km.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            <div class="form-text">
+                                <i class="fas fa-info-circle me-1"></i>
+                                Maximum distance you're willing to travel for jobs
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Insurance Documentation -->
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <h5 class="text-emergency border-bottom pb-2 mb-3">
+                                <i class="fas fa-shield-alt me-2"></i>Insurance & Documentation
+                            </h5>
+                        </div>
+                        <div class="col-md-8 mb-3">
+                            {{ form.insurance_document.label(class="form-label fw-bold required") }}
+                            {{ form.insurance_document(class="form-control" + (" is-invalid" if form.insurance_document.errors else "")) }}
+                            {% if form.insurance_document.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.insurance_document.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            <div class="form-text">
+                                <i class="fas fa-upload me-1"></i>
+                                Upload your current Public Liability Insurance certificate (PDF, DOC, or image)
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            {% if trade and trade.insurance_document_url %}
+                                <div class="alert alert-success">
+                                    <i class="fas fa-check-circle me-2"></i>
+                                    <strong>Document Uploaded</strong><br>
+                                    <small>Upload a new file to replace</small>
+                                </div>
+                            {% else %}
+                                <div class="alert alert-warning">
+                                    <i class="fas fa-exclamation-triangle me-2"></i>
+                                    <strong>Required for Verification</strong><br>
+                                    <small>Upload insurance certificate</small>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- Requirements Checklist -->
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <h5 class="text-emergency border-bottom pb-2 mb-3">
+                                <i class="fas fa-clipboard-check me-2"></i>Verification Requirements
+                            </h5>
+                            <div class="alert alert-light">
+                                <h6>To become a verified trade professional, you need:</h6>
+                                <ul class="mb-0">
+                                    <li class="{{ 'text-success' if form.company.data else 'text-muted' }}">
+                                        <i class="fas {{ 'fa-check' if form.company.data else 'fa-circle' }} me-2"></i>
+                                        Complete company information
+                                    </li>
+                                    <li class="{{ 'text-success' if form.skills.data else 'text-muted' }}">
+                                        <i class="fas {{ 'fa-check' if form.skills.data else 'fa-circle' }} me-2"></i>
+                                        List your skills and services
+                                    </li>
+                                    <li class="{{ 'text-success' if form.coverage_areas.data else 'text-muted' }}">
+                                        <i class="fas {{ 'fa-check' if form.coverage_areas.data else 'fa-circle' }} me-2"></i>
+                                        Define your coverage areas
+                                    </li>
+                                    <li class="{{ 'text-success' if (trade and trade.insurance_document_url) or form.insurance_document.data else 'text-muted' }}">
+                                        <i class="fas {{ 'fa-check' if (trade and trade.insurance_document_url) or form.insurance_document.data else 'fa-circle' }} me-2"></i>
+                                        Upload Public Liability Insurance certificate
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a href="{{ url_for('trade_dashboard') }}" class="btn btn-secondary me-2">
+                            <i class="fas fa-arrow-left me-1"></i>Back to Dashboard
+                        </a>
+                        {{ form.submit(class="btn btn-emergency btn-lg") }}
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function addSkill(skill) {
+    const skillsField = document.getElementById('skills');
+    const currentSkills = skillsField.value.trim();
+    
+    if (currentSkills === '') {
+        skillsField.value = skill;
+    } else if (!currentSkills.split(',').map(s => s.trim()).includes(skill)) {
+        skillsField.value = currentSkills + ', ' + skill;
+    }
+    
+    skillsField.focus();
+}
+
+// Make skill suggestions clickable
+document.addEventListener('DOMContentLoaded', function() {
+    const suggestions = document.querySelectorAll('.skill-suggestion');
+    suggestions.forEach(suggestion => {
+        suggestion.style.cursor = 'pointer';
+        suggestion.title = 'Click to add to skills';
+    });
+});
+</script>
+
+<style>
+.required::after {
+    content: " *";
+    color: red;
+}
+
+.skill-suggestion:hover {
+    background-color: #e9ecef !important;
+    transform: scale(1.05);
+    transition: all 0.2s ease;
+}
+</style>
+{% endblock %}
