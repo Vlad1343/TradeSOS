@@ -2,6 +2,10 @@
 
 {% block title %}Create Emergency Job - TradeSOS{% endblock %}
 
+{% block scripts %}
+<!-- Override base template to exclude main.js which causes auto-submit -->
+{% endblock %}
+
 {% block content %}
 <div class="row justify-content-center">
     <div class="col-lg-8">
@@ -206,61 +210,7 @@
 </div>
 
 <script>
-// Completely isolate this form from any external JavaScript
-(function() {
-    'use strict';
-    
-    // Wait for DOM and disable main.js entirely for this page
-    document.addEventListener('DOMContentLoaded', function() {
-        const form = document.getElementById('jobCreationForm');
-        if (!form) return;
-        
-        // Completely block all event propagation from form inputs
-        const allInputs = form.querySelectorAll('input, select, textarea');
-        allInputs.forEach(function(input) {
-            // Block all change events from bubbling up
-            input.addEventListener('change', function(e) {
-                e.stopPropagation();
-                e.stopImmediatePropagation();
-            }, { capture: true });
-            
-            input.addEventListener('input', function(e) {
-                e.stopPropagation(); 
-                e.stopImmediatePropagation();
-            }, { capture: true });
-            
-            // Block keydown/keyup that might trigger form submission
-            input.addEventListener('keydown', function(e) {
-                if (e.key === 'Enter' && input.tagName !== 'TEXTAREA' && input.type !== 'submit') {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    e.stopImmediatePropagation();
-                    return false;
-                }
-            }, { capture: true });
-        });
-        
-        // Block any programmatic form submission except from submit button
-        const originalSubmit = form.submit;
-        form.submit = function() {
-            console.log('Blocked programmatic form submission');
-            return false;
-        };
-        
-        // Only allow submission via submit button click
-        form.addEventListener('submit', function(e) {
-            if (!e.submitter || e.submitter.type !== 'submit') {
-                e.preventDefault();
-                e.stopPropagation();
-                e.stopImmediatePropagation();
-                console.log('Blocked non-button form submission');
-                return false;
-            }
-            console.log('Allowing form submission from submit button');
-        }, { capture: true });
-    });
-})();
-    
+document.addEventListener('DOMContentLoaded', function() {
     // Character counter for description
     const descriptionField = document.getElementById('description');
     const charCount = document.getElementById('charCount');
