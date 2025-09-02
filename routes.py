@@ -101,7 +101,16 @@ def register():
             
             # Create trade profile
             if role == 'trade':
-                trade = Trade(user_id=user.id, company=company)
+                trade = Trade(
+                    user_id=user.id, 
+                    company=company,
+                    companies_house_number='',
+                    vat_number='',
+                    utr_number='',
+                    skills='[]',
+                    coverage_areas='[]',
+                    coverage_districts='[]'
+                )
                 db.session.add(trade)
             
             db.session.commit()
