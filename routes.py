@@ -22,26 +22,15 @@ def allowed_file(filename):
 # Public routes
 @app.route('/')
 def index():
-    print(f"INDEX DEBUG: current_user.is_authenticated: {current_user.is_authenticated}")
-    if hasattr(current_user, 'role'):
-        print(f"INDEX DEBUG: current_user.role: {current_user.role}")
-        print(f"INDEX DEBUG: current_user: {current_user}")
-    else:
-        print("INDEX DEBUG: current_user has no role attribute")
-    
     if current_user.is_authenticated:
         if current_user.role == 'customer':
-            print("INDEX DEBUG: Redirecting to customer_dashboard")
             return redirect(url_for('customer_dashboard'))
         elif current_user.role == 'trade':
-            print("INDEX DEBUG: Redirecting to trade_dashboard")
             return redirect(url_for('trade_dashboard'))
         elif current_user.role == 'admin':
-            print("INDEX DEBUG: Redirecting to admin_dashboard")
             return redirect(url_for('admin_dashboard'))
     
     # Show public trade directory for anonymous users
-    print("INDEX DEBUG: Showing public page for anonymous user")
     verified_trades = Trade.query.filter_by(verified=True).limit(6).all()
     return render_template('index.html', trades=verified_trades)
 
@@ -70,50 +59,16 @@ def login():
         return redirect(url_for('index'))
     
     form = LoginForm()
-    
-    if request.method == 'POST':
-        print(f"LOGIN DEBUG: Form submitted with email: {form.email.data}")
-        print(f"LOGIN DEBUG: Form validate_on_submit: {form.validate_on_submit()}")
-        print(f"LOGIN DEBUG: Form errors: {form.errors}")
-    
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
-        print(f"LOGIN DEBUG: User found: {user}")
-        if user:
-            password_check = user.check_password(form.password.data)
-            print(f"LOGIN DEBUG: Password check result: {password_check}")
-            if password_check:
-                print(f"LOGIN DEBUG: Session before login: {session}")
-                print(f"LOGIN DEBUG: Session secret key exists: {bool(current_app.secret_key)}")
-                
-                login_result = login_user(user, remember=form.remember_me.data, force=True)
-                print(f"LOGIN DEBUG: login_user result: {login_result}")
-                print(f"LOGIN DEBUG: Session after login: {session}")
-                print(f"LOGIN DEBUG: current_user after login: {current_user}")
-                print(f"LOGIN DEBUG: current_user.is_authenticated: {current_user.is_authenticated}")
-                
-                flash(f'Welcome back! Logged in as {user.role}.', 'success')
-                
-                # Instead of redirecting to index, redirect directly to trade dashboard
-                if user.role == 'trade':
-                    print("LOGIN DEBUG: Redirecting directly to trade_dashboard")
-                    return redirect(url_for('trade_dashboard'))
-                elif user.role == 'customer':
-                    print("LOGIN DEBUG: Redirecting directly to customer_dashboard")
-                    return redirect(url_for('customer_dashboard'))
-                else:
-                    next_page = request.args.get('next')
-                    if not next_page or not next_page.startswith('/'):
-                        next_page = url_for('index')
-                    print(f"LOGIN DEBUG: Redirecting to: {next_page}")
-                    return redirect(next_page)
-            else:
-                flash('Invalid password. Please check your password and try again.', 'danger')
-        else:
-            flash('No account found with this email address.', 'danger')
-    else:
-        if request.method == 'POST':
-            flash('Please check your form inputs and try again.', 'danger')
+        if user and user.check_password(form.password.data):
+            login_user(user, remember=form.remember_me.data)
+            flash(f'Welcome back! Logged in as {user.role}.', 'success')
+            next_page = request.args.get('next')
+            if not next_page or not next_page.startswith('/'):
+                next_page = url_for('index')
+            return redirect(next_page)
+        flash('Invalid email or password', 'danger')
     
     return render_template('auth/login.html', form=form)
 
@@ -383,19 +338,9 @@ def job_detail(job_id):
 
 # Trade routes
 @app.route('/trade/dashboard')
+@login_required
 def trade_dashboard():
-    print(f"TRADE_DASHBOARD DEBUG: current_user.is_authenticated: {current_user.is_authenticated}")
-    print(f"TRADE_DASHBOARD DEBUG: current_user: {current_user}")
-    if hasattr(current_user, 'role'):
-        print(f"TRADE_DASHBOARD DEBUG: current_user.role: {current_user.role}")
-    
-    if not current_user.is_authenticated:
-        print("TRADE_DASHBOARD DEBUG: Not authenticated, redirecting to login")
-        flash('Please log in to access the trade dashboard.', 'info')
-        return redirect(url_for('login'))
-    
     if current_user.role != 'trade':
-        print(f"TRADE_DASHBOARD DEBUG: Wrong role ({current_user.role}), redirecting to index")
         flash('Access denied.', 'danger')
         return redirect(url_for('index'))
     

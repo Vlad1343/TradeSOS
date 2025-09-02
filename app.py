@@ -74,17 +74,18 @@ def create_app():
     login_manager.session_protection = "strong"
     login_manager.remember_cookie_duration = timedelta(days=1)
     
-    # Session configuration for better persistence
+    # Session configuration for proper persistence
     app.config['SESSION_PERMANENT'] = True
-    app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=1)
+    app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=7)
+    app.config['SESSION_COOKIE_SECURE'] = False  # Allow non-HTTPS for development
+    app.config['SESSION_COOKIE_HTTPONLY'] = True
+    app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
     
     # User loader function
     @login_manager.user_loader
     def load_user(user_id):
         from models import User
-        user = User.query.get(int(user_id))
-        print(f"USER_LOADER DEBUG: Loading user {user_id}, found: {user}")
-        return user
+        return User.query.get(int(user_id))
     
     # Create upload directory
     os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
