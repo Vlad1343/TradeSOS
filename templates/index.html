@@ -1,234 +1,165 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="hero-section bg-emergency text-white py-5 rounded mb-5">
-    <div class="row align-items-center">
-        <div class="col-lg-8">
-            <h1 class="display-4 fw-bold">Emergency Trade Services</h1>
-            <p class="lead">Connect instantly with verified trade professionals for urgent repairs and emergency callouts across the UK.</p>
+<!-- Hero Section -->
+<section class="tradesos-hero">
+    <div class="tradesos-hero-content">
+        <div class="tradesos-hero-text">
+            <h1>EMERGENCY TRADES<br>WHEN YOU NEED THEM.</h1>
+            <p class="hero-subtitle">CONNECT WITH VETTED EMERGENCY TRADE PROFESSIONALS ACROSS THE UK.</p>
+            <p class="hero-description">FAST RESPONSE, TRUSTED SERVICE, AVAILABLE 24/7.</p>
             
-            <div class="mt-4">
-                <a href="{{ url_for('job_request') }}" class="btn btn-light btn-lg me-3">
-                    <i class="fas fa-tools me-2"></i>Get Emergency Trade Access
+            <div class="tradesos-hero-features">
+                <div><i class="fas fa-check"></i> FULLY INSURED TRADES PROFESSIONALS</div>
+                <div><i class="fas fa-check"></i> AVERAGE RESPONSE TIME 15MINS</div>
+            </div>
+            
+            <!-- Mobile Buttons -->
+            <div style="margin-top: 40px;" class="mobile-buttons">
+                <a href="{{ url_for('job_request') }}" class="tradesos-btn tradesos-btn-outline tradesos-btn-block">
+                    <i class="fas fa-phone me-2"></i>GET EMERGENCY HELP NOW
                 </a>
-                <a href="{{ url_for('trade_directory') }}" class="btn btn-outline-light btn-lg">
-                    <i class="fas fa-search me-2"></i>Find Trades
+                <a href="{{ url_for('register') }}?role=trade" class="tradesos-btn tradesos-btn-white tradesos-btn-block">
+                    JOIN AS A TRADE PROFESSIONAL
                 </a>
             </div>
         </div>
-        <div class="col-lg-4 text-center">
-            <i class="fas fa-tools" style="font-size: 8rem; opacity: 0.3;"></i>
+        
+        <!-- Desktop Action Card -->
+        <div class="tradesos-action-card">
+            <h3>GET HELP NOW IN 3 SIMPLE STEPS.</h3>
+            
+            <div class="tradesos-step">
+                <div class="tradesos-step-number">1</div>
+                <div>DESCRIBE YOUR ISSUE</div>
+            </div>
+            
+            <div class="tradesos-step">
+                <div class="tradesos-step-number">2</div>
+                <div>MATCH WITH LOCAL TRADE</div>
+            </div>
+            
+            <div class="tradesos-step">
+                <div class="tradesos-step-number">3</div>
+                <div>TRACK ARRIVAL & GET HELP</div>
+            </div>
+            
+            <a href="{{ url_for('job_request') }}" class="tradesos-btn tradesos-btn-primary tradesos-btn-block mt-2">
+                <i class="fas fa-wrench me-2"></i>GET EMERGENCY HELP NOW
+            </a>
+            
+            <a href="{{ url_for('register') }}?role=trade" class="tradesos-btn tradesos-btn-black tradesos-btn-block" style="background-color: black; color: white; border-color: black;">
+                JOIN AS A TRADE PROFESSIONAL
+            </a>
         </div>
     </div>
-</div>
+</section>
 
-<!-- Emergency Categories -->
-<div class="row mb-5">
-    <div class="col-12">
-        <h2 class="text-center mb-4">Emergency Services Available</h2>
-    </div>
-    <div class="col-lg-3 col-md-4 col-sm-6 mb-3">
-        <div class="card service-card h-100 text-center">
-            <div class="card-body">
-                <i class="fas fa-wrench text-emergency mb-3" style="font-size: 2.5rem;"></i>
-                <h5 class="card-title">Plumbing</h5>
-                <p class="card-text">Burst pipes, leaks, blocked drains, boiler breakdowns</p>
-            </div>
+<!-- Emergency Trades Available Section -->
+<section class="tradesos-emergency-section">
+    <h2>EMERGENCY TRADES AVAILABLE</h2>
+    
+    <div class="tradesos-trades-grid">
+        <div class="tradesos-trade-card">
+            <h3>PLUMBER</h3>
+            <p style="margin: 15px 0; color: #666; text-transform: uppercase; font-size: 12px; letter-spacing: 0.5px;">
+                Burst pipes, leaks, blocked drains, boiler breakdowns
+            </p>
+            <a href="{{ url_for('job_request') }}" class="tradesos-btn tradesos-btn-primary">REQUEST NOW</a>
+        </div>
+        
+        <div class="tradesos-trade-card">
+            <h3>HEATING ENGINEER</h3>
+            <p style="margin: 15px 0; color: #666; text-transform: uppercase; font-size: 12px; letter-spacing: 0.5px;">
+                Boiler repairs, gas leaks, heating system failures
+            </p>
+            <a href="{{ url_for('job_request') }}" class="tradesos-btn tradesos-btn-primary">REQUEST NOW</a>
+        </div>
+        
+        <div class="tradesos-trade-card">
+            <h3>ELECTRICIAN</h3>
+            <p style="margin: 15px 0; color: #666; text-transform: uppercase; font-size: 12px; letter-spacing: 0.5px;">
+                Power outages, faulty wiring, emergency electrical repairs
+            </p>
+            <a href="{{ url_for('job_request') }}" class="tradesos-btn tradesos-btn-primary">REQUEST NOW</a>
         </div>
     </div>
-    <div class="col-lg-3 col-md-4 col-sm-6 mb-3">
-        <div class="card service-card h-100 text-center">
-            <div class="card-body">
-                <i class="fas fa-bolt text-warning mb-3" style="font-size: 2.5rem;"></i>
-                <h5 class="card-title">Electrical</h5>
-                <p class="card-text">Power outages, faulty wiring, emergency electrical repairs</p>
-            </div>
-        </div>
-    </div>
-    <div class="col-lg-3 col-md-4 col-sm-6 mb-3">
-        <div class="card service-card h-100 text-center">
-            <div class="card-body">
-                <i class="fas fa-fire text-danger mb-3" style="font-size: 2.5rem;"></i>
-                <h5 class="card-title">Heating & Gas</h5>
-                <p class="card-text">Boiler repairs, gas leaks, heating system failures</p>
-            </div>
-        </div>
-    </div>
-    <div class="col-lg-3 col-md-4 col-sm-6 mb-3">
-        <div class="card service-card h-100 text-center">
-            <div class="card-body">
-                <i class="fas fa-key text-info mb-3" style="font-size: 2.5rem;"></i>
-                <h5 class="card-title">Locksmith</h5>
-                <p class="card-text">Locked out, broken locks, security upgrades</p>
-            </div>
-        </div>
-    </div>
-    <div class="col-lg-3 col-md-4 col-sm-6 mb-3">
-        <div class="card service-card h-100 text-center">
-            <div class="card-body">
-                <i class="fas fa-home text-success mb-3" style="font-size: 2.5rem;"></i>
-                <h5 class="card-title">Roofing</h5>
-                <p class="card-text">Roof leaks, tile repairs, gutter problems, storm damage</p>
-            </div>
-        </div>
-    </div>
-    <div class="col-lg-3 col-md-4 col-sm-6 mb-3">
-        <div class="card service-card h-100 text-center">
-            <div class="card-body">
-                <i class="fas fa-cube text-primary mb-3" style="font-size: 2.5rem;"></i>
-                <h5 class="card-title">Glazier</h5>
-                <p class="card-text">Broken windows, glass repairs, emergency boarding</p>
-            </div>
-        </div>
-    </div>
-    <div class="col-lg-3 col-md-4 col-sm-6 mb-3">
-        <div class="card service-card h-100 text-center">
-            <div class="card-body">
-                <i class="fas fa-shield-alt text-dark mb-3" style="font-size: 2.5rem;"></i>
-                <h5 class="card-title">Security</h5>
-                <p class="card-text">Alarm systems, CCTV repairs, security door installation</p>
-            </div>
-        </div>
-    </div>
-</div>
+</section>
 
-<!-- How It Works -->
-<div class="row mb-5">
-    <div class="col-12">
-        <h2 class="text-center mb-4">How TradeSOS Works</h2>
-    </div>
-    <div class="col-lg-4 mb-4">
-        <div class="text-center">
-            <div class="step-number bg-emergency text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
-                <span class="h4 mb-0">1</span>
-            </div>
-            <h4>Report Emergency</h4>
-            <p>Describe your emergency, location, and urgency level. Upload photos if helpful.</p>
-        </div>
-    </div>
-    <div class="col-lg-4 mb-4">
-        <div class="text-center">
-            <div class="step-number bg-emergency text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
-                <span class="h4 mb-0">2</span>
-            </div>
-            <h4>Get Matched</h4>
-            <p>Verified trades in your area receive instant notifications. First to accept gets the job.</p>
-        </div>
-    </div>
-    <div class="col-lg-4 mb-4">
-        <div class="text-center">
-            <div class="step-number bg-emergency text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
-                <span class="h4 mb-0">3</span>
-            </div>
-            <h4>Problem Solved</h4>
-            <p>Track your tradesperson's arrival, communicate via chat, and leave a review when complete.</p>
-        </div>
-    </div>
-</div>
-
-<!-- Featured Verified Trades -->
-{% if trades %}
-<div class="row mb-5">
-    <div class="col-12">
-        <h2 class="text-center mb-4">Featured Verified Trades</h2>
-    </div>
-    {% for trade in trades %}
-    <div class="col-lg-4 col-md-6 mb-4">
-        <div class="card trade-card h-100">
-            <div class="card-body">
-                <div class="d-flex justify-content-between align-items-start mb-2">
-                    <h5 class="card-title">{{ trade.company }}</h5>
-                    {% if trade.verified %}
-                        <span class="badge bg-success">
-                            <i class="fas fa-check-circle me-1"></i>Verified
-                        </span>
-                    {% endif %}
+<!-- Additional Services -->
+<section style="background-color: white; padding: 40px 20px;">
+    <div style="max-width: 1200px; margin: 0 auto;">
+        <div class="tradesos-trades-grid">
+            <div class="tradesos-trade-card">
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <div style="background-color: var(--tradesos-red); color: white; padding: 15px; border-radius: 4px; display: inline-block; margin-bottom: 15px; text-transform: uppercase; font-weight: bold; letter-spacing: 1px; font-size: 12px;">
+                        UK COVERAGE
+                    </div>
                 </div>
-                
-                {% if trade.get_skills() %}
-                    <div class="mb-2">
-                        {% for skill in trade.get_skills()[:3] %}
-                            <span class="badge bg-secondary me-1">{{ skill }}</span>
-                        {% endfor %}
-                        {% if trade.get_skills()|length > 3 %}
-                            <span class="text-muted">+{{ trade.get_skills()|length - 3 }} more</span>
-                        {% endif %}
-                    </div>
-                {% endif %}
-                
-                {% if trade.rating_avg > 0 %}
-                    <div class="mb-2">
-                        <div class="rating">
-                            {% for i in range(1, 6) %}
-                                {% if i <= trade.rating_avg %}
-                                    <i class="fas fa-star text-warning"></i>
-                                {% else %}
-                                    <i class="far fa-star text-muted"></i>
-                                {% endif %}
-                            {% endfor %}
-                            <span class="ms-1 text-muted">({{ trade.review_count }} reviews)</span>
-                        </div>
-                    </div>
-                {% endif %}
-                
-                {% if trade.get_coverage_areas() %}
-                    <p class="card-text small text-muted">
-                        <i class="fas fa-map-marker-alt me-1"></i>
-                        Coverage: {{ trade.get_coverage_areas()[:3]|join(', ') }}
-                        {% if trade.get_coverage_areas()|length > 3 %}...{% endif %}
-                    </p>
-                {% endif %}
+                <h3 style="text-align: center;">NATIONWIDE<br>EMERGENCY RESPONSE</h3>
             </div>
-            <div class="card-footer bg-transparent">
-                <a href="{{ url_for('trade_directory') }}" class="btn btn-outline-emergency btn-sm">
-                    View Details
-                </a>
+            
+            <div class="tradesos-trade-card">
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <div style="background-color: var(--tradesos-red); color: white; padding: 15px; border-radius: 4px; display: inline-block; margin-bottom: 15px; text-transform: uppercase; font-weight: bold; letter-spacing: 1px; font-size: 12px;">
+                        24/7 AVAILABLE
+                    </div>
+                </div>
+                <h3 style="text-align: center;">ROUND THE CLOCK<br>EMERGENCY SUPPORT</h3>
             </div>
         </div>
     </div>
-    {% endfor %}
-</div>
+</section>
 
-<div class="text-center mb-5">
-    <a href="{{ url_for('trade_directory') }}" class="btn btn-emergency btn-lg">
-        <i class="fas fa-search me-2"></i>View All Verified Trades
-    </a>
-</div>
-{% endif %}
+<style>
+/* Mobile-specific adjustments */
+@media (max-width: 768px) {
+    .tradesos-action-card {
+        display: none;
+    }
+    
+    .mobile-buttons {
+        display: block !important;
+    }
+    
+    .tradesos-hero {
+        padding: 40px 20px 60px 20px;
+    }
+    
+    .tradesos-hero-content {
+        display: block;
+        text-align: center;
+    }
+    
+    .tradesos-hero-text h1 {
+        font-size: 28px;
+        line-height: 1.2;
+    }
+    
+    .tradesos-hero-text .hero-subtitle {
+        font-size: 14px;
+    }
+    
+    .tradesos-hero-text .hero-description {
+        font-size: 13px;
+    }
+    
+    .tradesos-hero-features {
+        font-size: 12px;
+        margin: 20px 0;
+        justify-content: center;
+    }
+    
+    .tradesos-hero-features div {
+        justify-content: center;
+        margin: 8px 0;
+    }
+}
 
-<!-- Trust Indicators -->
-<div class="row bg-light py-5 rounded mb-5">
-    <div class="col-12 text-center mb-4">
-        <h2>Why Choose TradeSOS?</h2>
-    </div>
-    <div class="col-md-4 text-center mb-3">
-        <i class="fas fa-shield-alt text-emergency mb-3" style="font-size: 3rem;"></i>
-        <h4>Verified Professionals</h4>
-        <p>All trades are background checked with valid insurance and qualifications.</p>
-    </div>
-    <div class="col-md-4 text-center mb-3">
-        <i class="fas fa-clock text-emergency mb-3" style="font-size: 3rem;"></i>
-        <h4>Rapid Response</h4>
-        <p>Emergency callouts with response times from immediate to next day.</p>
-    </div>
-    <div class="col-md-4 text-center mb-3">
-        <i class="fas fa-map-marked-alt text-emergency mb-3" style="font-size: 3rem;"></i>
-        <h4>UK-Wide Coverage</h4>
-        <p>Thousands of verified trades covering all UK postcode areas.</p>
-    </div>
-</div>
-
-<!-- Call to Action -->
-<div class="text-center bg-emergency text-white py-5 rounded">
-    <h2>Need Emergency Help Now?</h2>
-    <p class="lead">Get connected with verified trade professionals instantly - no registration required.</p>
-    <div class="mt-4">
-        <a href="{{ url_for('job_request') }}" class="btn btn-light btn-lg me-3">
-            <i class="fas fa-tools me-2"></i>Get Emergency Trade Access
-        </a>
-        <a href="{{ url_for('register') }}?role=trade" class="btn btn-outline-light btn-lg">
-            <i class="fas fa-briefcase me-2"></i>Join as a Trade Professional
-        </a>
-    </div>
-</div>
+@media (min-width: 769px) {
+    .mobile-buttons {
+        display: none !important;
+    }
+}
+</style>
 {% endblock %}
