@@ -50,9 +50,6 @@
                             <i class="fas fa-sign-out-alt" style="margin-right: 4px;"></i>Logout
                         </a>
                     {% else %}
-                        <a href="{{ url_for('job_request') }}" class="nav-link">
-                            <i class="fas fa-exclamation-triangle" style="margin-right: 4px;"></i>Get Help
-                        </a>
                         <a href="{{ url_for('trade_directory') }}" class="nav-link">Find Trades</a>
                         <a href="{{ url_for('login') }}" class="nav-link">Login</a>
                         <a href="{{ url_for('register') }}?role=trade" class="btn btn-primary" style="margin-left: 16px;">
