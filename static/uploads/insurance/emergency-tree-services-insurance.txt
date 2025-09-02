@@ -1,0 +1,52 @@
+SAMPLE INSURANCE CERTIFICATE
+=============================
+
+Company: Emergency Tree Services Ltd
+Companies House Number: 87654321
+VAT Number: GB987654321
+
+INSURANCE DETAILS
+-----------------
+Policy Number: INS-2024-ETS-002
+Insurance Provider: ArborSafe Insurance Ltd
+Policy Type: Specialist Tree Surgery & Public Liability Insurance
+
+Coverage Details:
+- Public Liability: £5,000,000
+- Employers Liability: £10,000,000
+- Professional Indemnity: £2,000,000
+- Plant & Equipment: £150,000
+- Motor Fleet: £75,000
+
+Policy Period: 15/03/2024 - 14/03/2025
+Premium: £3,847.50 (Paid in full)
+
+VERIFIED COVERAGES
+------------------
+✓ Tree Surgery Public Liability Insurance
+✓ Employers Liability Insurance 
+✓ Professional Indemnity Insurance
+✓ Plant and Machinery Cover
+✓ Motor Fleet Insurance
+✓ Environmental Liability
+✓ Aerial Work Platform Cover
+
+Specialized Coverage:
+- Tree removal and felling operations
+- Emergency storm damage response
+- Aerial work up to 30m height
+- Stump grinding operations
+- Highway tree work
+
+Contact Information:
+ArborSafe Insurance Ltd
+Phone: 0800 987 6543
+Email: claims@arborsafe-insurance.co.uk
+Web: www.arborsafe-insurance.co.uk
+
+This certificate is valid for verification purposes.
+Document Generated: 02/09/2025
+
+---
+This is a sample insurance certificate for testing purposes.
+In a real application, this would be a PDF document provided by the trade professional.
