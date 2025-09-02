@@ -37,7 +37,7 @@ def index():
     
     # Show public trade directory for anonymous users
     verified_trades = Trade.query.filter_by(verified=True).limit(6).all()
-    return render_template('index.html', trades=verified_trades)
+    return render_template('index_checkatrade.html', trades=verified_trades)
 
 @app.route('/trade-directory')
 def trade_directory():
@@ -205,7 +205,7 @@ def job_request():
     if request.method == 'GET':
         # Get pre-selected category from URL parameter
         selected_category = request.args.get('category', '')
-        return render_template('job_request.html', selected_category=selected_category)
+        return render_template('job_request_checkatrade.html', selected_category=selected_category)
     
     # Handle form submission
     try:
@@ -287,11 +287,11 @@ def job_request():
         matching_trades = find_matching_trades(job)
         send_job_notification(job, matching_trades)
         
-        return render_template('job_request.html', success=True)
+        return render_template('job_request_checkatrade.html', success=True)
         
     except Exception as e:
         flash('Something went wrong. Please try again.', 'danger')
-        return render_template('job_request.html')
+        return render_template('job_request_checkatrade.html')
 
 @app.route('/create-job', methods=['GET', 'POST'])
 def create_job():
@@ -545,7 +545,7 @@ def admin_dashboard():
     recent_jobs = Job.query.order_by(Job.created_at.desc()).limit(5).all()
     recent_trades = Trade.query.order_by(Trade.created_at.desc()).limit(5).all()
     
-    return render_template('admin/dashboard.html', stats=stats, recent_jobs=recent_jobs, recent_trades=recent_trades)
+    return render_template('admin/dashboard_checkatrade.html', stats=stats, recent_jobs=recent_jobs, recent_trades=recent_trades)
 
 @app.route('/admin/trades')
 @login_required
@@ -557,7 +557,7 @@ def admin_trades():
     page = request.args.get('page', 1, type=int)
     trades = Trade.query.paginate(page=page, per_page=20, error_out=False)
     
-    return render_template('admin/trades.html', trades=trades)
+    return render_template('admin/trades_checkatrade.html', trades=trades)
 
 @app.route('/admin/trade-details/<int:trade_id>')
 @login_required

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}TradeSOS - Emergency Trade Services{% endblock %}</title>
+    
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/checkatrade-style.css') }}">
+    
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-content">
+                <a href="{{ url_for('index') }}" class="navbar-brand">
+                    <img src="{{ url_for('static', filename='images/tradesos-logo.png') }}" alt="TradeSOS" style="height: 32px; margin-right: 8px;">
+                    TradeSOS
+                </a>
+                
+                <div class="navbar-nav">
+                    {% if current_user.is_authenticated %}
+                        {% if current_user.role == 'admin' %}
+                            <a href="{{ url_for('admin_dashboard') }}" class="nav-link">
+                                <i class="fas fa-tachometer-alt" style="margin-right: 4px;"></i>Dashboard
+                            </a>
+                            <a href="{{ url_for('admin_trades') }}" class="nav-link">
+                                <i class="fas fa-users" style="margin-right: 4px;"></i>Trades
+                            </a>
+                        {% elif current_user.role == 'trade' %}
+                            <a href="{{ url_for('trade_dashboard') }}" class="nav-link">
+                                <i class="fas fa-tachometer-alt" style="margin-right: 4px;"></i>Dashboard
+                            </a>
+                            <a href="{{ url_for('trade_profile') }}" class="nav-link">
+                                <i class="fas fa-user" style="margin-right: 4px;"></i>Profile
+                            </a>
+                        {% elif current_user.role == 'customer' %}
+                            <a href="{{ url_for('customer_dashboard') }}" class="nav-link">
+                                <i class="fas fa-tachometer-alt" style="margin-right: 4px;"></i>Dashboard
+                            </a>
+                        {% endif %}
+                        
+                        <a href="{{ url_for('logout') }}" class="nav-link">
+                            <i class="fas fa-sign-out-alt" style="margin-right: 4px;"></i>Logout
+                        </a>
+                    {% else %}
+                        <a href="{{ url_for('job_request') }}" class="nav-link">
+                            <i class="fas fa-exclamation-triangle" style="margin-right: 4px;"></i>Get Help
+                        </a>
+                        <a href="{{ url_for('trade_directory') }}" class="nav-link">Find Trades</a>
+                        <a href="{{ url_for('login') }}" class="nav-link">Login</a>
+                        <a href="{{ url_for('register') }}?role=trade" class="btn btn-primary" style="margin-left: 16px;">
+                            Join as Trade
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="container" style="padding-top: 20px;">
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ 'danger' if category == 'error' else category }}">
+                        {% if category == 'success' %}
+                            <i class="fas fa-check-circle" style="margin-right: 8px;"></i>
+                        {% elif category == 'error' or category == 'danger' %}
+                            <i class="fas fa-exclamation-triangle" style="margin-right: 8px;"></i>
+                        {% elif category == 'warning' %}
+                            <i class="fas fa-exclamation-circle" style="margin-right: 8px;"></i>
+                        {% else %}
+                            <i class="fas fa-info-circle" style="margin-right: 8px;"></i>
+                        {% endif %}
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <!-- Main Content -->
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>Emergency Trades</h4>
+                    <a href="{{ url_for('job_request') }}?category=plumbing">Plumber</a>
+                    <a href="{{ url_for('job_request') }}?category=electrical">Electrician</a>
+                    <a href="{{ url_for('job_request') }}?category=heating">Heating Engineer</a>
+                    <a href="{{ url_for('job_request') }}?category=locksmith">Locksmith</a>
+                    <a href="{{ url_for('job_request') }}?category=roofing">Roofer</a>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>For Trade Professionals</h4>
+                    <a href="{{ url_for('register') }}?role=trade">Join TradeSOS</a>
+                    <a href="{{ url_for('login') }}">Trade Login</a>
+                    <a href="#pricing">Pricing Plans</a>
+                    <a href="#support">Support</a>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Support</h4>
+                    <a href="#help">Help Center</a>
+                    <a href="#contact">Contact Us</a>
+                    <a href="#safety">Safety Guidelines</a>
+                    <a href="#guarantee">Our Guarantee</a>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Company</h4>
+                    <a href="#about">About TradeSOS</a>
+                    <a href="#careers">Careers</a>
+                    <a href="#privacy">Privacy Policy</a>
+                    <a href="#terms">Terms of Service</a>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2025 TradeSOS. All rights reserved. Emergency trade services across the UK.</p>
+            </div>
+        </div>
+    </footer>
+
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

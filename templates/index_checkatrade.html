@@ -1,0 +1,148 @@
+{% extends "base_checkatrade.html" %}
+
+{% block content %}
+<!-- Hero Section - Checkatrade inspired -->
+<section class="hero-section">
+    <div class="container">
+        <h1 class="hero-title">Find emergency trades you can trust</h1>
+        <p class="hero-subtitle">Get your emergency sorted with verified, insured trade professionals across the UK</p>
+        
+        <div class="hero-search">
+            <form action="{{ url_for('job_request') }}" method="GET">
+                <input type="text" class="search-input" name="q" placeholder="What's your emergency? e.g., burst pipe, power outage, broken lock...">
+                <button type="submit" class="search-btn">Get Help Now</button>
+            </form>
+        </div>
+        
+        <!-- Quick emergency examples -->
+        <div style="margin-top: 32px; display: flex; justify-content: center; gap: 16px; flex-wrap: wrap;">
+            <a href="{{ url_for('job_request') }}?category=plumbing" style="background: var(--tradesos-white); padding: 8px 16px; border-radius: 20px; text-decoration: none; color: var(--tradesos-black); font-size: 14px; border: 1px solid var(--tradesos-gray-dark);">🔧 Burst pipe emergency</a>
+            <a href="{{ url_for('job_request') }}?category=electrical" style="background: var(--tradesos-white); padding: 8px 16px; border-radius: 20px; text-decoration: none; color: var(--tradesos-black); font-size: 14px; border: 1px solid var(--tradesos-gray-dark);">⚡ Power outage</a>
+            <a href="{{ url_for('job_request') }}?category=locksmith" style="background: var(--tradesos-white); padding: 8px 16px; border-radius: 20px; text-decoration: none; color: var(--tradesos-black); font-size: 14px; border: 1px solid var(--tradesos-gray-dark);">🔐 Locked out</a>
+            <a href="{{ url_for('job_request') }}?category=heating" style="background: var(--tradesos-white); padding: 8px 16px; border-radius: 20px; text-decoration: none; color: var(--tradesos-black); font-size: 14px; border: 1px solid var(--tradesos-gray-dark);">🔥 Boiler breakdown</a>
+        </div>
+    </div>
+</section>
+
+<!-- Categories Section -->
+<section class="categories-section">
+    <div class="container">
+        <h2 class="section-title">Browse our most popular emergency trades</h2>
+        
+        <div class="categories-grid">
+            <div class="category-card">
+                <div class="category-icon">🔧</div>
+                <h3 class="category-title">Plumber</h3>
+                <p class="category-description">Burst pipes, leaks, blocked drains, boiler breakdowns</p>
+                <a href="{{ url_for('job_request') }}?category=plumbing" class="category-btn">Get Help Now</a>
+            </div>
+            
+            <div class="category-card">
+                <div class="category-icon">⚡</div>
+                <h3 class="category-title">Electrician</h3>
+                <p class="category-description">Power outages, faulty wiring, emergency electrical repairs</p>
+                <a href="{{ url_for('job_request') }}?category=electrical" class="category-btn">Get Help Now</a>
+            </div>
+            
+            <div class="category-card">
+                <div class="category-icon">🔐</div>
+                <h3 class="category-title">Locksmith</h3>
+                <p class="category-description">Lockouts, broken locks, security upgrades, key cutting</p>
+                <a href="{{ url_for('job_request') }}?category=locksmith" class="category-btn">Get Help Now</a>
+            </div>
+            
+            <div class="category-card">
+                <div class="category-icon">🔥</div>
+                <h3 class="category-title">Heating Engineer</h3>
+                <p class="category-description">Boiler repairs, gas leaks, heating system failures</p>
+                <a href="{{ url_for('job_request') }}?category=heating" class="category-btn">Get Help Now</a>
+            </div>
+            
+            <div class="category-card">
+                <div class="category-icon">🏠</div>
+                <h3 class="category-title">Roofer</h3>
+                <p class="category-description">Emergency roof repairs, leaks, storm damage, tiles</p>
+                <a href="{{ url_for('job_request') }}?category=roofing" class="category-btn">Get Help Now</a>
+            </div>
+            
+            <div class="category-card">
+                <div class="category-icon">🛡️</div>
+                <h3 class="category-title">Security</h3>
+                <p class="category-description">Alarm systems, CCTV repairs, access control issues</p>
+                <a href="{{ url_for('job_request') }}?category=security" class="category-btn">Get Help Now</a>
+            </div>
+            
+            <div class="category-card">
+                <div class="category-icon">🪟</div>
+                <h3 class="category-title">Emergency Glazier</h3>
+                <p class="category-description">Broken windows, glass doors, emergency boarding up</p>
+                <a href="{{ url_for('job_request') }}?category=glazing" class="category-btn">Get Help Now</a>
+            </div>
+            
+            <div class="category-card">
+                <div class="category-icon">🌳</div>
+                <h3 class="category-title">Tree Surgeon</h3>
+                <p class="category-description">Emergency tree removal, storm damage, dangerous trees</p>
+                <a href="{{ url_for('job_request') }}?category=tree_surgery" class="category-btn">Get Help Now</a>
+            </div>
+            
+            <div class="category-card">
+                <div class="category-icon">🚗</div>
+                <h3 class="category-title">Emergency Mechanic</h3>
+                <p class="category-description">Breakdown service, mobile repairs, battery replacement</p>
+                <a href="{{ url_for('job_request') }}?category=automotive" class="category-btn">Get Help Now</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Trust Section - Adapted from Checkatrade's trust indicators -->
+<section class="trust-section">
+    <div class="container">
+        <div class="trust-grid">
+            <div class="trust-item">
+                <div class="trust-icon">
+                    <i class="fas fa-shield-check"></i>
+                </div>
+                <h3 class="trust-title">Verified</h3>
+                <p class="trust-description">Every TradeSOS professional has passed comprehensive background checks and insurance verification</p>
+            </div>
+            
+            <div class="trust-item">
+                <div class="trust-icon">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <h3 class="trust-title">Fast Response</h3>
+                <p class="trust-description">Average response time of 15 minutes for emergency callouts across the UK</p>
+            </div>
+            
+            <div class="trust-item">
+                <div class="trust-icon">
+                    <i class="fas fa-star"></i>
+                </div>
+                <h3 class="trust-title">Quality Guaranteed</h3>
+                <p class="trust-description">All work is fully insured and comes with our satisfaction guarantee</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Call to Action Section -->
+<section class="categories-section">
+    <div class="container">
+        <div style="text-align: center; max-width: 600px; margin: 0 auto;">
+            <h2 style="font-size: 32px; margin-bottom: 16px; color: var(--tradesos-black);">Need emergency help right now?</h2>
+            <p style="font-size: 18px; color: var(--tradesos-gray-text); margin-bottom: 32px;">Don't wait - our verified trade professionals are standing by to help with your emergency</p>
+            
+            <div style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;">
+                <a href="{{ url_for('job_request') }}" class="btn btn-primary btn-large">
+                    <i class="fas fa-phone" style="margin-right: 8px;"></i>Get Emergency Help Now
+                </a>
+                <a href="{{ url_for('register') }}?role=trade" class="btn btn-outline btn-large">
+                    Join as a Trade Professional
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
