@@ -67,19 +67,12 @@ def create_app():
     mail.init_app(app)
     csrf.init_app(app)
     
-    # Login manager configuration
+    # Login manager configuration - SIMPLIFIED
     login_manager.login_view = 'login'
     login_manager.login_message = 'Please log in to access this page.'
     login_manager.login_message_category = 'info'
-    login_manager.session_protection = "strong"
+    login_manager.session_protection = None  # Disable session protection
     login_manager.remember_cookie_duration = timedelta(days=1)
-    
-    # Session configuration for proper persistence
-    app.config['SESSION_PERMANENT'] = True
-    app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=7)
-    app.config['SESSION_COOKIE_SECURE'] = False  # Allow non-HTTPS for development
-    app.config['SESSION_COOKIE_HTTPONLY'] = True
-    app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
     
     # User loader function
     @login_manager.user_loader
