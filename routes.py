@@ -19,10 +19,10 @@ def allowed_file(filename):
     ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'pdf', 'doc', 'docx'}
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-# Simple session setup
+# Session setup
 @app.before_request
 def setup_session():
-    pass
+    session.permanent = True
 
 # Public routes
 @app.route('/')
@@ -83,8 +83,9 @@ def login():
             flash('Invalid email or password', 'danger')
             return render_template('auth/login.html')
         
-        # Login successful - force login without any complex session handling
-        login_user(user, remember=False, force=True)
+        # Login successful - ensure session persists
+        session['user_id'] = user.id
+        login_user(user, remember=True, force=True, fresh=True)
         
         # Immediate redirect to trade dashboard
         if user.role == 'trade':
