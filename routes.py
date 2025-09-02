@@ -203,7 +203,9 @@ def customer_dashboard():
 @app.route('/job-request', methods=['GET', 'POST'])
 def job_request():
     if request.method == 'GET':
-        return render_template('job_request.html')
+        # Get pre-selected category from URL parameter
+        selected_category = request.args.get('category', '')
+        return render_template('job_request.html', selected_category=selected_category)
     
     # Handle form submission
     try:

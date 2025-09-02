@@ -67,15 +67,17 @@
                         <label for="category">Trade Type *</label>
                         <select id="category" name="category" required>
                             <option value="">Select trade type...</option>
-                            <option value="plumbing">🔧 Plumbing</option>
-                            <option value="heating">🔥 Heating & Boilers</option>
-                            <option value="electrical">⚡ Electrical</option>
-                            <option value="gas">⛽ Gas Safety</option>
-                            <option value="roofing">🏠 Roofing</option>
-                            <option value="locksmith">🔐 Locksmith</option>
-                            <option value="glazing">🪟 Emergency Glazier</option>
-                            <option value="security">🛡️ Security Systems</option>
-                            <option value="other">❓ Other Emergency</option>
+                            <option value="plumbing" {{ 'selected' if selected_category == 'plumbing' }}>🔧 Plumbing</option>
+                            <option value="heating" {{ 'selected' if selected_category == 'heating' }}>🔥 Heating & Boilers</option>
+                            <option value="electrical" {{ 'selected' if selected_category == 'electrical' }}>⚡ Electrical</option>
+                            <option value="gas" {{ 'selected' if selected_category == 'gas' }}>⛽ Gas Safety</option>
+                            <option value="roofing" {{ 'selected' if selected_category == 'roofing' }}>🏠 Roofing</option>
+                            <option value="locksmith" {{ 'selected' if selected_category == 'locksmith' }}>🔐 Locksmith</option>
+                            <option value="security" {{ 'selected' if selected_category == 'security' }}>🛡️ Security Systems</option>
+                            <option value="glazing" {{ 'selected' if selected_category == 'glazing' }}>🪟 Emergency Glazing</option>
+                            <option value="tree_surgery" {{ 'selected' if selected_category == 'tree_surgery' }}>🌳 Tree Surgery</option>
+                            <option value="automotive" {{ 'selected' if selected_category == 'automotive' }}>🔧 Emergency Mechanic</option>
+                            <option value="other" {{ 'selected' if selected_category == 'other' }}>❓ Other Emergency</option>
                         </select>
                     </div>
                 </div>
