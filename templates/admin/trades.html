@@ -3,288 +3,240 @@
 {% block title %}Manage Trades - Admin - TradeSOS{% endblock %}
 
 {% block content %}
-<div class="row mb-4">
-    <div class="col-12 d-flex justify-content-between align-items-center">
+<div style="max-width: 1200px; margin: 0 auto; padding: 20px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
         <div>
-            <h1>Manage Trade Professionals</h1>
-            <p class="text-muted">Verify and manage trade professional accounts</p>
+            <h1 style="color: var(--tradesos-red); font-size: 2.5rem; margin-bottom: 10px;">MANAGE TRADE PROFESSIONALS</h1>
+            <p style="color: var(--tradesos-gray-text); font-size: 1.1rem;">Verify and manage trade professional accounts</p>
         </div>
-        <a href="{{ url_for('admin_dashboard') }}" class="btn btn-outline-secondary">
-            <i class="fas fa-arrow-left me-1"></i>Back to Dashboard
+        <a href="{{ url_for('admin_dashboard') }}" style="background: var(--tradesos-gray-dark); color: var(--tradesos-black); padding: 12px 20px; text-decoration: none; border-radius: 5px; font-weight: 600;">
+            <i class="fas fa-arrow-left" style="margin-right: 8px;"></i>BACK TO DASHBOARD
         </a>
     </div>
-</div>
 
-<!-- Filters and Search -->
-<div class="row mb-4">
-    <div class="col-12">
-        <div class="card">
-            <div class="card-body">
-                <form method="GET" class="row align-items-end">
-                    <div class="col-md-4 mb-2">
-                        <label class="form-label">Search</label>
-                        <input type="text" name="search" class="form-control" 
-                               placeholder="Company name or email" 
-                               value="{{ request.args.get('search', '') }}">
-                    </div>
-                    <div class="col-md-3 mb-2">
-                        <label class="form-label">Verification Status</label>
-                        <select name="verified" class="form-select">
-                            <option value="">All</option>
-                            <option value="true" {{ 'selected' if request.args.get('verified') == 'true' }}>Verified</option>
-                            <option value="false" {{ 'selected' if request.args.get('verified') == 'false' }}>Pending</option>
-                        </select>
-                    </div>
-                    <div class="col-md-3 mb-2">
-                        <label class="form-label">Plan Type</label>
-                        <select name="plan" class="form-select">
-                            <option value="">All Plans</option>
-                            <option value="standard" {{ 'selected' if request.args.get('plan') == 'standard' }}>Standard</option>
-                            <option value="premium" {{ 'selected' if request.args.get('plan') == 'premium' }}>Premium</option>
-                        </select>
-                    </div>
-                    <div class="col-md-2 mb-2">
-                        <button type="submit" class="btn btn-primary w-100">
-                            <i class="fas fa-search me-1"></i>Filter
-                        </button>
-                    </div>
-                </form>
+    <!-- Filters and Search -->
+    <div style="background: white; padding: 25px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); margin-bottom: 30px;">
+        <h3 style="color: var(--tradesos-red); margin-bottom: 20px;">
+            <i class="fas fa-filter" style="margin-right: 10px;"></i>FILTER OPTIONS
+        </h3>
+        <form method="GET" style="display: grid; grid-template-columns: 1fr 1fr 1fr auto; gap: 15px; align-items: end;">
+            <div>
+                <label style="display: block; margin-bottom: 5px; font-weight: 600; color: var(--tradesos-black);">Search</label>
+                <input type="text" name="search" style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 5px; font-size: 14px;" 
+                       placeholder="Company name or email" 
+                       value="{{ request.args.get('search', '') }}">
+            </div>
+            <div>
+                <label style="display: block; margin-bottom: 5px; font-weight: 600; color: var(--tradesos-black);">Verification Status</label>
+                <select name="verified" style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 5px; font-size: 14px;">
+                    <option value="">All</option>
+                    <option value="true" {{ 'selected' if request.args.get('verified') == 'true' }}>Verified</option>
+                    <option value="false" {{ 'selected' if request.args.get('verified') == 'false' }}>Pending</option>
+                </select>
+            </div>
+            <div>
+                <label style="display: block; margin-bottom: 5px; font-weight: 600; color: var(--tradesos-black);">Plan Type</label>
+                <select name="plan" style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 5px; font-size: 14px;">
+                    <option value="">All Plans</option>
+                    <option value="standard" {{ 'selected' if request.args.get('plan') == 'standard' }}>Standard</option>
+                    <option value="premium" {{ 'selected' if request.args.get('plan') == 'premium' }}>Premium</option>
+                </select>
+            </div>
+            <button type="submit" style="background: var(--tradesos-red); color: white; padding: 10px 20px; border: none; border-radius: 5px; font-weight: 600; cursor: pointer;">
+                <i class="fas fa-search" style="margin-right: 8px;"></i>FILTER
+            </button>
+        </form>
+    </div>
+
+    <!-- Bulk Actions -->
+    <div style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); margin-bottom: 20px;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h4 style="color: var(--tradesos-red); margin: 0;">
+                <i class="fas fa-users" style="margin-right: 10px;"></i>TRADE PROFESSIONALS
+                <span style="background: var(--tradesos-gray-dark); color: var(--tradesos-black); padding: 4px 12px; border-radius: 15px; margin-left: 10px; font-size: 14px;">{{ trades.total if trades else 0 }}</span>
+            </h4>
+            <div style="display: flex; gap: 10px;">
+                <button style="background: #28a745; color: white; padding: 8px 16px; border: none; border-radius: 5px; font-weight: 600; cursor: pointer;" onclick="verifySelected()">
+                    <i class="fas fa-check" style="margin-right: 5px;"></i>VERIFY SELECTED
+                </button>
+                <button style="background: #ffc107; color: black; padding: 8px 16px; border: none; border-radius: 5px; font-weight: 600; cursor: pointer;" onclick="unverifySelected()">
+                    <i class="fas fa-times" style="margin-right: 5px;"></i>UNVERIFY SELECTED
+                </button>
             </div>
         </div>
     </div>
-</div>
 
-<!-- Trades List -->
-<div class="row">
-    <div class="col-12">
-        <div class="card shadow">
-            <div class="card-header d-flex justify-content-between align-items-center">
-                <h5 class="mb-0">
-                    <i class="fas fa-users me-2"></i>Trade Professionals
-                    <span class="badge bg-secondary ms-2">{{ trades.total }}</span>
-                </h5>
+    <!-- Trades List -->
+    <div style="background: white; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+        {% if trades and trades.items %}
+            <!-- Table Header -->
+            <div style="background: var(--tradesos-gray); padding: 15px 20px; border-radius: 8px 8px 0 0; display: grid; grid-template-columns: 30px 2fr 1.5fr 1fr 1fr 1fr 1fr 100px; gap: 15px; font-weight: 600; border-bottom: 2px solid #ddd;">
+                <input type="checkbox" id="selectAll" onchange="toggleAll()" style="transform: scale(1.2);">
+                <div>COMPANY</div>
+                <div>CONTACT</div>
+                <div>SKILLS</div>
+                <div>COVERAGE</div>
+                <div>STATUS</div>
+                <div>PLAN</div>
+                <div>ACTIONS</div>
+            </div>
+
+            <!-- Trade Rows -->
+            {% for trade in trades.items %}
+            <div style="padding: 20px; border-bottom: 1px solid #eee; display: grid; grid-template-columns: 30px 2fr 1.5fr 1fr 1fr 1fr 1fr 100px; gap: 15px; align-items: center; transition: background 0.3s;" onmouseover="this.style.background='#f8f9fa'" onmouseout="this.style.background='white'">
+                <input type="checkbox" class="trade-checkbox" value="{{ trade.id }}" style="transform: scale(1.2);">
+                
                 <div>
-                    <button class="btn btn-outline-success btn-sm" onclick="verifySelected()">
-                        <i class="fas fa-check me-1"></i>Verify Selected
-                    </button>
-                    <button class="btn btn-outline-warning btn-sm" onclick="unverifySelected()">
-                        <i class="fas fa-times me-1"></i>Unverify Selected
+                    <strong style="color: var(--tradesos-black); font-size: 16px;">{{ trade.company }}</strong>
+                    {% if trade.vat_number %}
+                        <br><small style="color: var(--tradesos-gray-text);">VAT: {{ trade.vat_number }}</small>
+                    {% endif %}
+                </div>
+                
+                <div>
+                    <div style="color: var(--tradesos-black);">{{ trade.user.email if trade.user else 'N/A' }}</div>
+                    <small style="color: var(--tradesos-gray-text);">Reg: {{ trade.created_at.strftime('%d/%m/%Y') }}</small>
+                </div>
+                
+                <div>
+                    {% if trade.get_skills() %}
+                        {% for skill in trade.get_skills()[:2] %}
+                            <span style="background: var(--tradesos-gray-dark); color: var(--tradesos-black); padding: 3px 8px; border-radius: 12px; font-size: 12px; margin-right: 5px; margin-bottom: 3px; display: inline-block;">{{ skill }}</span>
+                        {% endfor %}
+                        {% if trade.get_skills()|length > 2 %}
+                            <span style="color: var(--tradesos-gray-text); font-size: 12px;">+{{ trade.get_skills()|length - 2 }}</span>
+                        {% endif %}
+                    {% else %}
+                        <span style="color: var(--tradesos-gray-text);">None listed</span>
+                    {% endif %}
+                </div>
+                
+                <div>
+                    {% if trade.get_coverage_areas() %}
+                        {% for area in trade.get_coverage_areas()[:2] %}
+                            <span style="background: #17a2b8; color: white; padding: 3px 8px; border-radius: 12px; font-size: 12px; margin-right: 5px; margin-bottom: 3px; display: inline-block;">{{ area }}</span>
+                        {% endfor %}
+                        {% if trade.get_coverage_areas()|length > 2 %}
+                            <span style="color: var(--tradesos-gray-text); font-size: 12px;">+{{ trade.get_coverage_areas()|length - 2 }}</span>
+                        {% endif %}
+                    {% else %}
+                        <span style="color: var(--tradesos-gray-text);">Not set</span>
+                    {% endif %}
+                </div>
+                
+                <div style="display: flex; flex-direction: column; gap: 5px;">
+                    {% if trade.verified %}
+                        <span style="background: #28a745; color: white; padding: 4px 8px; border-radius: 12px; font-size: 12px; text-align: center;">
+                            <i class="fas fa-check-circle"></i> VERIFIED
+                        </span>
+                    {% else %}
+                        <span style="background: #ffc107; color: black; padding: 4px 8px; border-radius: 12px; font-size: 12px; text-align: center;">
+                            <i class="fas fa-clock"></i> PENDING
+                        </span>
+                    {% endif %}
+                    
+                    {% if trade.insurance_document_url %}
+                        <span style="background: #17a2b8; color: white; padding: 2px 6px; border-radius: 10px; font-size: 10px; text-align: center;">
+                            <i class="fas fa-shield-alt"></i> INSURED
+                        </span>
+                    {% else %}
+                        <span style="background: var(--tradesos-red); color: white; padding: 2px 6px; border-radius: 10px; font-size: 10px; text-align: center;">
+                            <i class="fas fa-exclamation-triangle"></i> NO INSURANCE
+                        </span>
+                    {% endif %}
+                </div>
+                
+                <div style="text-align: center;">
+                    <span style="background: {{ '#ffc107' if trade.plan_tier == 'premium' else 'var(--tradesos-gray-dark)' }}; color: {{ 'black' if trade.plan_tier == 'premium' else 'var(--tradesos-black)' }}; padding: 6px 10px; border-radius: 12px; font-size: 12px; font-weight: 600;">
+                        {% if trade.plan_tier == 'premium' %}
+                            <i class="fas fa-crown"></i> PREMIUM
+                        {% else %}
+                            <i class="fas fa-user"></i> STANDARD
+                        {% endif %}
+                    </span>
+                    {% if trade.subscription_status %}
+                        <br><small style="color: var(--tradesos-gray-text); font-size: 10px;">{{ trade.subscription_status.title() }}</small>
+                    {% endif %}
+                </div>
+                
+                <div style="display: flex; flex-direction: column; gap: 5px;">
+                    <a href="{{ url_for('verify_trade', trade_id=trade.id) }}" 
+                       style="background: {{ 'var(--tradesos-red)' if not trade.verified else '#ffc107' }}; color: white; padding: 6px 8px; text-decoration: none; border-radius: 4px; text-align: center; font-size: 12px; font-weight: 600;"
+                       onclick="return confirm('{{ 'Verify' if not trade.verified else 'Unverify' }} {{ trade.company }}?')"
+                       title="{{ 'Verify' if not trade.verified else 'Unverify' }} Trade">
+                        <i class="fas fa-{{ 'check' if not trade.verified else 'times' }}"></i>
+                    </a>
+                    
+                    {% if trade.insurance_document_url %}
+                        <a href="{{ trade.insurance_document_url }}" 
+                           style="background: #17a2b8; color: white; padding: 6px 8px; text-decoration: none; border-radius: 4px; text-align: center; font-size: 12px;"
+                           target="_blank"
+                           title="View Insurance Document">
+                            <i class="fas fa-file-alt"></i>
+                        </a>
+                    {% endif %}
+                    
+                    <button style="background: var(--tradesos-gray-dark); color: var(--tradesos-black); padding: 6px 8px; border: none; border-radius: 4px; cursor: pointer; font-size: 12px;" 
+                            onclick="viewTradeDetails({{ trade.id }})"
+                            title="View Details">
+                        <i class="fas fa-eye"></i>
                     </button>
                 </div>
             </div>
-            <div class="card-body p-0">
-                {% if trades.items %}
-                    <div class="table-responsive">
-                        <table class="table table-hover mb-0">
-                            <thead class="table-light">
-                                <tr>
-                                    <th width="30">
-                                        <input type="checkbox" id="selectAll" onchange="toggleAll()">
-                                    </th>
-                                    <th>Company</th>
-                                    <th>Contact</th>
-                                    <th>Skills</th>
-                                    <th>Coverage</th>
-                                    <th>Status</th>
-                                    <th>Plan</th>
-                                    <th>Rating</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for trade in trades.items %}
-                                <tr>
-                                    <td>
-                                        <input type="checkbox" class="trade-checkbox" value="{{ trade.id }}">
-                                    </td>
-                                    <td>
-                                        <div>
-                                            <strong>{{ trade.company }}</strong>
-                                            {% if trade.vat_number %}
-                                                <br><small class="text-muted">VAT: {{ trade.vat_number }}</small>
-                                            {% endif %}
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div>
-                                            {{ trade.user.email if trade.user else 'N/A' }}
-                                            <br><small class="text-muted">Reg: {{ trade.created_at.strftime('%d/%m/%Y') }}</small>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        {% if trade.get_skills() %}
-                                            {% for skill in trade.get_skills()[:2] %}
-                                                <span class="badge bg-secondary me-1">{{ skill }}</span>
-                                            {% endfor %}
-                                            {% if trade.get_skills()|length > 2 %}
-                                                <span class="text-muted">+{{ trade.get_skills()|length - 2 }}</span>
-                                            {% endif %}
-                                        {% else %}
-                                            <span class="text-muted">None listed</span>
-                                        {% endif %}
-                                    </td>
-                                    <td>
-                                        {% if trade.get_coverage_areas() %}
-                                            {% for area in trade.get_coverage_areas()[:3] %}
-                                                <span class="badge bg-info me-1">{{ area }}</span>
-                                            {% endfor %}
-                                            {% if trade.get_coverage_areas()|length > 3 %}
-                                                <span class="text-muted">+{{ trade.get_coverage_areas()|length - 3 }}</span>
-                                            {% endif %}
-                                        {% else %}
-                                            <span class="text-muted">Not set</span>
-                                        {% endif %}
-                                    </td>
-                                    <td>
-                                        <div class="d-flex flex-column gap-1">
-                                            {% if trade.verified %}
-                                                <span class="badge bg-success">
-                                                    <i class="fas fa-check-circle me-1"></i>Verified
-                                                </span>
-                                            {% else %}
-                                                <span class="badge bg-warning">
-                                                    <i class="fas fa-clock me-1"></i>Pending
-                                                </span>
-                                            {% endif %}
-                                            
-                                            {% if trade.insurance_document_url %}
-                                                <span class="badge bg-info">
-                                                    <i class="fas fa-shield-alt me-1"></i>Insured
-                                                </span>
-                                            {% else %}
-                                                <span class="badge bg-danger">
-                                                    <i class="fas fa-exclamation-triangle me-1"></i>No Insurance
-                                                </span>
-                                            {% endif %}
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <span class="badge {{ 'bg-warning text-dark' if trade.plan_tier == 'premium' else 'bg-secondary' }}">
-                                            {% if trade.plan_tier == 'premium' %}
-                                                <i class="fas fa-crown me-1"></i>Premium
-                                            {% else %}
-                                                <i class="fas fa-user me-1"></i>Standard
-                                            {% endif %}
-                                        </span>
-                                        {% if trade.subscription_status %}
-                                            <br><small class="text-muted">{{ trade.subscription_status.title() }}</small>
-                                        {% endif %}
-                                    </td>
-                                    <td>
-                                        {% if trade.review_count > 0 %}
-                                            <div class="rating small">
-                                                {% for i in range(1, 6) %}
-                                                    {% if i <= trade.rating_avg %}
-                                                        <i class="fas fa-star text-warning"></i>
-                                                    {% else %}
-                                                        <i class="far fa-star text-muted"></i>
-                                                    {% endif %}
-                                                {% endfor %}
-                                            </div>
-                                            <small class="text-muted">{{ "%.1f"|format(trade.rating_avg) }} ({{ trade.review_count }})</small>
-                                        {% else %}
-                                            <span class="text-muted">No reviews</span>
-                                        {% endif %}
-                                    </td>
-                                    <td>
-                                        <div class="btn-group-vertical btn-group-sm">
-                                            <a href="{{ url_for('verify_trade', trade_id=trade.id) }}" 
-                                               class="btn btn-outline-{{ 'warning' if trade.verified else 'success' }}"
-                                               onclick="return confirm('{{ 'Unverify' if trade.verified else 'Verify' }} {{ trade.company }}?')"
-                                               title="{{ 'Unverify' if trade.verified else 'Verify' }} Trade">
-                                                <i class="fas fa-{{ 'times' if trade.verified else 'check' }}"></i>
-                                            </a>
-                                            
-                                            {% if trade.insurance_document_url %}
-                                                <a href="{{ trade.insurance_document_url }}" 
-                                                   class="btn btn-outline-info" 
-                                                   target="_blank"
-                                                   title="View Insurance Document">
-                                                    <i class="fas fa-file-alt"></i>
-                                                </a>
-                                            {% endif %}
-                                            
-                                            <button class="btn btn-outline-secondary" 
-                                                    onclick="viewTradeDetails({{ trade.id }})"
-                                                    title="View Details">
-                                                <i class="fas fa-eye"></i>
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
+            {% endfor %}
 
-                    <!-- Pagination -->
-                    {% if trades.pages > 1 %}
-                    <div class="card-footer">
-                        <nav aria-label="Trade pagination">
-                            <ul class="pagination justify-content-center mb-0">
-                                {% if trades.has_prev %}
-                                    <li class="page-item">
-                                        <a class="page-link" href="{{ url_for('admin_trades', page=trades.prev_num, **request.args) }}">
-                                            <i class="fas fa-chevron-left"></i>
-                                        </a>
-                                    </li>
-                                {% endif %}
-                                
-                                {% for page_num in trades.iter_pages() %}
-                                    {% if page_num %}
-                                        {% if page_num != trades.page %}
-                                            <li class="page-item">
-                                                <a class="page-link" href="{{ url_for('admin_trades', page=page_num, **request.args) }}">
-                                                    {{ page_num }}
-                                                </a>
-                                            </li>
-                                        {% else %}
-                                            <li class="page-item active">
-                                                <span class="page-link">{{ page_num }}</span>
-                                            </li>
-                                        {% endif %}
-                                    {% else %}
-                                        <li class="page-item disabled">
-                                            <span class="page-link">...</span>
-                                        </li>
-                                    {% endif %}
-                                {% endfor %}
-                                
-                                {% if trades.has_next %}
-                                    <li class="page-item">
-                                        <a class="page-link" href="{{ url_for('admin_trades', page=trades.next_num, **request.args) }}">
-                                            <i class="fas fa-chevron-right"></i>
-                                        </a>
-                                    </li>
-                                {% endif %}
-                            </ul>
-                        </nav>
-                    </div>
+            <!-- Pagination -->
+            {% if trades.pages > 1 %}
+            <div style="padding: 20px; background: var(--tradesos-gray); border-radius: 0 0 8px 8px;">
+                <div style="display: flex; justify-content: center; align-items: center; gap: 10px;">
+                    {% if trades.has_prev %}
+                        <a href="{{ url_for('admin_trades', page=trades.prev_num, **request.args) }}" style="background: var(--tradesos-red); color: white; padding: 8px 12px; text-decoration: none; border-radius: 4px;">
+                            <i class="fas fa-chevron-left"></i>
+                        </a>
                     {% endif %}
-
-                {% else %}
-                    <div class="text-center py-5">
-                        <i class="fas fa-users text-muted" style="font-size: 3rem;"></i>
-                        <h5 class="mt-3 text-muted">No trades found</h5>
-                        <p class="text-muted">Try adjusting your search filters.</p>
-                    </div>
-                {% endif %}
+                    
+                    {% for page_num in trades.iter_pages() %}
+                        {% if page_num %}
+                            {% if page_num != trades.page %}
+                                <a href="{{ url_for('admin_trades', page=page_num, **request.args) }}" style="background: white; color: var(--tradesos-black); padding: 8px 12px; text-decoration: none; border-radius: 4px; border: 1px solid #ddd;">
+                                    {{ page_num }}
+                                </a>
+                            {% else %}
+                                <span style="background: var(--tradesos-red); color: white; padding: 8px 12px; border-radius: 4px; font-weight: bold;">{{ page_num }}</span>
+                            {% endif %}
+                        {% else %}
+                            <span style="color: var(--tradesos-gray-text);">...</span>
+                        {% endif %}
+                    {% endfor %}
+                    
+                    {% if trades.has_next %}
+                        <a href="{{ url_for('admin_trades', page=trades.next_num, **request.args) }}" style="background: var(--tradesos-red); color: white; padding: 8px 12px; text-decoration: none; border-radius: 4px;">
+                            <i class="fas fa-chevron-right"></i>
+                        </a>
+                    {% endif %}
+                </div>
             </div>
-        </div>
+            {% endif %}
+
+        {% else %}
+            <div style="text-align: center; padding: 60px 20px;">
+                <i class="fas fa-users" style="font-size: 4rem; color: var(--tradesos-gray-dark); margin-bottom: 20px;"></i>
+                <h4 style="color: var(--tradesos-gray-text); margin-bottom: 10px;">No trades found</h4>
+                <p style="color: var(--tradesos-gray-text);">Try adjusting your search filters or check back later for new applications.</p>
+            </div>
+        {% endif %}
     </div>
 </div>
 
 <!-- Trade Details Modal -->
-<div class="modal fade" id="tradeDetailsModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Trade Details</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body" id="tradeDetailsContent">
-                <!-- Content loaded via JavaScript -->
-            </div>
+<div id="tradeDetailsModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000;" onclick="closeModal()">
+    <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 30px; border-radius: 8px; max-width: 600px; width: 90%;" onclick="event.stopPropagation()">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h3 style="color: var(--tradesos-red); margin: 0;">Trade Details</h3>
+            <button onclick="closeModal()" style="background: none; border: none; font-size: 24px; cursor: pointer; color: var(--tradesos-gray-text);">×</button>
+        </div>
+        <div id="tradeDetailsContent">
+            <!-- Content loaded via JavaScript -->
         </div>
     </div>
 </div>
@@ -331,29 +283,32 @@ function unverifySelected() {
 }
 
 function viewTradeDetails(tradeId) {
-    // In a real app, this would load trade details via AJAX
+    const modal = document.getElementById('tradeDetailsModal');
     const modalContent = document.getElementById('tradeDetailsContent');
+    
     modalContent.innerHTML = `
-        <div class="text-center">
-            <div class="spinner-border" role="status">
-                <span class="visually-hidden">Loading...</span>
-            </div>
-            <p class="mt-2">Loading trade details...</p>
+        <div style="text-align: center; padding: 20px;">
+            <i class="fas fa-spinner fa-spin" style="font-size: 2rem; color: var(--tradesos-red);"></i>
+            <p style="margin-top: 10px; color: var(--tradesos-gray-text);">Loading trade details...</p>
         </div>
     `;
     
-    const modal = new bootstrap.Modal(document.getElementById('tradeDetailsModal'));
-    modal.show();
+    modal.style.display = 'block';
     
     // Simulate loading
     setTimeout(() => {
         modalContent.innerHTML = `
-            <div class="alert alert-info">
-                <i class="fas fa-info-circle me-2"></i>
-                Trade details for ID: ${tradeId} would be displayed here in a real implementation.
+            <div style="background: #e7f3ff; border: 1px solid #bee5eb; padding: 15px; border-radius: 5px;">
+                <i class="fas fa-info-circle" style="color: #17a2b8; margin-right: 10px;"></i>
+                <strong>Trade details for ID: ${tradeId}</strong><br>
+                <small>Complete trade details would be displayed here in a real implementation.</small>
             </div>
         `;
     }, 1000);
+}
+
+function closeModal() {
+    document.getElementById('tradeDetailsModal').style.display = 'none';
 }
 </script>
 {% endblock %}
