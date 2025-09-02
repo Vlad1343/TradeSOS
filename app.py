@@ -1,5 +1,6 @@
 import os
 import logging
+from datetime import timedelta
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
@@ -70,12 +71,20 @@ def create_app():
     login_manager.login_view = 'login'
     login_manager.login_message = 'Please log in to access this page.'
     login_manager.login_message_category = 'info'
+    login_manager.session_protection = "strong"
+    login_manager.remember_cookie_duration = timedelta(days=1)
+    
+    # Session configuration for better persistence
+    app.config['SESSION_PERMANENT'] = True
+    app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=1)
     
     # User loader function
     @login_manager.user_loader
     def load_user(user_id):
         from models import User
-        return User.query.get(int(user_id))
+        user = User.query.get(int(user_id))
+        print(f"USER_LOADER DEBUG: Loading user {user_id}, found: {user}")
+        return user
     
     # Create upload directory
     os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
