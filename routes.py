@@ -97,6 +97,7 @@ def register():
             return render_template('auth/register.html', form=form)
         
         try:
+            # Create user account
             user = User(email=form.email.data, role=form.role.data)
             user.set_password(form.password.data)
             db.session.add(user)
@@ -104,24 +105,72 @@ def register():
             
             # Create role-specific profile
             if form.role.data == 'customer':
-                customer = Customer(user_id=user.id, name=form.name.data, phone=form.phone.data)
-                db.session.add(customer)
-            elif form.role.data == 'trade':
-                companies_house_num = form.companies_house_number.data or None
-                trade = Trade(
+                customer = Customer(
                     user_id=user.id, 
-                    company=form.name.data,
-                    companies_house_number=companies_house_num
+                    name=form.name.data, 
+                    phone=form.phone.data or None
                 )
+                db.session.add(customer)
+                
+            elif form.role.data == 'trade':
+                # Handle file uploads for trade professionals
+                insurance_doc_url = None
+                qualification_docs = []
+                gas_safe_doc_url = None
+                
+                # Upload insurance document
+                if form.insurance_document.data:
+                    insurance_file = form.insurance_document.data
+                    if insurance_file and allowed_file(insurance_file.filename):
+                        filename = secure_filename(f"insurance_{user.id}_{insurance_file.filename}")
+                        file_path = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
+                        insurance_file.save(file_path)
+                        insurance_doc_url = filename
+                
+                # Upload qualification documents
+                if form.qualification_documents.data:
+                    for i, qual_file in enumerate(form.qualification_documents.data):
+                        if qual_file and allowed_file(qual_file.filename):
+                            filename = secure_filename(f"qualification_{user.id}_{i}_{qual_file.filename}")
+                            file_path = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
+                            qual_file.save(file_path)
+                            qualification_docs.append(filename)
+                
+                # Upload Gas Safe certificate
+                if form.gas_safe_certificate.data:
+                    gas_safe_file = form.gas_safe_certificate.data
+                    if gas_safe_file and allowed_file(gas_safe_file.filename):
+                        filename = secure_filename(f"gas_safe_{user.id}_{gas_safe_file.filename}")
+                        file_path = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
+                        gas_safe_file.save(file_path)
+                        gas_safe_doc_url = filename
+                
+                # Create trade profile
+                trade = Trade(
+                    user_id=user.id,
+                    company=form.name.data,
+                    companies_house_number=form.companies_house_number.data or None,
+                    vat_number=form.vat_number.data or None,
+                    insurance_document_url=insurance_doc_url
+                )
+                
+                # Set skills and coverage areas
+                if form.skills.data:
+                    trade.set_skills([form.skills.data])
+                
+                if form.coverage_areas.data:
+                    areas = [area.strip().upper() for area in form.coverage_areas.data.split(',')]
+                    trade.set_coverage_areas(areas)
+                
                 db.session.add(trade)
             
             db.session.commit()
-            flash('Registration successful! Please log in.', 'success')
+            flash('Registration successful! Your account has been created. Trade professionals will be verified before accessing job offers.', 'success')
             return redirect(url_for('login'))
             
         except Exception as e:
             db.session.rollback()
-            flash('Registration failed. Please try again.', 'danger')
+            flash(f'Registration failed: {str(e)}. Please try again.', 'danger')
             return render_template('auth/register.html', form=form)
     
     return render_template('auth/register.html', form=form)

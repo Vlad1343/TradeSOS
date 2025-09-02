@@ -24,9 +24,37 @@ class RegisterForm(FlaskForm):
         ('trade', 'Trade Professional (provide services)')
     ], validators=[DataRequired()])
     name = StringField('Full Name / Company Name', validators=[DataRequired(), Length(min=2, max=100)])
+    phone = StringField('Phone Number', validators=[DataRequired(), Length(min=10, max=20)])
+    
+    # Trade-specific fields
     companies_house_number = StringField('Companies House Registration Number', validators=[Optional(), Length(max=20)], 
                                         render_kw={'placeholder': 'e.g., 12345678'})
-    phone = StringField('Phone Number', validators=[Optional(), Length(max=20)])
+    vat_number = StringField('VAT Number', validators=[Optional(), Length(max=20)], 
+                            render_kw={'placeholder': 'e.g., GB123456789'})
+    skills = SelectField('Primary Trade Skills', choices=[
+        ('plumbing', 'Plumbing & Drainage'),
+        ('heating', 'Heating & Boilers'),
+        ('electrical', 'Electrical Services'),
+        ('locksmith', 'Locksmith Services'),
+        ('roofing', 'Roofing & Guttering'),
+        ('security', 'Security Systems'),
+        ('glazing', 'Emergency Glazier'),
+        ('gas', 'Gas Safety'),
+        ('other', 'Other Emergency Services')
+    ], validators=[Optional()])
+    coverage_areas = StringField('Coverage Areas (UK Postcode Areas)', validators=[Optional()],
+                                render_kw={'placeholder': 'e.g., M, SK, WA, OL'})
+    
+    # Required documents for trade professionals
+    insurance_document = FileField('Public Liability Insurance Certificate (Required)', 
+                                  validators=[Optional(), FileAllowed(['pdf', 'doc', 'docx', 'jpg', 'png'], 
+                                            'Only PDF, DOC, DOCX, JPG, PNG files allowed')])
+    qualification_documents = MultipleFileField('Trade Qualifications & Certifications', 
+                                               validators=[Optional(), FileAllowed(['pdf', 'doc', 'docx', 'jpg', 'png'], 
+                                                         'Only PDF, DOC, DOCX, JPG, PNG files allowed')])
+    gas_safe_certificate = FileField('Gas Safe Certificate (if applicable)', 
+                                    validators=[Optional(), FileAllowed(['pdf', 'doc', 'docx', 'jpg', 'png'])])
+    
     submit = SubmitField('Register')
 
 class CustomerProfileForm(FlaskForm):
