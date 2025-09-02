@@ -135,6 +135,13 @@ def customer_dashboard():
     return render_template('customer/dashboard.html', customer=customer, jobs=recent_jobs, ads=active_ads)
 
 # Public job creation (anonymous) - main entry point
+@app.route('/create-job-simple', methods=['GET', 'POST'])
+def create_job_simple():
+    if request.method == 'GET':
+        return render_template('customer/create_job_simple.html')
+    # For POST, redirect to main create_job for processing
+    return redirect(url_for('create_job'))
+
 @app.route('/create-job', methods=['GET', 'POST'])
 def create_job():
     form = JobForm()
