@@ -1,29 +1,6 @@
 {% extends "base_checkatrade.html" %}
 
 {% block content %}
-<!-- Hero Section - Checkatrade inspired -->
-<section class="hero-section">
-    <div class="container">
-        <h1 class="hero-title">Find emergency trades you can trust</h1>
-        <p class="hero-subtitle">Get your emergency sorted with verified, insured trade professionals across the UK</p>
-        
-        <div class="hero-search">
-            <form action="{{ url_for('job_request') }}" method="GET">
-                <input type="text" class="search-input" name="q" placeholder="What's your emergency? e.g., burst pipe, power outage, broken lock...">
-                <button type="submit" class="search-btn">Get Help Now</button>
-            </form>
-        </div>
-        
-        <!-- Quick emergency examples -->
-        <div style="margin-top: 32px; display: flex; justify-content: center; gap: 16px; flex-wrap: wrap;">
-            <a href="{{ url_for('job_request') }}?category=plumbing" style="background: var(--tradesos-white); padding: 8px 16px; border-radius: 20px; text-decoration: none; color: var(--tradesos-black); font-size: 14px; border: 1px solid var(--tradesos-gray-dark);">🔧 Burst pipe emergency</a>
-            <a href="{{ url_for('job_request') }}?category=electrical" style="background: var(--tradesos-white); padding: 8px 16px; border-radius: 20px; text-decoration: none; color: var(--tradesos-black); font-size: 14px; border: 1px solid var(--tradesos-gray-dark);">⚡ Power outage</a>
-            <a href="{{ url_for('job_request') }}?category=locksmith" style="background: var(--tradesos-white); padding: 8px 16px; border-radius: 20px; text-decoration: none; color: var(--tradesos-black); font-size: 14px; border: 1px solid var(--tradesos-gray-dark);">🔐 Locked out</a>
-            <a href="{{ url_for('job_request') }}?category=heating" style="background: var(--tradesos-white); padding: 8px 16px; border-radius: 20px; text-decoration: none; color: var(--tradesos-black); font-size: 14px; border: 1px solid var(--tradesos-gray-dark);">🔥 Boiler breakdown</a>
-        </div>
-    </div>
-</section>
-
 <!-- Call to Action Section -->
 <section class="categories-section">
     <div class="container">
