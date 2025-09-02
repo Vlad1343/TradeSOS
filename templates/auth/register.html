@@ -13,7 +13,7 @@
             </p>
         </div>
         
-        <form method="POST">
+        <form method="POST" action="{{ url_for('register') }}">
             {{ form.hidden_tag() }}
             
             <!-- Role Selection -->
@@ -54,8 +54,8 @@
             
             <div class="grid-2">
                 <div class="form-group">
-                    {{ form.email.label() }}
-                    {{ form.email(class="" + (" error" if form.email.errors else "")) }}
+                    {{ form.email.label(class="form-label") }}
+                    {{ form.email(class="form-control" + (" error" if form.email.errors else "")) }}
                     {% if form.email.errors %}
                         <div style="color: var(--tradesos-red); font-size: 12px; margin-top: 5px;">
                             {% for error in form.email.errors %}
@@ -66,9 +66,9 @@
                 </div>
                 
                 <div class="form-group">
-                    {{ form.name.label() }}
+                    {{ form.name.label(class="form-label") }}
                     <div class="tradesos-info" id="nameHelp" style="margin-bottom: 5px;"></div>
-                    {{ form.name(class="" + (" error" if form.name.errors else "")) }}
+                    {{ form.name(class="form-control" + (" error" if form.name.errors else "")) }}
                     {% if form.name.errors %}
                         <div style="color: var(--tradesos-red); font-size: 12px; margin-top: 5px;">
                             {% for error in form.name.errors %}
@@ -81,8 +81,8 @@
             
             <div class="grid-2">
                 <div class="form-group">
-                    {{ form.password.label() }}
-                    {{ form.password(class="" + (" error" if form.password.errors else "")) }}
+                    {{ form.password.label(class="form-label") }}
+                    {{ form.password(class="form-control" + (" error" if form.password.errors else "")) }}
                     {% if form.password.errors %}
                         <div style="color: var(--tradesos-red); font-size: 12px; margin-top: 5px;">
                             {% for error in form.password.errors %}
@@ -94,8 +94,8 @@
                 </div>
                 
                 <div class="form-group">
-                    {{ form.password2.label() }}
-                    {{ form.password2(class="" + (" error" if form.password2.errors else "")) }}
+                    {{ form.password2.label(class="form-label") }}
+                    {{ form.password2(class="form-control" + (" error" if form.password2.errors else "")) }}
                     {% if form.password2.errors %}
                         <div style="color: var(--tradesos-red); font-size: 12px; margin-top: 5px;">
                             {% for error in form.password2.errors %}
@@ -108,9 +108,9 @@
             
             <!-- Companies House Number - Only show for trades -->
             <div class="form-group" id="companiesHouseField" style="display: none;">
-                {{ form.companies_house_number.label() }}
+                {{ form.companies_house_number.label(class="form-label") }}
                 <div class="tradesos-info" style="margin-bottom: 5px;">(Required for trade professionals)</div>
-                {{ form.companies_house_number(class="" + (" error" if form.companies_house_number.errors else "")) }}
+                {{ form.companies_house_number(class="form-control" + (" error" if form.companies_house_number.errors else "")) }}
                 {% if form.companies_house_number.errors %}
                     <div style="color: var(--tradesos-red); font-size: 12px; margin-top: 5px;">
                         {% for error in form.companies_house_number.errors %}
@@ -125,8 +125,8 @@
             </div>
             
             <div class="form-group">
-                {{ form.phone.label() }}
-                {{ form.phone(placeholder="Optional - for emergency contact") }}
+                {{ form.phone.label(class="form-label") }}
+                {{ form.phone(class="form-control", placeholder="Optional - for emergency contact") }}
                 {% if form.phone.errors %}
                     <div style="color: var(--tradesos-red); font-size: 12px; margin-top: 5px;">
                         {% for error in form.phone.errors %}

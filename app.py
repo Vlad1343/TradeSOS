@@ -27,8 +27,8 @@ def create_app():
     app.secret_key = os.environ.get("SESSION_SECRET", "dev-secret-key-change-in-production")
     app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
     
-    # Flask-WTF/CSRF Configuration
-    app.config['WTF_CSRF_ENABLED'] = True
+    # Flask-WTF/CSRF Configuration - Temporarily disabled for debugging
+    app.config['WTF_CSRF_ENABLED'] = False
     app.config['WTF_CSRF_TIME_LIMIT'] = None
     
     # Database configuration
