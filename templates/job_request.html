@@ -6,13 +6,13 @@
         <div style="text-align: center; margin-bottom: 40px;">
             <i class="fas fa-exclamation-triangle" style="font-size: 48px; color: var(--tradesos-red); margin-bottom: 20px;"></i>
             <h2>REQUEST EMERGENCY TRADE HELP</h2>
-            <p style="color: #666; text-transform: uppercase; letter-spacing: 1px; font-size: 14px; margin: 0;">
+            <p class="tradesos-info" style="color: #666; font-size: 14px; margin: 10px 0 0 0;">
                 Fill in your details below - no registration needed
             </p>
         </div>
         
         {% if success %}
-        <div style="background-color: #28a745; color: white; padding: 20px; margin-bottom: 30px; border-radius: 4px; text-align: center; text-transform: uppercase; letter-spacing: 1px; font-weight: bold;">
+        <div class="tradesos-success">
             <i class="fas fa-check-circle" style="margin-right: 10px;"></i>
             Your job request has been submitted! Trades in your area will contact you directly.
         </div>
@@ -21,11 +21,11 @@
         <form method="POST" action="/job-request" enctype="multipart/form-data">
             <!-- Contact Details Section -->
             <div style="margin-bottom: 40px;">
-                <h3 style="color: var(--tradesos-red); font-size: 18px; font-weight: bold; margin-bottom: 25px; text-transform: uppercase; letter-spacing: 1px; display: flex; align-items: center;">
-                    <i class="fas fa-user" style="margin-right: 10px;"></i>Your Contact Details
+                <h3>
+                    <i class="fas fa-user"></i>Your Contact Details
                 </h3>
                 
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;">
+                <div class="grid-3">
                     <div class="form-group">
                         <label for="name">Your Name *</label>
                         <input type="text" id="name" name="name" required>
@@ -43,13 +43,13 @@
 
             <!-- Emergency Details Section -->
             <div style="margin-bottom: 40px;">
-                <h3 style="color: var(--tradesos-red); font-size: 18px; font-weight: bold; margin-bottom: 25px; text-transform: uppercase; letter-spacing: 1px; display: flex; align-items: center;">
-                    <i class="fas fa-exclamation-circle" style="margin-right: 10px;"></i>Emergency Details
+                <h3>
+                    <i class="fas fa-exclamation-circle"></i>Emergency Details
                 </h3>
                 
                 <div class="form-group">
                     <label for="urgency">How urgent is this? *</label>
-                    <select id="urgency" name="urgency" required style="font-size: 16px; padding: 15px;">
+                    <select id="urgency" name="urgency" required>
                         <option value="">Choose urgency level...</option>
                         <option value="emergency_now">🚨 Emergency Now - Immediate help needed</option>
                         <option value="urgent_2h">⏰ Urgent - Within 2 hours</option>
@@ -58,7 +58,7 @@
                     </select>
                 </div>
 
-                <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 20px;">
+                <div class="grid-2">
                     <div class="form-group">
                         <label for="title">What's the problem? *</label>
                         <input type="text" id="title" name="title" placeholder="e.g., Burst pipe flooding kitchen" required>
@@ -88,11 +88,11 @@
 
             <!-- Address Section -->
             <div style="margin-bottom: 40px;">
-                <h3 style="color: var(--tradesos-red); font-size: 18px; font-weight: bold; margin-bottom: 25px; text-transform: uppercase; letter-spacing: 1px; display: flex; align-items: center;">
-                    <i class="fas fa-map-marker-alt" style="margin-right: 10px;"></i>Your Full Address
+                <h3>
+                    <i class="fas fa-map-marker-alt"></i>Your Full Address
                 </h3>
                 
-                <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 15px; margin-bottom: 15px;">
+                <div class="grid-2 mb-2">
                     <div class="form-group">
                         <label for="house_number">House Number/Name *</label>
                         <input type="text" id="house_number" name="house_number" required>
@@ -103,7 +103,7 @@
                     </div>
                 </div>
                 
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                <div class="grid-2">
                     <div class="form-group">
                         <label for="town">Town/City *</label>
                         <input type="text" id="town" name="town" required>
@@ -114,7 +114,7 @@
                     </div>
                 </div>
                 
-                <div style="margin-top: 10px; color: #666; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px;">
+                <div class="tradesos-info">
                     <i class="fas fa-info-circle" style="margin-right: 5px;"></i>
                     Provide your complete address so the tradesperson can find you
                 </div>
@@ -122,13 +122,13 @@
 
             <!-- Photo Upload Section -->
             <div style="margin-bottom: 40px;">
-                <h3 style="color: var(--tradesos-red); font-size: 18px; font-weight: bold; margin-bottom: 25px; text-transform: uppercase; letter-spacing: 1px; display: flex; align-items: center;">
-                    <i class="fas fa-camera" style="margin-right: 10px;"></i>Photos or Videos (Optional)
+                <h3>
+                    <i class="fas fa-camera"></i>Photos or Videos (Optional)
                 </h3>
                 
                 <div class="form-group">
                     <input type="file" id="photos" name="photos" multiple accept="image/*,video/*" onchange="previewFiles()" style="padding: 20px; border: 2px dashed var(--tradesos-gray-dark); background-color: #f9f9f9;">
-                    <div style="margin-top: 10px; color: #666; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px;">
+                    <div class="tradesos-info">
                         <i class="fas fa-info-circle" style="margin-right: 5px;"></i>
                         Upload photos or videos to help trades understand the problem better. Max 16MB per file.
                     </div>
@@ -138,7 +138,7 @@
 
             <!-- Terms and Submit -->
             <div style="margin-bottom: 30px;">
-                <label style="display: flex; align-items: center; font-size: 14px; color: #666;">
+                <label style="display: flex; align-items: center; font-size: 14px; color: #666; cursor: pointer;">
                     <input type="checkbox" id="terms" name="terms" required style="margin-right: 10px; transform: scale(1.2);">
                     I agree to share my contact details with verified trade professionals
                 </label>
@@ -169,64 +169,17 @@ function previewFiles() {
         previewHtml += `
             <div style="background-color: white; padding: 15px; border-radius: 4px; border: 2px solid var(--tradesos-gray-dark); text-align: center;">
                 <i class="fas ${icon}" style="font-size: 24px; color: var(--tradesos-red); margin-bottom: 8px;"></i>
-                <div style="font-size: 11px; color: #666; text-transform: uppercase; letter-spacing: 0.5px;">${fileName}</div>
+                <div style="font-size: 11px; color: #666;">${fileName}</div>
             </div>
         `;
     }
     
     if (files.length > 5) {
-        previewHtml += `<div style="background-color: #f9f9f9; padding: 15px; border-radius: 4px; border: 2px dashed var(--tradesos-gray-dark); text-align: center; display: flex; align-items: center; justify-content: center;"><small style="color: #666; text-transform: uppercase; letter-spacing: 0.5px;">+${files.length - 5} more files</small></div>`;
+        previewHtml += `<div style="background-color: #f9f9f9; padding: 15px; border-radius: 4px; border: 2px dashed var(--tradesos-gray-dark); text-align: center; display: flex; align-items: center; justify-content: center;"><small style="color: #666;">+${files.length - 5} more files</small></div>`;
     }
     
     previewHtml += '</div>';
     preview.innerHTML = previewHtml;
 }
 </script>
-
-<style>
-.tradesos-form input,
-.tradesos-form select,
-.tradesos-form textarea {
-    width: 100%;
-    padding: 15px;
-    border: 2px solid var(--tradesos-gray-dark);
-    border-radius: 4px;
-    font-size: 14px;
-    transition: border-color 0.3s ease;
-    box-sizing: border-box;
-}
-
-.tradesos-form input:focus,
-.tradesos-form select:focus,
-.tradesos-form textarea:focus {
-    border-color: var(--tradesos-red);
-    outline: none;
-    box-shadow: 0 0 0 3px rgba(215, 48, 55, 0.1);
-}
-
-.form-group {
-    margin-bottom: 20px;
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: bold;
-    color: var(--tradesos-black);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    font-size: 12px;
-}
-
-@media (max-width: 768px) {
-    .tradesos-form {
-        margin: 20px;
-        padding: 30px 20px;
-    }
-    
-    .tradesos-form div[style*="grid-template-columns"] {
-        grid-template-columns: 1fr !important;
-    }
-}
-</style>
 {% endblock %}

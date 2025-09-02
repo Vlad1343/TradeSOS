@@ -3,65 +3,71 @@
 {% block title %}Login - TradeSOS{% endblock %}
 
 {% block content %}
-<div class="row justify-content-center">
-    <div class="col-lg-6 col-md-8">
-        <div class="card shadow">
-            <div class="card-header bg-emergency text-white text-center">
-                <h3 class="mb-0">
-                    <i class="fas fa-sign-in-alt me-2"></i>Sign In to TradeSOS
-                </h3>
-            </div>
-            <div class="card-body p-4">
-                <form method="POST">
-                    {{ form.hidden_tag() }}
-                    
-                    <div class="mb-3">
-                        {{ form.email.label(class="form-label") }}
-                        {{ form.email(class="form-control" + (" is-invalid" if form.email.errors else "")) }}
-                        {% if form.email.errors %}
-                            <div class="invalid-feedback">
-                                {% for error in form.email.errors %}
-                                    {{ error }}
-                                {% endfor %}
-                            </div>
-                        {% endif %}
-                    </div>
-                    
-                    <div class="mb-3">
-                        {{ form.password.label(class="form-label") }}
-                        {{ form.password(class="form-control" + (" is-invalid" if form.password.errors else "")) }}
-                        {% if form.password.errors %}
-                            <div class="invalid-feedback">
-                                {% for error in form.password.errors %}
-                                    {{ error }}
-                                {% endfor %}
-                            </div>
-                        {% endif %}
-                    </div>
-                    
-                    <div class="mb-3 form-check">
-                        {{ form.remember_me(class="form-check-input") }}
-                        {{ form.remember_me.label(class="form-check-label") }}
-                    </div>
-                    
-                    <div class="d-grid">
-                        {{ form.submit(class="btn btn-emergency btn-lg") }}
-                    </div>
-                </form>
-            </div>
-            <div class="card-footer text-center">
-                <p class="mb-0">
-                    Don't have an account? 
-                    <a href="{{ url_for('register') }}" class="text-emergency">Sign up here</a>
-                </p>
-            </div>
+<div style="background-color: var(--tradesos-gray); min-height: 100vh; padding: 40px 20px; display: flex; align-items: center; justify-content: center;">
+    <div class="tradesos-form" style="max-width: 500px; width: 100%;">
+        <div style="text-align: center; margin-bottom: 40px;">
+            <i class="fas fa-sign-in-alt" style="font-size: 48px; color: var(--tradesos-red); margin-bottom: 20px;"></i>
+            <h2>SIGN IN TO TRADESOS</h2>
+            <p class="tradesos-info" style="color: #666; font-size: 14px; margin: 10px 0 0 0;">
+                Access your emergency trade services account
+            </p>
         </div>
         
-        <!-- Emergency Access Notice -->
-        <div class="alert alert-info mt-4">
-            <h6><i class="fas fa-info-circle me-2"></i>Emergency Access</h6>
-            <p class="mb-0">For genuine emergencies requiring immediate assistance, please also contact the relevant emergency services (999) if there is immediate danger to life or property.</p>
+        <form method="POST">
+            {{ form.hidden_tag() }}
+            
+            <div class="form-group">
+                {{ form.email.label(class="") }}
+                {{ form.email(class="" + (" error" if form.email.errors else "")) }}
+                {% if form.email.errors %}
+                    <div style="color: var(--tradesos-red); font-size: 12px; margin-top: 5px;">
+                        {% for error in form.email.errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+            
+            <div class="form-group">
+                {{ form.password.label(class="") }}
+                {{ form.password(class="" + (" error" if form.password.errors else "")) }}
+                {% if form.password.errors %}
+                    <div style="color: var(--tradesos-red); font-size: 12px; margin-top: 5px;">
+                        {% for error in form.password.errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+            
+            <div style="margin-bottom: 25px;">
+                <label style="display: flex; align-items: center; font-size: 14px; color: #666; cursor: pointer;">
+                    {{ form.remember_me(style="margin-right: 10px; transform: scale(1.2);") }}
+                    {{ form.remember_me.label.text }}
+                </label>
+            </div>
+            
+            {{ form.submit(class="tradesos-btn tradesos-btn-primary tradesos-btn-block", style="padding: 20px; font-size: 16px;") }}
+        </form>
+        
+        <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid var(--tradesos-gray-dark);">
+            <p style="margin: 0; color: #666; font-size: 14px;">
+                Don't have an account? 
+                <a href="{{ url_for('register') }}" style="color: var(--tradesos-red); text-decoration: none; font-weight: 700;">Sign up here</a>
+            </p>
         </div>
+    </div>
+</div>
+
+<!-- Emergency Access Notice -->
+<div style="background-color: #E3F2FD; padding: 30px 20px; text-align: center;">
+    <div style="max-width: 800px; margin: 0 auto;">
+        <h6 style="color: var(--tradesos-red); margin-bottom: 15px; font-family: 'Oswald', Arial, sans-serif; font-weight: 700;">
+            <i class="fas fa-info-circle" style="margin-right: 10px;"></i>EMERGENCY ACCESS
+        </h6>
+        <p style="margin: 0; color: #666; font-size: 14px; line-height: 1.5;">
+            For genuine emergencies requiring immediate assistance, please also contact the relevant emergency services (999) if there is immediate danger to life or property.
+        </p>
     </div>
 </div>
 {% endblock %}

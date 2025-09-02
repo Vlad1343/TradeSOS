@@ -17,7 +17,7 @@
             <!-- Mobile Buttons -->
             <div style="margin-top: 40px;" class="mobile-buttons">
                 <a href="{{ url_for('job_request') }}" class="tradesos-btn tradesos-btn-outline tradesos-btn-block">
-                    <i class="fas fa-phone me-2"></i>GET EMERGENCY HELP NOW
+                    <i class="fas fa-phone" style="margin-right: 10px;"></i>GET EMERGENCY HELP NOW
                 </a>
                 <a href="{{ url_for('register') }}?role=trade" class="tradesos-btn tradesos-btn-white tradesos-btn-block">
                     JOIN AS A TRADE PROFESSIONAL
@@ -45,10 +45,10 @@
             </div>
             
             <a href="{{ url_for('job_request') }}" class="tradesos-btn tradesos-btn-primary tradesos-btn-block mt-2">
-                <i class="fas fa-wrench me-2"></i>GET EMERGENCY HELP NOW
+                <i class="fas fa-wrench" style="margin-right: 10px;"></i>GET EMERGENCY HELP NOW
             </a>
             
-            <a href="{{ url_for('register') }}?role=trade" class="tradesos-btn tradesos-btn-black tradesos-btn-block" style="background-color: black; color: white; border-color: black;">
+            <a href="{{ url_for('register') }}?role=trade" class="tradesos-btn tradesos-btn-black tradesos-btn-block">
                 JOIN AS A TRADE PROFESSIONAL
             </a>
         </div>
@@ -62,37 +62,31 @@
     <div class="tradesos-trades-grid">
         <div class="tradesos-trade-card">
             <h3>PLUMBER</h3>
-            <p style="margin: 15px 0; color: #666; text-transform: uppercase; font-size: 12px; letter-spacing: 0.5px;">
-                Burst pipes, leaks, blocked drains, boiler breakdowns
-            </p>
+            <p>Burst pipes, leaks, blocked drains, boiler breakdowns</p>
             <a href="{{ url_for('job_request') }}" class="tradesos-btn tradesos-btn-primary">REQUEST NOW</a>
         </div>
         
         <div class="tradesos-trade-card">
             <h3>HEATING ENGINEER</h3>
-            <p style="margin: 15px 0; color: #666; text-transform: uppercase; font-size: 12px; letter-spacing: 0.5px;">
-                Boiler repairs, gas leaks, heating system failures
-            </p>
+            <p>Boiler repairs, gas leaks, heating system failures</p>
             <a href="{{ url_for('job_request') }}" class="tradesos-btn tradesos-btn-primary">REQUEST NOW</a>
         </div>
         
         <div class="tradesos-trade-card">
             <h3>ELECTRICIAN</h3>
-            <p style="margin: 15px 0; color: #666; text-transform: uppercase; font-size: 12px; letter-spacing: 0.5px;">
-                Power outages, faulty wiring, emergency electrical repairs
-            </p>
+            <p>Power outages, faulty wiring, emergency electrical repairs</p>
             <a href="{{ url_for('job_request') }}" class="tradesos-btn tradesos-btn-primary">REQUEST NOW</a>
         </div>
     </div>
 </section>
 
 <!-- Additional Services -->
-<section style="background-color: white; padding: 40px 20px;">
+<section style="background-color: white; padding: 60px 20px;">
     <div style="max-width: 1200px; margin: 0 auto;">
         <div class="tradesos-trades-grid">
             <div class="tradesos-trade-card">
                 <div style="text-align: center; margin-bottom: 20px;">
-                    <div style="background-color: var(--tradesos-red); color: white; padding: 15px; border-radius: 4px; display: inline-block; margin-bottom: 15px; text-transform: uppercase; font-weight: bold; letter-spacing: 1px; font-size: 12px;">
+                    <div style="background-color: var(--tradesos-red); color: white; padding: 15px; border-radius: 4px; display: inline-block; margin-bottom: 15px; font-weight: 700; font-size: 12px;">
                         UK COVERAGE
                     </div>
                 </div>
@@ -101,7 +95,7 @@
             
             <div class="tradesos-trade-card">
                 <div style="text-align: center; margin-bottom: 20px;">
-                    <div style="background-color: var(--tradesos-red); color: white; padding: 15px; border-radius: 4px; display: inline-block; margin-bottom: 15px; text-transform: uppercase; font-weight: bold; letter-spacing: 1px; font-size: 12px;">
+                    <div style="background-color: var(--tradesos-red); color: white; padding: 15px; border-radius: 4px; display: inline-block; margin-bottom: 15px; font-weight: 700; font-size: 12px;">
                         24/7 AVAILABLE
                     </div>
                 </div>
@@ -110,56 +104,4 @@
         </div>
     </div>
 </section>
-
-<style>
-/* Mobile-specific adjustments */
-@media (max-width: 768px) {
-    .tradesos-action-card {
-        display: none;
-    }
-    
-    .mobile-buttons {
-        display: block !important;
-    }
-    
-    .tradesos-hero {
-        padding: 40px 20px 60px 20px;
-    }
-    
-    .tradesos-hero-content {
-        display: block;
-        text-align: center;
-    }
-    
-    .tradesos-hero-text h1 {
-        font-size: 28px;
-        line-height: 1.2;
-    }
-    
-    .tradesos-hero-text .hero-subtitle {
-        font-size: 14px;
-    }
-    
-    .tradesos-hero-text .hero-description {
-        font-size: 13px;
-    }
-    
-    .tradesos-hero-features {
-        font-size: 12px;
-        margin: 20px 0;
-        justify-content: center;
-    }
-    
-    .tradesos-hero-features div {
-        justify-content: center;
-        margin: 8px 0;
-    }
-}
-
-@media (min-width: 769px) {
-    .mobile-buttons {
-        display: none !important;
-    }
-}
-</style>
 {% endblock %}
