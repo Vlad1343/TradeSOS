@@ -14,40 +14,17 @@
         </div>
         
         <form method="POST" action="{{ url_for('login') }}">
-            {{ form.hidden_tag() }}
-            
             <div class="form-group">
-                {{ form.email.label(class="form-label") }}
-                {{ form.email(class="form-control" + (" error" if form.email.errors else "")) }}
-                {% if form.email.errors %}
-                    <div style="color: var(--tradesos-red); font-size: 12px; margin-top: 5px;">
-                        {% for error in form.email.errors %}
-                            {{ error }}
-                        {% endfor %}
-                    </div>
-                {% endif %}
+                <label class="form-label" for="email">Email</label>
+                <input type="email" class="form-control" id="email" name="email" required>
             </div>
             
             <div class="form-group">
-                {{ form.password.label(class="form-label") }}
-                {{ form.password(class="form-control" + (" error" if form.password.errors else "")) }}
-                {% if form.password.errors %}
-                    <div style="color: var(--tradesos-red); font-size: 12px; margin-top: 5px;">
-                        {% for error in form.password.errors %}
-                            {{ error }}
-                        {% endfor %}
-                    </div>
-                {% endif %}
+                <label class="form-label" for="password">Password</label>
+                <input type="password" class="form-control" id="password" name="password" required>
             </div>
             
-            <div style="margin-bottom: 25px;">
-                <label style="display: flex; align-items: center; font-size: 14px; color: #666; cursor: pointer;">
-                    {{ form.remember_me(style="margin-right: 10px; transform: scale(1.2);") }}
-                    {{ form.remember_me.label.text }}
-                </label>
-            </div>
-            
-            {{ form.submit(class="tradesos-btn tradesos-btn-primary tradesos-btn-block", style="padding: 20px; font-size: 16px;") }}
+            <button type="submit" class="tradesos-btn tradesos-btn-primary tradesos-btn-block" style="padding: 20px; font-size: 16px;">Sign In</button>
         </form>
         
         <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid var(--tradesos-gray-dark);">

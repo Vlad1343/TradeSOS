@@ -63,45 +63,38 @@ def login():
     if current_user.is_authenticated:
         return redirect(url_for('index'))
     
-    form = LoginForm()
-    
-    # Debug: Show if form was submitted
     if request.method == 'POST':
-        flash('Form submitted - processing login...', 'info')
+        # Get form data directly - bypass WTForms completely
+        email = request.form.get('email', '').strip()
+        password = request.form.get('password', '')
         
-        # Check form validation
-        if not form.validate_on_submit():
-            flash(f'Form validation failed: {form.errors}', 'warning')
-            return render_template('auth/login.html', form=form)
+        if not email or not password:
+            flash('Please enter both email and password', 'danger')
+            return render_template('auth/login.html')
         
-        # Form is valid, check credentials
-        email = form.email.data
-        password = form.password.data
-        flash(f'Checking credentials for: {email}', 'info')
-        
+        # Find user
         user = User.query.filter_by(email=email).first()
         if not user:
-            flash('No user found with that email address', 'danger')
-            return render_template('auth/login.html', form=form)
+            flash('Invalid email or password', 'danger')
+            return render_template('auth/login.html')
         
+        # Check password
         if not user.check_password(password):
-            flash('Password is incorrect', 'danger')
-            return render_template('auth/login.html', form=form)
+            flash('Invalid email or password', 'danger')
+            return render_template('auth/login.html')
         
-        # Credentials are correct, try to log in
-        session.permanent = True
-        login_result = login_user(user, remember=True)
+        # Login successful - force login without any complex session handling
+        login_user(user, remember=False, force=True)
         
-        if login_result:
-            flash(f'SUCCESS! Logged in as {user.role}', 'success')
-            if user.role == 'trade':
-                return redirect(url_for('trade_dashboard'))
-            else:
-                return redirect(url_for('index'))
+        # Immediate redirect to trade dashboard
+        if user.role == 'trade':
+            return redirect(url_for('trade_dashboard'))
+        elif user.role == 'customer':
+            return redirect(url_for('customer_dashboard'))
         else:
-            flash('Flask-Login failed to log you in', 'danger')
+            return redirect(url_for('index'))
     
-    return render_template('auth/login.html', form=form)
+    return render_template('auth/login.html')
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
