@@ -66,6 +66,14 @@ body {
 .navbar-brand img {
     height: 48px;
     width: auto;
+    border-radius: 6px;
+    /* Blend seamlessly with navbar background */
+    background: var(--tradesos-red);
+    /* Remove any border or outline */
+    border: none;
+    outline: none;
+    /* Ensure smooth integration */
+    vertical-align: middle;
 }
 
 .navbar-nav {
