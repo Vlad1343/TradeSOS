@@ -1,0 +1,42 @@
+SAMPLE INSURANCE CERTIFICATE
+=============================
+
+Company: Emergency Plumbing Ltd
+Companies House Number: 12345678
+VAT Number: GB123456789
+
+INSURANCE DETAILS
+-----------------
+Policy Number: INS-2024-EPL-001
+Insurance Provider: TradeSafe Insurance Ltd
+Policy Type: Public Liability & Employers Liability Insurance
+
+Coverage Details:
+- Public Liability: £2,000,000
+- Employers Liability: £10,000,000
+- Professional Indemnity: £1,000,000
+- Tools & Equipment: £25,000
+
+Policy Period: 01/01/2024 - 31/12/2024
+Premium: £1,247.50 (Paid in full)
+
+VERIFIED COVERAGES
+------------------
+✓ Public Liability Insurance
+✓ Employers Liability Insurance 
+✓ Professional Indemnity Insurance
+✓ Tools and Equipment Cover
+✓ Business Interruption Insurance
+
+Contact Information:
+TradeSafe Insurance Ltd
+Phone: 0800 123 4567
+Email: claims@tradesafe-insurance.co.uk
+Web: www.tradesafe-insurance.co.uk
+
+This certificate is valid for verification purposes.
+Document Generated: 02/09/2025
+
+---
+This is a sample insurance certificate for testing purposes.
+In a real application, this would be a PDF document provided by the trade professional.
