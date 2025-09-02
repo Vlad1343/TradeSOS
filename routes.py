@@ -61,13 +61,18 @@ def login():
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
-        if user and user.check_password(form.password.data):
-            login_user(user, remember=form.remember_me.data)
-            next_page = request.args.get('next')
-            if not next_page or not next_page.startswith('/'):
-                next_page = url_for('index')
-            return redirect(next_page)
-        flash('Invalid email or password', 'danger')
+        if user:
+            if user.check_password(form.password.data):
+                login_user(user, remember=form.remember_me.data)
+                flash(f'Welcome back! Logged in as {user.role}.', 'success')
+                next_page = request.args.get('next')
+                if not next_page or not next_page.startswith('/'):
+                    next_page = url_for('index')
+                return redirect(next_page)
+            else:
+                flash('Invalid password. Please check your password and try again.', 'danger')
+        else:
+            flash('No account found with this email address.', 'danger')
     
     return render_template('auth/login.html', form=form)
 
