@@ -103,6 +103,9 @@ class Job(db.Model):
     customer_name = db.Column(db.String(100))
     customer_phone = db.Column(db.String(20))
     customer_email = db.Column(db.String(120))
+    customer_house_number = db.Column(db.String(50))  # House number or name
+    customer_street = db.Column(db.String(100))  # Street name
+    customer_town = db.Column(db.String(50))  # Town/City
     title = db.Column(db.String(200), nullable=False)
     category = db.Column(db.String(50), nullable=False)
     description = db.Column(db.Text, nullable=False)
@@ -130,6 +133,19 @@ class Job(db.Model):
     
     def set_photos(self, photos_list):
         self.photos = json.dumps(photos_list)
+    
+    def get_full_address(self):
+        """Return the complete formatted address for the job"""
+        address_parts = []
+        if self.customer_house_number:
+            address_parts.append(self.customer_house_number)
+        if self.customer_street:
+            address_parts.append(self.customer_street)
+        if self.customer_town:
+            address_parts.append(self.customer_town)
+        if self.postcode_full:
+            address_parts.append(self.postcode_full)
+        return ', '.join(address_parts)
     
     @staticmethod
     def get_urgency_sla_minutes(urgency):

@@ -108,9 +108,29 @@
                                 </div>
 
                                 <div class="mb-3">
-                                    <label for="postcode" class="form-label fw-bold">Your Postcode *</label>
-                                    <input type="text" class="form-control" id="postcode" name="postcode" 
-                                           placeholder="e.g., M1 1AA" required>
+                                    <label class="form-label fw-bold">Your Full Address *</label>
+                                    <div class="row">
+                                        <div class="col-md-4 mb-2">
+                                            <input type="text" class="form-control" id="house_number" name="house_number" 
+                                                   placeholder="House number/name" required>
+                                        </div>
+                                        <div class="col-md-8 mb-2">
+                                            <input type="text" class="form-control" id="street" name="street" 
+                                                   placeholder="Street name" required>
+                                        </div>
+                                        <div class="col-md-6 mb-2">
+                                            <input type="text" class="form-control" id="town" name="town" 
+                                                   placeholder="Town/City" required>
+                                        </div>
+                                        <div class="col-md-6 mb-2">
+                                            <input type="text" class="form-control" id="postcode" name="postcode" 
+                                                   placeholder="Postcode (e.g., M1 1AA)" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-text">
+                                        <i class="fas fa-map-marker-alt me-1"></i>
+                                        Provide your complete address so the tradesperson can find you
+                                    </div>
                                 </div>
 
                                 <div class="mb-3">

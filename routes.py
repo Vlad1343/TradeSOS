@@ -146,6 +146,9 @@ def job_request():
         name = request.form.get('name', '').strip()
         phone = request.form.get('phone', '').strip()
         email = request.form.get('email', '').strip()
+        house_number = request.form.get('house_number', '').strip()
+        street = request.form.get('street', '').strip()
+        town = request.form.get('town', '').strip()
         urgency = request.form.get('urgency', '').strip()
         title = request.form.get('title', '').strip()
         category = request.form.get('category', '').strip()
@@ -173,7 +176,7 @@ def job_request():
                     photo_urls.append(f"/uploads/{filename}")
         
         # Basic validation
-        if not all([name, phone, email, urgency, title, category, description, postcode]):
+        if not all([name, phone, email, house_number, street, town, urgency, title, category, description, postcode]):
             flash('Please fill in all required fields.', 'danger')
             return render_template('job_request.html')
         
@@ -191,6 +194,9 @@ def job_request():
             customer_name=name,
             customer_phone=phone,
             customer_email=email,
+            customer_house_number=house_number,
+            customer_street=street,
+            customer_town=town,
             title=title,
             category=category,
             description=description,
