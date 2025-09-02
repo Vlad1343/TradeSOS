@@ -67,10 +67,27 @@ def login():
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
         if user and user.check_password(form.password.data):
-            login_user(user)
-            flash(f'Welcome back! Logged in as {user.role}.', 'success')
-            return redirect(url_for('index'))
-        flash('Invalid email or password', 'danger')
+            try:
+                # Make session permanent first
+                session.permanent = True
+                # Login the user
+                login_result = login_user(user, remember=True)
+                
+                if login_result:
+                    flash(f'Welcome back! Successfully logged in as {user.role}.', 'success')
+                    # Direct redirect based on role instead of going through index
+                    if user.role == 'trade':
+                        return redirect(url_for('trade_dashboard'))
+                    elif user.role == 'customer':
+                        return redirect(url_for('customer_dashboard'))
+                    else:
+                        return redirect(url_for('index'))
+                else:
+                    flash('Login failed. Please try again.', 'danger')
+            except Exception as e:
+                flash(f'Login error: {str(e)}', 'danger')
+        else:
+            flash('Invalid email or password', 'danger')
     
     return render_template('auth/login.html', form=form)
 
@@ -391,13 +408,13 @@ def job_detail(job_id):
 @app.route('/trade/dashboard')
 @login_required
 def trade_dashboard():
-    if not current_user.is_authenticated or current_user.role != 'trade':
+    if current_user.role != 'trade':
         flash('Access denied. Please log in as a trade professional.', 'danger')
         return redirect(url_for('login'))
     
     trade = Trade.query.filter_by(user_id=current_user.id).first()
     if not trade:
-        flash('Trade profile not found.', 'danger')
+        flash('Trade profile not found. Please contact support.', 'danger')
         return redirect(url_for('index'))
     
     # Get available jobs in coverage areas
