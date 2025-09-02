@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h1 class="tradesos-red">Customer Dashboard</h1>
+        <p class="lead">Welcome back, {{ current_user.email }}!</p>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Post Emergency Job</h5>
+                <p class="card-text">Need urgent repairs? Post a job and get instant responses.</p>
+                <button class="btn btn-tradesos">Post Job Now</button>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">My Jobs</h5>
+                <p class="card-text">View your current and past emergency jobs.</p>
+                <button class="btn btn-outline-secondary">View Jobs</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="alert alert-success mt-4">
+    <h5>🎉 Authentication Working!</h5>
+    <p>You are successfully logged in as a customer. The new authentication system is working correctly!</p>
+</div>
+{% endblock %}

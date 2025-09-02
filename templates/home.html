@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 mx-auto text-center">
+        <h1 class="tradesos-red mb-4">TradeSOS</h1>
+        <h2 class="mb-4">Emergency Trade Services</h2>
+        <p class="lead mb-5">Connect with verified trade professionals for urgent repairs across the UK.</p>
+        
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">Need Emergency Repairs?</h5>
+                        <p class="card-text">Post urgent jobs and get instant responses from verified professionals.</p>
+                        <a href="{{ url_for('register') }}" class="btn btn-tradesos">Get Help Now</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 mb-3">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">Trade Professional?</h5>
+                        <p class="card-text">Join our network and receive emergency job alerts in your area.</p>
+                        <a href="{{ url_for('register') }}" class="btn btn-tradesos">Join TradeSOS</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
