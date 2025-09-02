@@ -83,13 +83,30 @@ def login():
             password_check = user.check_password(form.password.data)
             print(f"LOGIN DEBUG: Password check result: {password_check}")
             if password_check:
-                login_user(user, remember=form.remember_me.data)
+                print(f"LOGIN DEBUG: Session before login: {session}")
+                print(f"LOGIN DEBUG: Session secret key exists: {bool(current_app.secret_key)}")
+                
+                login_result = login_user(user, remember=form.remember_me.data, force=True)
+                print(f"LOGIN DEBUG: login_user result: {login_result}")
+                print(f"LOGIN DEBUG: Session after login: {session}")
+                print(f"LOGIN DEBUG: current_user after login: {current_user}")
+                print(f"LOGIN DEBUG: current_user.is_authenticated: {current_user.is_authenticated}")
+                
                 flash(f'Welcome back! Logged in as {user.role}.', 'success')
-                next_page = request.args.get('next')
-                if not next_page or not next_page.startswith('/'):
-                    next_page = url_for('index')
-                print(f"LOGIN DEBUG: Redirecting to: {next_page}")
-                return redirect(next_page)
+                
+                # Instead of redirecting to index, redirect directly to trade dashboard
+                if user.role == 'trade':
+                    print("LOGIN DEBUG: Redirecting directly to trade_dashboard")
+                    return redirect(url_for('trade_dashboard'))
+                elif user.role == 'customer':
+                    print("LOGIN DEBUG: Redirecting directly to customer_dashboard")
+                    return redirect(url_for('customer_dashboard'))
+                else:
+                    next_page = request.args.get('next')
+                    if not next_page or not next_page.startswith('/'):
+                        next_page = url_for('index')
+                    print(f"LOGIN DEBUG: Redirecting to: {next_page}")
+                    return redirect(next_page)
             else:
                 flash('Invalid password. Please check your password and try again.', 'danger')
         else:
