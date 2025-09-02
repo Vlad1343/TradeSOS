@@ -22,15 +22,26 @@ def allowed_file(filename):
 # Public routes
 @app.route('/')
 def index():
+    print(f"INDEX DEBUG: current_user.is_authenticated: {current_user.is_authenticated}")
+    if hasattr(current_user, 'role'):
+        print(f"INDEX DEBUG: current_user.role: {current_user.role}")
+        print(f"INDEX DEBUG: current_user: {current_user}")
+    else:
+        print("INDEX DEBUG: current_user has no role attribute")
+    
     if current_user.is_authenticated:
         if current_user.role == 'customer':
+            print("INDEX DEBUG: Redirecting to customer_dashboard")
             return redirect(url_for('customer_dashboard'))
         elif current_user.role == 'trade':
+            print("INDEX DEBUG: Redirecting to trade_dashboard")
             return redirect(url_for('trade_dashboard'))
         elif current_user.role == 'admin':
+            print("INDEX DEBUG: Redirecting to admin_dashboard")
             return redirect(url_for('admin_dashboard'))
     
     # Show public trade directory for anonymous users
+    print("INDEX DEBUG: Showing public page for anonymous user")
     verified_trades = Trade.query.filter_by(verified=True).limit(6).all()
     return render_template('index.html', trades=verified_trades)
 
