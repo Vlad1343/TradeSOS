@@ -225,9 +225,11 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .tradesos-btn-primary {
-    background-color: var(--tradesos-red);
-    color: var(--tradesos-white);
-    border: 2px solid var(--tradesos-red);
+    background-color: var(--tradesos-red) !important;
+    color: var(--tradesos-white) !important;
+    border: 2px solid var(--tradesos-red) !important;
+    opacity: 1 !important;
+    visibility: visible !important;
 }
 
 .tradesos-btn-primary:hover {
