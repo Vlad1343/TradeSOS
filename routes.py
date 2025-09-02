@@ -152,6 +152,26 @@ def job_request():
         description = request.form.get('description', '').strip()
         postcode = request.form.get('postcode', '').strip().upper()
         
+        # Handle file uploads
+        photo_urls = []
+        if 'photos' in request.files:
+            uploaded_files = request.files.getlist('photos')
+            for file in uploaded_files:
+                if file and file.filename and allowed_file(file.filename):
+                    filename = secure_filename(file.filename)
+                    # Add timestamp to filename to avoid conflicts
+                    timestamp = datetime.utcnow().strftime('%Y%m%d_%H%M%S')
+                    filename = f"{timestamp}_{filename}"
+                    
+                    # Ensure upload directory exists
+                    upload_path = os.path.join(app.root_path, 'uploads')
+                    if not os.path.exists(upload_path):
+                        os.makedirs(upload_path)
+                    
+                    file_path = os.path.join(upload_path, filename)
+                    file.save(file_path)
+                    photo_urls.append(f"/uploads/{filename}")
+        
         # Basic validation
         if not all([name, phone, email, urgency, title, category, description, postcode]):
             flash('Please fill in all required fields.', 'danger')
@@ -182,6 +202,10 @@ def job_request():
             urgency=urgency,
             urgency_sla_minutes=Job.get_urgency_sla_minutes(urgency)
         )
+        
+        # Add uploaded files to job
+        if photo_urls:
+            job.set_photos(photo_urls)
         
         db.session.add(job)
         db.session.commit()

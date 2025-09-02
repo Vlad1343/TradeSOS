@@ -38,7 +38,7 @@
                         </div>
                         {% endif %}
 
-                        <form method="POST" action="/job-request">
+                        <form method="POST" action="/job-request" enctype="multipart/form-data">
                             <!-- Your Details -->
                             <div class="mb-4">
                                 <h5 class="text-emergency mb-3">
@@ -112,6 +112,17 @@
                                     <input type="text" class="form-control" id="postcode" name="postcode" 
                                            placeholder="e.g., M1 1AA" required>
                                 </div>
+
+                                <div class="mb-3">
+                                    <label for="photos" class="form-label fw-bold">Photos or Videos (Optional)</label>
+                                    <input type="file" class="form-control" id="photos" name="photos" 
+                                           multiple accept="image/*,video/*" onchange="previewFiles()">
+                                    <div class="form-text">
+                                        <i class="fas fa-camera me-1"></i>
+                                        Upload photos or videos to help trades understand the problem better. Max 16MB per file.
+                                    </div>
+                                    <div id="filePreview" class="mt-2"></div>
+                                </div>
                             </div>
 
                             <!-- Submit -->
@@ -136,6 +147,40 @@
         </div>
     </div>
 
-    <!-- Absolutely no JavaScript - keeping it completely simple -->
+    <script>
+    function previewFiles() {
+        const files = document.getElementById('photos').files;
+        const preview = document.getElementById('filePreview');
+        preview.innerHTML = '';
+        
+        if (files.length === 0) return;
+        
+        let previewHtml = '<div class="row">';
+        for (let i = 0; i < Math.min(files.length, 5); i++) {
+            const file = files[i];
+            const fileName = file.name.length > 20 ? file.name.substring(0, 20) + '...' : file.name;
+            const fileType = file.type.startsWith('image/') ? 'image' : 'video';
+            const icon = fileType === 'image' ? 'fa-image' : 'fa-video';
+            
+            previewHtml += `
+                <div class="col-auto">
+                    <div class="card" style="width: 100px;">
+                        <div class="card-body text-center p-2">
+                            <i class="fas ${icon} text-primary mb-1"></i>
+                            <div class="small text-truncate">${fileName}</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        if (files.length > 5) {
+            previewHtml += `<div class="col-auto align-self-center"><small class="text-muted">+${files.length - 5} more files</small></div>`;
+        }
+        
+        previewHtml += '</div>';
+        preview.innerHTML = previewHtml;
+    }
+    </script>
 </body>
 </html>
