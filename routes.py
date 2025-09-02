@@ -99,25 +99,71 @@ def register():
             db.session.add(user)
             db.session.flush()
             
-            # Create trade profile
+            # Create role-specific profile
             if role == 'trade':
+                # Get trade-specific fields
+                companies_house_number = request.form.get('companies_house_number', '').strip()
+                vat_number = request.form.get('vat_number', '').strip()
+                skills = request.form.get('skills', '')
+                coverage_areas = request.form.get('coverage_areas', '').strip()
+                
+                # Handle file uploads
+                insurance_doc_url = None
+                gas_safe_doc_url = None
+                
+                # Upload insurance document
+                if 'insurance_document' in request.files:
+                    insurance_file = request.files['insurance_document']
+                    if insurance_file and insurance_file.filename and allowed_file(insurance_file.filename):
+                        filename = secure_filename(f"insurance_{user.id}_{insurance_file.filename}")
+                        file_path = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
+                        insurance_file.save(file_path)
+                        insurance_doc_url = filename
+                
+                # Upload Gas Safe certificate
+                if 'gas_safe_certificate' in request.files:
+                    gas_safe_file = request.files['gas_safe_certificate']
+                    if gas_safe_file and gas_safe_file.filename and allowed_file(gas_safe_file.filename):
+                        filename = secure_filename(f"gas_safe_{user.id}_{gas_safe_file.filename}")
+                        file_path = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
+                        gas_safe_file.save(file_path)
+                        gas_safe_doc_url = filename
+                
+                # Process coverage areas
+                areas_list = []
+                if coverage_areas:
+                    areas_list = [area.strip().upper() for area in coverage_areas.split(',')]
+                
+                # Create trade profile
                 trade = Trade(
                     user_id=user.id, 
                     company=company,
-                    companies_house_number='',
-                    vat_number='',
+                    companies_house_number=companies_house_number or '',
+                    vat_number=vat_number or '',
                     utr_number='',
-                    skills='[]',
-                    coverage_areas='[]',
-                    coverage_districts='[]'
+                    skills=f'["{skills}"]' if skills else '[]',
+                    coverage_areas=str(areas_list).replace("'", '"') if areas_list else '[]',
+                    coverage_districts='[]',
+                    insurance_document_url=insurance_doc_url
                 )
                 db.session.add(trade)
             
+            elif role == 'customer':
+                # Create customer profile
+                customer = Customer(
+                    user_id=user.id,
+                    name=company,  # Use company as name for now
+                    phone='',
+                    postcode='',
+                    addresses='[]'
+                )
+                db.session.add(customer)
+            
             db.session.commit()
-            flash('Registration successful! Please login.', 'success')
+            flash('Registration successful! Trade professionals will be verified before accessing job offers.', 'success')
             return redirect('/login')
         else:
-            flash('Please fill in all fields', 'error')
+            flash('Please fill in all required fields', 'error')
     
     return render_template('auth/simple_register.html')
 
