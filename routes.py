@@ -135,12 +135,66 @@ def customer_dashboard():
     return render_template('customer/dashboard.html', customer=customer, jobs=recent_jobs, ads=active_ads)
 
 # Public job creation (anonymous) - main entry point
-@app.route('/create-job-simple', methods=['GET', 'POST'])
-def create_job_simple():
+@app.route('/job-request', methods=['GET', 'POST'])
+def job_request():
     if request.method == 'GET':
-        return render_template('customer/create_job_simple.html')
-    # For POST, redirect to main create_job for processing
-    return redirect(url_for('create_job'))
+        return render_template('job_request.html')
+    
+    # Handle form submission
+    try:
+        # Get form data
+        name = request.form.get('name', '').strip()
+        phone = request.form.get('phone', '').strip()
+        email = request.form.get('email', '').strip()
+        urgency = request.form.get('urgency', '').strip()
+        title = request.form.get('title', '').strip()
+        category = request.form.get('category', '').strip()
+        description = request.form.get('description', '').strip()
+        postcode = request.form.get('postcode', '').strip().upper()
+        
+        # Basic validation
+        if not all([name, phone, email, urgency, title, category, description, postcode]):
+            flash('Please fill in all required fields.', 'danger')
+            return render_template('job_request.html')
+        
+        # Parse postcode
+        postcode_info = parse_postcode(postcode)
+        if not postcode_info:
+            flash('Invalid UK postcode format.', 'danger')
+            return render_template('job_request.html')
+        
+        # Get coordinates (mock for now)
+        lat, lon = geocode_postcode(postcode)
+        
+        # Create job with anonymous customer information
+        job = Job(
+            customer_name=name,
+            customer_phone=phone,
+            customer_email=email,
+            title=title,
+            category=category,
+            description=description,
+            postcode_full=postcode_info['full'],
+            postcode_area=postcode_info['area'],
+            postcode_district=postcode_info['district'],
+            lat=lat,
+            lon=lon,
+            urgency=urgency,
+            urgency_sla_minutes=Job.get_urgency_sla_minutes(urgency)
+        )
+        
+        db.session.add(job)
+        db.session.commit()
+        
+        # Find and notify matching trades
+        matching_trades = find_matching_trades(job)
+        send_job_notification(job, matching_trades)
+        
+        return render_template('job_request.html', success=True)
+        
+    except Exception as e:
+        flash('Something went wrong. Please try again.', 'danger')
+        return render_template('job_request.html')
 
 @app.route('/create-job', methods=['GET', 'POST'])
 def create_job():

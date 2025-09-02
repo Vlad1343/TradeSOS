@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emergency Trade Request - TradeSOS</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .bg-emergency { background-color: #dc3545 !important; }
+        body { background-color: #f8f9fa; }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-dark bg-emergency">
+        <div class="container">
+            <span class="navbar-brand mb-0 h1">
+                <i class="fas fa-tools me-2"></i>TradeSOS - Emergency Trade Services
+            </span>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card shadow">
+                    <div class="card-header bg-emergency text-white">
+                        <h3 class="mb-0">
+                            <i class="fas fa-exclamation-triangle me-2"></i>Request Emergency Trade Help
+                        </h3>
+                        <p class="mb-0 mt-2">Fill in your details below - no registration needed</p>
+                    </div>
+                    <div class="card-body p-4">
+                        {% if success %}
+                        <div class="alert alert-success">
+                            <i class="fas fa-check-circle me-2"></i>
+                            Your job request has been submitted! Trades in your area will contact you directly.
+                        </div>
+                        {% endif %}
+
+                        <form method="POST" action="/job-request">
+                            <!-- Your Details -->
+                            <div class="mb-4">
+                                <h5 class="text-emergency mb-3">
+                                    <i class="fas fa-user me-2"></i>Your Contact Details
+                                </h5>
+                                
+                                <div class="row">
+                                    <div class="col-md-4 mb-3">
+                                        <label for="name" class="form-label fw-bold">Your Name *</label>
+                                        <input type="text" class="form-control" id="name" name="name" required>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label for="phone" class="form-label fw-bold">Phone Number *</label>
+                                        <input type="tel" class="form-control" id="phone" name="phone" required>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label for="email" class="form-label fw-bold">Email Address *</label>
+                                        <input type="email" class="form-control" id="email" name="email" required>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Emergency Details -->
+                            <div class="mb-4">
+                                <h5 class="text-emergency mb-3">
+                                    <i class="fas fa-exclamation-circle me-2"></i>Emergency Details
+                                </h5>
+                                
+                                <div class="mb-3">
+                                    <label for="urgency" class="form-label fw-bold">How urgent is this? *</label>
+                                    <select class="form-select form-select-lg" id="urgency" name="urgency" required>
+                                        <option value="">Choose urgency level...</option>
+                                        <option value="emergency_now">🚨 Emergency Now - Immediate help needed</option>
+                                        <option value="urgent_2h">⏰ Urgent - Within 2 hours</option>
+                                        <option value="same_day">📅 Same Day - Within 8 hours</option>
+                                        <option value="next_day">📋 Next Day - Within 24 hours</option>
+                                    </select>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-8 mb-3">
+                                        <label for="title" class="form-label fw-bold">What's the problem? *</label>
+                                        <input type="text" class="form-control" id="title" name="title" 
+                                               placeholder="e.g., Burst pipe flooding kitchen" required>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label for="category" class="form-label fw-bold">Trade Type *</label>
+                                        <select class="form-select" id="category" name="category" required>
+                                            <option value="">Select trade type...</option>
+                                            <option value="plumbing">🔧 Plumbing</option>
+                                            <option value="heating">🔥 Heating & Boilers</option>
+                                            <option value="electrical">⚡ Electrical</option>
+                                            <option value="gas">⛽ Gas Safety</option>
+                                            <option value="roofing">🏠 Roofing</option>
+                                            <option value="locksmith">🔐 Locksmith</option>
+                                            <option value="glazing">🪟 Glazing & Windows</option>
+                                            <option value="security">🛡️ Security Systems</option>
+                                            <option value="other">❓ Other Emergency</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="description" class="form-label fw-bold">Describe the problem in detail *</label>
+                                    <textarea class="form-control" id="description" name="description" rows="4" 
+                                              placeholder="What happened? What's not working? Any safety concerns?" required></textarea>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="postcode" class="form-label fw-bold">Your Postcode *</label>
+                                    <input type="text" class="form-control" id="postcode" name="postcode" 
+                                           placeholder="e.g., M1 1AA" required>
+                                </div>
+                            </div>
+
+                            <!-- Submit -->
+                            <div class="mb-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="terms" name="terms" required>
+                                    <label class="form-check-label" for="terms">
+                                        I agree to share my contact details with verified trade professionals
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-emergency btn-lg">
+                                    <i class="fas fa-paper-plane me-2"></i>Get Emergency Help Now
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Absolutely no JavaScript - keeping it completely simple -->
+</body>
+</html>
