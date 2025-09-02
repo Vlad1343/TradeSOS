@@ -78,27 +78,39 @@ def register():
     
     form = RegisterForm()
     if form.validate_on_submit():
-        user = User(email=form.email.data, role=form.role.data)
-        user.set_password(form.password.data)
-        db.session.add(user)
-        db.session.flush()  # Get the user ID
+        # Check if email already exists
+        existing_user = User.query.filter_by(email=form.email.data).first()
+        if existing_user:
+            flash('An account with this email already exists. Please use a different email or sign in.', 'danger')
+            return render_template('auth/register.html', form=form)
         
-        # Create role-specific profile
-        if form.role.data == 'customer':
-            customer = Customer(user_id=user.id, name=form.name.data, phone=form.phone.data)
-            db.session.add(customer)
-        elif form.role.data == 'trade':
-            companies_house_num = form.companies_house_number.data or None
-            trade = Trade(
-                user_id=user.id, 
-                company=form.name.data,
-                companies_house_number=companies_house_num
-            )
-            db.session.add(trade)
-        
-        db.session.commit()
-        flash('Registration successful! Please log in.', 'success')
-        return redirect(url_for('login'))
+        try:
+            user = User(email=form.email.data, role=form.role.data)
+            user.set_password(form.password.data)
+            db.session.add(user)
+            db.session.flush()  # Get the user ID
+            
+            # Create role-specific profile
+            if form.role.data == 'customer':
+                customer = Customer(user_id=user.id, name=form.name.data, phone=form.phone.data)
+                db.session.add(customer)
+            elif form.role.data == 'trade':
+                companies_house_num = form.companies_house_number.data or None
+                trade = Trade(
+                    user_id=user.id, 
+                    company=form.name.data,
+                    companies_house_number=companies_house_num
+                )
+                db.session.add(trade)
+            
+            db.session.commit()
+            flash('Registration successful! Please log in.', 'success')
+            return redirect(url_for('login'))
+            
+        except Exception as e:
+            db.session.rollback()
+            flash('Registration failed. Please try again.', 'danger')
+            return render_template('auth/register.html', form=form)
     
     return render_template('auth/register.html', form=form)
 
