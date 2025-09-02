@@ -557,6 +557,38 @@ def admin_trades():
     
     return render_template('admin/trades.html', trades=trades)
 
+@app.route('/admin/trade-details/<int:trade_id>')
+@login_required
+def admin_trade_details(trade_id):
+    if current_user.role != 'admin':
+        return {'error': 'Access denied'}, 403
+    
+    trade = Trade.query.get_or_404(trade_id)
+    
+    # Return detailed trade information as JSON
+    trade_data = {
+        'id': trade.id,
+        'company': trade.company,
+        'companies_house_number': trade.companies_house_number,
+        'vat_number': trade.vat_number,
+        'utr_number': trade.utr_number,
+        'email': trade.user.email if trade.user else None,
+        'skills': trade.get_skills(),
+        'coverage_areas': trade.get_coverage_areas(),
+        'coverage_districts': trade.get_coverage_districts(),
+        'radius_km': trade.radius_km,
+        'insurance_document_url': trade.insurance_document_url,
+        'verified': trade.verified,
+        'plan_tier': trade.plan_tier,
+        'subscription_status': trade.subscription_status,
+        'rating_avg': trade.rating_avg,
+        'review_count': trade.review_count,
+        'created_at': trade.created_at.strftime('%d/%m/%Y %H:%M'),
+        'stripe_customer_id': trade.stripe_customer_id
+    }
+    
+    return trade_data
+
 @app.route('/admin/verify-trade/<int:trade_id>')
 @login_required
 def verify_trade(trade_id):
