@@ -383,9 +383,19 @@ def job_detail(job_id):
 
 # Trade routes
 @app.route('/trade/dashboard')
-@login_required
 def trade_dashboard():
+    print(f"TRADE_DASHBOARD DEBUG: current_user.is_authenticated: {current_user.is_authenticated}")
+    print(f"TRADE_DASHBOARD DEBUG: current_user: {current_user}")
+    if hasattr(current_user, 'role'):
+        print(f"TRADE_DASHBOARD DEBUG: current_user.role: {current_user.role}")
+    
+    if not current_user.is_authenticated:
+        print("TRADE_DASHBOARD DEBUG: Not authenticated, redirecting to login")
+        flash('Please log in to access the trade dashboard.', 'info')
+        return redirect(url_for('login'))
+    
     if current_user.role != 'trade':
+        print(f"TRADE_DASHBOARD DEBUG: Wrong role ({current_user.role}), redirecting to index")
         flash('Access denied.', 'danger')
         return redirect(url_for('index'))
     
