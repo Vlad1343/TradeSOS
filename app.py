@@ -4,6 +4,7 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_mail import Mail
+from flask_wtf.csrf import CSRFProtect
 from werkzeug.middleware.proxy_fix import ProxyFix
 from sqlalchemy.orm import DeclarativeBase
 
@@ -17,6 +18,7 @@ class Base(DeclarativeBase):
 db = SQLAlchemy(model_class=Base)
 login_manager = LoginManager()
 mail = Mail()
+csrf = CSRFProtect()
 
 def create_app():
     app = Flask(__name__)
@@ -24,6 +26,10 @@ def create_app():
     # Configuration
     app.secret_key = os.environ.get("SESSION_SECRET", "dev-secret-key-change-in-production")
     app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
+    
+    # Flask-WTF/CSRF Configuration
+    app.config['WTF_CSRF_ENABLED'] = True
+    app.config['WTF_CSRF_TIME_LIMIT'] = None
     
     # Database configuration
     app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DATABASE_URL", "sqlite:///tradesos.db")
@@ -58,6 +64,7 @@ def create_app():
     db.init_app(app)
     login_manager.init_app(app)
     mail.init_app(app)
+    csrf.init_app(app)
     
     # Login manager configuration
     login_manager.login_view = 'login'

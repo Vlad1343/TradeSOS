@@ -13,12 +13,12 @@
             </p>
         </div>
         
-        <form method="POST">
+        <form method="POST" action="{{ url_for('login') }}">
             {{ form.hidden_tag() }}
             
             <div class="form-group">
-                {{ form.email.label(class="") }}
-                {{ form.email(class="" + (" error" if form.email.errors else "")) }}
+                {{ form.email.label(class="form-label") }}
+                {{ form.email(class="form-control" + (" error" if form.email.errors else "")) }}
                 {% if form.email.errors %}
                     <div style="color: var(--tradesos-red); font-size: 12px; margin-top: 5px;">
                         {% for error in form.email.errors %}
@@ -29,8 +29,8 @@
             </div>
             
             <div class="form-group">
-                {{ form.password.label(class="") }}
-                {{ form.password(class="" + (" error" if form.password.errors else "")) }}
+                {{ form.password.label(class="form-label") }}
+                {{ form.password(class="form-control" + (" error" if form.password.errors else "")) }}
                 {% if form.password.errors %}
                     <div style="color: var(--tradesos-red); font-size: 12px; margin-top: 5px;">
                         {% for error in form.password.errors %}
