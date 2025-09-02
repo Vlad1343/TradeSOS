@@ -1,20 +1,36 @@
 {% extends "base_checkatrade.html" %}
 
 {% block content %}
-<!-- Call to Action Section -->
-<section class="categories-section">
+<!-- Call to Action Section - Hero Style -->
+<section class="hero-cta-section">
     <div class="container">
-        <div style="text-align: center; max-width: 600px; margin: 0 auto;">
-            <h2 style="font-size: 32px; margin-bottom: 16px; color: var(--tradesos-black);">Need emergency help right now?</h2>
-            <p style="font-size: 18px; color: var(--tradesos-gray-text); margin-bottom: 32px;">Don't wait - our verified trade professionals are standing by to help with your emergency</p>
+        <div style="text-align: center; max-width: 800px; margin: 0 auto; padding: 80px 20px;">
+            <h1 style="font-size: 48px; font-weight: 700; margin-bottom: 24px; color: var(--tradesos-black); line-height: 1.2;">Need emergency help right now?</h1>
+            <p style="font-size: 24px; color: var(--tradesos-gray-text); margin-bottom: 48px; line-height: 1.4;">Don't wait - our verified trade professionals are standing by to help with your emergency</p>
             
-            <div style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;">
-                <a href="{{ url_for('job_request') }}" class="btn btn-primary btn-large">
-                    <i class="fas fa-phone" style="margin-right: 8px;"></i>Get Emergency Help Now
+            <div style="display: flex; gap: 24px; justify-content: center; flex-wrap: wrap; margin-bottom: 32px;">
+                <a href="{{ url_for('job_request') }}" class="btn btn-primary" style="font-size: 20px; padding: 20px 40px; border-radius: 8px; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; min-width: 280px; justify-content: center;">
+                    <i class="fas fa-phone" style="margin-right: 12px; font-size: 18px;"></i>Get Emergency Help Now
                 </a>
-                <a href="{{ url_for('register') }}?role=trade" class="btn btn-outline btn-large">
+                <a href="{{ url_for('register') }}?role=trade" class="btn btn-outline" style="font-size: 18px; padding: 18px 32px; border-radius: 8px; font-weight: 500; text-decoration: none; display: inline-flex; align-items: center; min-width: 240px; justify-content: center;">
                     Join as a Trade Professional
                 </a>
+            </div>
+            
+            <!-- Trust indicators -->
+            <div style="display: flex; justify-content: center; gap: 40px; flex-wrap: wrap; margin-top: 48px; opacity: 0.8;">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <i class="fas fa-shield-check" style="color: var(--tradesos-red); font-size: 20px;"></i>
+                    <span style="font-size: 16px; color: var(--tradesos-gray-text);">Verified Professionals</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <i class="fas fa-clock" style="color: var(--tradesos-red); font-size: 20px;"></i>
+                    <span style="font-size: 16px; color: var(--tradesos-gray-text);">15min Response</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <i class="fas fa-star" style="color: var(--tradesos-red); font-size: 20px;"></i>
+                    <span style="font-size: 16px; color: var(--tradesos-gray-text);">Quality Guaranteed</span>
+                </div>
             </div>
         </div>
     </div>
