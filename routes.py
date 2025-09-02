@@ -59,20 +59,33 @@ def login():
         return redirect(url_for('index'))
     
     form = LoginForm()
+    
+    if request.method == 'POST':
+        print(f"LOGIN DEBUG: Form submitted with email: {form.email.data}")
+        print(f"LOGIN DEBUG: Form validate_on_submit: {form.validate_on_submit()}")
+        print(f"LOGIN DEBUG: Form errors: {form.errors}")
+    
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
+        print(f"LOGIN DEBUG: User found: {user}")
         if user:
-            if user.check_password(form.password.data):
+            password_check = user.check_password(form.password.data)
+            print(f"LOGIN DEBUG: Password check result: {password_check}")
+            if password_check:
                 login_user(user, remember=form.remember_me.data)
                 flash(f'Welcome back! Logged in as {user.role}.', 'success')
                 next_page = request.args.get('next')
                 if not next_page or not next_page.startswith('/'):
                     next_page = url_for('index')
+                print(f"LOGIN DEBUG: Redirecting to: {next_page}")
                 return redirect(next_page)
             else:
                 flash('Invalid password. Please check your password and try again.', 'danger')
         else:
             flash('No account found with this email address.', 'danger')
+    else:
+        if request.method == 'POST':
+            flash('Please check your form inputs and try again.', 'danger')
     
     return render_template('auth/login.html', form=form)
 
