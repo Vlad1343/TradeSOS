@@ -57,137 +57,60 @@ def trade_directory():
     
     return render_template('public/trade_directory.html', trades=trades, search=search, area=area)
 
-# Authentication routes
+# FRESH START - Simple Authentication
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    if current_user.is_authenticated:
-        return redirect(url_for('index'))
-    
     if request.method == 'POST':
-        # Get form data directly - bypass WTForms completely
-        email = request.form.get('email', '').strip()
+        email = request.form.get('email', '').strip().lower()
         password = request.form.get('password', '')
         
-        if not email or not password:
-            flash('Please enter both email and password', 'danger')
-            return render_template('auth/login.html')
-        
-        # Find user
-        user = User.query.filter_by(email=email).first()
-        if not user:
-            flash('Invalid email or password', 'danger')
-            return render_template('auth/login.html')
-        
-        # Check password
-        if not user.check_password(password):
-            flash('Invalid email or password', 'danger')
-            return render_template('auth/login.html')
-        
-        # Login successful - ensure session persists
-        session['user_id'] = user.id
-        login_user(user, remember=True, force=True, fresh=True)
-        
-        # Immediate redirect to trade dashboard
-        if user.role == 'trade':
-            return redirect(url_for('trade_dashboard'))
-        elif user.role == 'customer':
-            return redirect(url_for('customer_dashboard'))
+        if email and password:
+            user = User.query.filter_by(email=email).first()
+            if user and user.check_password(password):
+                login_user(user)
+                if user.role == 'trade':
+                    return redirect('/trade/dashboard')
+                else:
+                    return redirect('/')
+            else:
+                flash('Invalid credentials', 'error')
         else:
-            return redirect(url_for('index'))
+            flash('Please fill in all fields', 'error')
     
-    return render_template('auth/login.html')
+    return render_template('auth/simple_login.html')
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
-    if current_user.is_authenticated:
-        return redirect(url_for('index'))
-    
-    form = RegisterForm()
-    if form.validate_on_submit():
-        # Check if email already exists
-        existing_user = User.query.filter_by(email=form.email.data).first()
-        if existing_user:
-            flash('An account with this email already exists. Please use a different email or sign in.', 'danger')
-            return render_template('auth/register.html', form=form)
+    if request.method == 'POST':
+        email = request.form.get('email', '').strip().lower()
+        password = request.form.get('password', '')
+        company = request.form.get('company', '').strip()
+        role = request.form.get('role', 'trade')
         
-        try:
-            # Create user account
-            user = User(email=form.email.data, role=form.role.data)
-            user.set_password(form.password.data)
-            db.session.add(user)
-            db.session.flush()  # Get the user ID
+        if email and password and company:
+            # Check if user exists
+            if User.query.filter_by(email=email).first():
+                flash('Email already exists', 'error')
+                return render_template('auth/simple_register.html')
             
-            # Create role-specific profile
-            if form.role.data == 'customer':
-                customer = Customer(
-                    user_id=user.id, 
-                    name=form.name.data, 
-                    phone=form.phone.data or None
-                )
-                db.session.add(customer)
-                
-            elif form.role.data == 'trade':
-                # Handle file uploads for trade professionals
-                insurance_doc_url = None
-                qualification_docs = []
-                gas_safe_doc_url = None
-                
-                # Upload insurance document
-                if form.insurance_document.data:
-                    insurance_file = form.insurance_document.data
-                    if insurance_file and allowed_file(insurance_file.filename):
-                        filename = secure_filename(f"insurance_{user.id}_{insurance_file.filename}")
-                        file_path = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
-                        insurance_file.save(file_path)
-                        insurance_doc_url = filename
-                
-                # Upload qualification documents
-                if form.qualification_documents.data:
-                    for i, qual_file in enumerate(form.qualification_documents.data):
-                        if qual_file and allowed_file(qual_file.filename):
-                            filename = secure_filename(f"qualification_{user.id}_{i}_{qual_file.filename}")
-                            file_path = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
-                            qual_file.save(file_path)
-                            qualification_docs.append(filename)
-                
-                # Upload Gas Safe certificate
-                if form.gas_safe_certificate.data:
-                    gas_safe_file = form.gas_safe_certificate.data
-                    if gas_safe_file and allowed_file(gas_safe_file.filename):
-                        filename = secure_filename(f"gas_safe_{user.id}_{gas_safe_file.filename}")
-                        file_path = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
-                        gas_safe_file.save(file_path)
-                        gas_safe_doc_url = filename
-                
-                # Create trade profile
-                trade = Trade(
-                    user_id=user.id,
-                    company=form.name.data,
-                    companies_house_number=form.companies_house_number.data or None,
-                    vat_number=form.vat_number.data or None,
-                    insurance_document_url=insurance_doc_url
-                )
-                
-                # Set skills and coverage areas
-                if form.skills.data:
-                    trade.set_skills([form.skills.data])
-                
-                if form.coverage_areas.data:
-                    areas = [area.strip().upper() for area in form.coverage_areas.data.split(',')]
-                    trade.set_coverage_areas(areas)
-                
+            # Create user
+            user = User(email=email, role=role)
+            user.set_password(password)
+            db.session.add(user)
+            db.session.flush()
+            
+            # Create trade profile
+            if role == 'trade':
+                trade = Trade(user_id=user.id, company=company)
                 db.session.add(trade)
             
             db.session.commit()
-            flash('Registration successful! Your account has been created. Trade professionals will be verified before accessing job offers.', 'success')
-            return redirect(url_for('login'))
-            
-        except Exception as e:
-            db.session.rollback()
-            flash(f'Registration failed: {str(e)}. Please try again.', 'danger')
-            return render_template('auth/register.html', form=form)
+            flash('Registration successful! Please login.', 'success')
+            return redirect('/login')
+        else:
+            flash('Please fill in all fields', 'error')
     
-    return render_template('auth/register.html', form=form)
+    return render_template('auth/simple_register.html')
 
 @app.route('/logout')
 @login_required
@@ -410,42 +333,18 @@ def job_detail(job_id):
     
     return render_template('customer/job_detail.html', job=job, messages=messages)
 
-# Trade routes
+# Simple Trade Dashboard
 @app.route('/trade/dashboard')
-@login_required
+@login_required  
 def trade_dashboard():
     if current_user.role != 'trade':
-        flash('Access denied. Please log in as a trade professional.', 'danger')
-        return redirect(url_for('login'))
+        return redirect('/login')
     
     trade = Trade.query.filter_by(user_id=current_user.id).first()
     if not trade:
-        flash('Trade profile not found. Please contact support.', 'danger')
-        return redirect(url_for('index'))
+        return redirect('/login')
     
-    # Get available jobs in coverage areas
-    available_jobs = []
-    if trade.get_coverage_areas() or trade.get_coverage_districts():
-        query = Job.query.filter_by(status='posted')
-        
-        area_conditions = []
-        if trade.get_coverage_areas():
-            for area in trade.get_coverage_areas():
-                area_conditions.append(Job.postcode_area == area)
-        
-        if trade.get_coverage_districts():
-            for district in trade.get_coverage_districts():
-                area_conditions.append(Job.postcode_district == district)
-        
-        if area_conditions:
-            from sqlalchemy import or_
-            query = query.filter(or_(*area_conditions))
-            available_jobs = query.order_by(Job.created_at.desc()).limit(10).all()
-    
-    # Get accepted jobs
-    accepted_jobs = Job.query.filter_by(accepted_trade_id=trade.id).order_by(Job.created_at.desc()).limit(5).all()
-    
-    return render_template('trade/dashboard.html', trade=trade, available_jobs=available_jobs, accepted_jobs=accepted_jobs)
+    return render_template('trade/simple_dashboard.html', trade=trade, user=current_user)
 
 @app.route('/trade/profile', methods=['GET', 'POST'])
 @login_required
