@@ -64,30 +64,42 @@ def login():
         return redirect(url_for('index'))
     
     form = LoginForm()
-    if form.validate_on_submit():
-        user = User.query.filter_by(email=form.email.data).first()
-        if user and user.check_password(form.password.data):
-            try:
-                # Make session permanent first
-                session.permanent = True
-                # Login the user
-                login_result = login_user(user, remember=True)
-                
-                if login_result:
-                    flash(f'Welcome back! Successfully logged in as {user.role}.', 'success')
-                    # Direct redirect based on role instead of going through index
-                    if user.role == 'trade':
-                        return redirect(url_for('trade_dashboard'))
-                    elif user.role == 'customer':
-                        return redirect(url_for('customer_dashboard'))
-                    else:
-                        return redirect(url_for('index'))
-                else:
-                    flash('Login failed. Please try again.', 'danger')
-            except Exception as e:
-                flash(f'Login error: {str(e)}', 'danger')
+    
+    # Debug: Show if form was submitted
+    if request.method == 'POST':
+        flash('Form submitted - processing login...', 'info')
+        
+        # Check form validation
+        if not form.validate_on_submit():
+            flash(f'Form validation failed: {form.errors}', 'warning')
+            return render_template('auth/login.html', form=form)
+        
+        # Form is valid, check credentials
+        email = form.email.data
+        password = form.password.data
+        flash(f'Checking credentials for: {email}', 'info')
+        
+        user = User.query.filter_by(email=email).first()
+        if not user:
+            flash('No user found with that email address', 'danger')
+            return render_template('auth/login.html', form=form)
+        
+        if not user.check_password(password):
+            flash('Password is incorrect', 'danger')
+            return render_template('auth/login.html', form=form)
+        
+        # Credentials are correct, try to log in
+        session.permanent = True
+        login_result = login_user(user, remember=True)
+        
+        if login_result:
+            flash(f'SUCCESS! Logged in as {user.role}', 'success')
+            if user.role == 'trade':
+                return redirect(url_for('trade_dashboard'))
+            else:
+                return redirect(url_for('index'))
         else:
-            flash('Invalid email or password', 'danger')
+            flash('Flask-Login failed to log you in', 'danger')
     
     return render_template('auth/login.html', form=form)
 
