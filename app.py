@@ -67,12 +67,10 @@ def create_app():
     mail.init_app(app)
     csrf.init_app(app)
     
-    # Login manager configuration - SIMPLIFIED
+    # Login manager configuration - BASIC
     login_manager.login_view = 'login'
     login_manager.login_message = 'Please log in to access this page.'
     login_manager.login_message_category = 'info'
-    login_manager.session_protection = None  # Disable session protection
-    login_manager.remember_cookie_duration = timedelta(days=1)
     
     # User loader function
     @login_manager.user_loader

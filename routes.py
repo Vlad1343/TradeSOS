@@ -19,10 +19,10 @@ def allowed_file(filename):
     ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'pdf', 'doc', 'docx'}
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-# Session management
+# Simple session setup
 @app.before_request
-def make_session_permanent():
-    session.permanent = True
+def setup_session():
+    pass
 
 # Public routes
 @app.route('/')
@@ -67,18 +67,9 @@ def login():
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
         if user and user.check_password(form.password.data):
-            # Force session to be permanent
-            session.permanent = True
-            login_result = login_user(user, remember=True, force=True)
+            login_user(user)
             flash(f'Welcome back! Logged in as {user.role}.', 'success')
-            
-            # Redirect directly to the right dashboard
-            if user.role == 'trade':
-                return redirect(url_for('trade_dashboard'))
-            elif user.role == 'customer':
-                return redirect(url_for('customer_dashboard'))
-            else:
-                return redirect(url_for('index'))
+            return redirect(url_for('index'))
         flash('Invalid email or password', 'danger')
     
     return render_template('auth/login.html', form=form)
@@ -400,9 +391,9 @@ def job_detail(job_id):
 @app.route('/trade/dashboard')
 @login_required
 def trade_dashboard():
-    if current_user.role != 'trade':
-        flash('Access denied.', 'danger')
-        return redirect(url_for('index'))
+    if not current_user.is_authenticated or current_user.role != 'trade':
+        flash('Access denied. Please log in as a trade professional.', 'danger')
+        return redirect(url_for('login'))
     
     trade = Trade.query.filter_by(user_id=current_user.id).first()
     if not trade:
