@@ -3,336 +3,317 @@
 {% block title %}Find Trade Professionals - TradeSOS{% endblock %}
 
 {% block content %}
-<div class="row mb-4">
-    <div class="col-12">
-        <h1>Find Verified Trade Professionals</h1>
-        <p class="text-muted">Browse our directory of verified emergency trade professionals across the UK</p>
-    </div>
-</div>
-
-<!-- Search and Filters -->
-<div class="row mb-4">
-    <div class="col-12">
-        <div class="card shadow">
-            <div class="card-body">
-                <form method="GET" class="row align-items-end">
-                    <div class="col-md-4 mb-2">
-                        <label class="form-label">Search</label>
-                        <input type="text" name="search" class="form-control" 
-                               placeholder="Company name or skills" 
-                               value="{{ search }}">
-                    </div>
-                    <div class="col-md-3 mb-2">
-                        <label class="form-label">Area</label>
-                        <select name="area" class="form-select">
-                            <option value="">All Areas</option>
-                            <option value="M" {{ 'selected' if area == 'M' }}>Manchester (M)</option>
-                            <option value="B" {{ 'selected' if area == 'B' }}>Birmingham (B)</option>
-                            <option value="L" {{ 'selected' if area == 'L' }}>Liverpool (L)</option>
-                            <option value="LS" {{ 'selected' if area == 'LS' }}>Leeds (LS)</option>
-                            <option value="S" {{ 'selected' if area == 'S' }}>Sheffield (S)</option>
-                            <option value="E" {{ 'selected' if area == 'E' }}>London East (E)</option>
-                            <option value="W" {{ 'selected' if area == 'W' }}>London West (W)</option>
-                            <option value="N" {{ 'selected' if area == 'N' }}>London North (N)</option>
-                            <option value="SW" {{ 'selected' if area == 'SW' }}>London Southwest (SW)</option>
-                            <option value="SE" {{ 'selected' if area == 'SE' }}>London Southeast (SE)</option>
-                        </select>
-                    </div>
-                    <div class="col-md-3 mb-2">
-                        <label class="form-label">Service Type</label>
-                        <select name="service" class="form-select">
-                            <option value="">All Services</option>
-                            <option value="plumbing" {{ 'selected' if request.args.get('service') == 'plumbing' }}>Plumbing</option>
-                            <option value="electrical" {{ 'selected' if request.args.get('service') == 'electrical' }}>Electrical</option>
-                            <option value="heating" {{ 'selected' if request.args.get('service') == 'heating' }}>Heating & Gas</option>
-                            <option value="locksmith" {{ 'selected' if request.args.get('service') == 'locksmith' }}>Locksmith</option>
-                            <option value="glazing" {{ 'selected' if request.args.get('service') == 'glazing' }}>Glazing</option>
-                            <option value="roofing" {{ 'selected' if request.args.get('service') == 'roofing' }}>Roofing</option>
-                        </select>
-                    </div>
-                    <div class="col-md-2 mb-2">
-                        <button type="submit" class="btn btn-emergency w-100">
-                            <i class="fas fa-search me-1"></i>Search
-                        </button>
-                    </div>
-                </form>
-            </div>
+<!-- Hero Header -->
+<section style="background: var(--tradesos-gray-light); padding: 60px 0 40px 0; border-bottom: 1px solid var(--tradesos-gray-dark);">
+    <div class="container">
+        <div style="text-align: center; max-width: 700px; margin: 0 auto;">
+            <h1 style="font-size: 36px; font-weight: 600; margin-bottom: 16px; color: var(--tradesos-black);">Find Verified Trade Professionals</h1>
+            <p style="font-size: 18px; color: var(--tradesos-gray-text); margin-bottom: 0;">Browse our directory of verified emergency trade professionals across the UK</p>
         </div>
     </div>
-</div>
+</section>
+
+<!-- Search and Filters -->
+<section class="categories-section">
+    <div class="container">
+        <div class="search-card">
+            <h3 style="color: var(--tradesos-black); margin-bottom: 24px; font-size: 20px; font-weight: 600;">
+                <i class="fas fa-filter" style="color: var(--tradesos-red); margin-right: 8px;"></i>Find Your Trade Professional
+            </h3>
+            <form method="GET" style="display: grid; grid-template-columns: 1fr 1fr 1fr auto; gap: 16px; align-items: end;">
+                <div>
+                    <label style="display: block; margin-bottom: 8px; font-weight: 500; color: var(--tradesos-black); font-size: 14px;">Search</label>
+                    <input type="text" name="search" style="width: 100%; padding: 12px 16px; border: 2px solid var(--tradesos-gray-dark); border-radius: 6px; font-size: 14px;" 
+                           placeholder="Company name or skills" 
+                           value="{{ search }}">
+                </div>
+                <div>
+                    <label style="display: block; margin-bottom: 8px; font-weight: 500; color: var(--tradesos-black); font-size: 14px;">Area</label>
+                    <select name="area" style="width: 100%; padding: 12px 16px; border: 2px solid var(--tradesos-gray-dark); border-radius: 6px; font-size: 14px;">
+                        <option value="">All Areas</option>
+                        <option value="M" {{ 'selected' if area == 'M' }}>Manchester (M)</option>
+                        <option value="B" {{ 'selected' if area == 'B' }}>Birmingham (B)</option>
+                        <option value="L" {{ 'selected' if area == 'L' }}>Liverpool (L)</option>
+                        <option value="LS" {{ 'selected' if area == 'LS' }}>Leeds (LS)</option>
+                        <option value="S" {{ 'selected' if area == 'S' }}>Sheffield (S)</option>
+                        <option value="E" {{ 'selected' if area == 'E' }}>London East (E)</option>
+                        <option value="W" {{ 'selected' if area == 'W' }}>London West (W)</option>
+                        <option value="N" {{ 'selected' if area == 'N' }}>London North (N)</option>
+                        <option value="SW" {{ 'selected' if area == 'SW' }}>London Southwest (SW)</option>
+                        <option value="SE" {{ 'selected' if area == 'SE' }}>London Southeast (SE)</option>
+                    </select>
+                </div>
+                <div>
+                    <label style="display: block; margin-bottom: 8px; font-weight: 500; color: var(--tradesos-black); font-size: 14px;">Service Type</label>
+                    <select name="service" style="width: 100%; padding: 12px 16px; border: 2px solid var(--tradesos-gray-dark); border-radius: 6px; font-size: 14px;">
+                        <option value="">All Services</option>
+                        <option value="plumbing" {{ 'selected' if request.args.get('service') == 'plumbing' }}>Plumbing</option>
+                        <option value="electrical" {{ 'selected' if request.args.get('service') == 'electrical' }}>Electrical</option>
+                        <option value="heating" {{ 'selected' if request.args.get('service') == 'heating' }}>Heating & Gas</option>
+                        <option value="locksmith" {{ 'selected' if request.args.get('service') == 'locksmith' }}>Locksmith</option>
+                        <option value="glazing" {{ 'selected' if request.args.get('service') == 'glazing' }}>Glazing</option>
+                        <option value="roofing" {{ 'selected' if request.args.get('service') == 'roofing' }}>Roofing</option>
+                    </select>
+                </div>
+                <div>
+                    <button type="submit" class="btn btn-primary" style="padding: 12px 24px; font-size: 14px; font-weight: 500;">
+                        <i class="fas fa-search" style="margin-right: 8px;"></i>Search
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
 
 <!-- Results -->
-<div class="row mb-4">
-    <div class="col-12">
-        <div class="d-flex justify-content-between align-items-center">
-            <h5 class="mb-0">
+<section class="categories-section" style="padding-top: 20px;">
+    <div class="container">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px;">
+            <h2 class="section-title" style="margin-bottom: 0; font-size: 20px;">
                 {% if trades.items %}
                     Showing {{ trades.items|length }} of {{ trades.total }} verified professionals
                 {% else %}
                     No trade professionals found
                 {% endif %}
-            </h5>
+            </h2>
             {% if not current_user.is_authenticated %}
                 <div>
-                    <a href="{{ url_for('register') }}" class="btn btn-outline-emergency">
-                        <i class="fas fa-plus me-1"></i>Join as Trade Professional
+                    <a href="{{ url_for('register') }}" class="btn btn-outline" style="font-size: 14px;">
+                        <i class="fas fa-plus" style="margin-right: 8px;"></i>Join as Trade Professional
                     </a>
                 </div>
             {% endif %}
         </div>
-    </div>
-</div>
 
-<!-- Trade Cards -->
-{% if trades.items %}
-    <div class="row">
-        {% for trade in trades.items %}
-        <div class="col-lg-4 col-md-6 mb-4">
-            <div class="card trade-professional-card h-100 shadow-sm">
-                <div class="card-body">
-                    <!-- Header with verification status -->
-                    <div class="d-flex justify-content-between align-items-start mb-3">
-                        <h5 class="card-title mb-0">{{ trade.company }}</h5>
-                        <div>
-                            {% if trade.verified %}
-                                <span class="badge bg-success">
-                                    <i class="fas fa-check-circle me-1"></i>Verified
-                                </span>
-                            {% endif %}
-                            {% if trade.plan_tier == 'premium' %}
-                                <span class="badge bg-warning text-dark">
-                                    <i class="fas fa-crown me-1"></i>Premium
-                                </span>
-                            {% endif %}
-                        </div>
-                    </div>
-                    
-                    <!-- Skills -->
-                    {% if trade.get_skills() %}
-                        <div class="mb-3">
-                            <h6 class="small text-muted mb-2">SPECIALTIES</h6>
-                            <div>
-                                {% for skill in trade.get_skills()[:6] %}
-                                    <span class="badge bg-secondary me-1 mb-1">{{ skill.title() }}</span>
-                                {% endfor %}
-                                {% if trade.get_skills()|length > 6 %}
-                                    <span class="text-muted small">+{{ trade.get_skills()|length - 6 }} more</span>
-                                {% endif %}
-                            </div>
-                        </div>
-                    {% endif %}
-                    
-                    <!-- Coverage Areas -->
-                    {% if trade.get_coverage_areas() %}
-                        <div class="mb-3">
-                            <h6 class="small text-muted mb-2">COVERAGE AREAS</h6>
-                            <div>
-                                {% for area in trade.get_coverage_areas()[:5] %}
-                                    <span class="badge bg-info me-1 mb-1">{{ area }}</span>
-                                {% endfor %}
-                                {% if trade.get_coverage_areas()|length > 5 %}
-                                    <span class="text-muted small">+{{ trade.get_coverage_areas()|length - 5 }} more</span>
-                                {% endif %}
-                            </div>
-                        </div>
-                    {% endif %}
-                    
-                    <!-- Rating -->
-                    {% if trade.review_count > 0 %}
-                        <div class="mb-3">
-                            <div class="rating">
-                                {% for i in range(1, 6) %}
-                                    {% if i <= trade.rating_avg %}
-                                        <i class="fas fa-star text-warning"></i>
-                                    {% else %}
-                                        <i class="far fa-star text-muted"></i>
-                                    {% endif %}
-                                {% endfor %}
-                                <span class="ms-2 text-muted">
-                                    {{ "%.1f"|format(trade.rating_avg) }} ({{ trade.review_count }} reviews)
-                                </span>
-                            </div>
-                        </div>
-                    {% else %}
-                        <div class="mb-3">
-                            <span class="text-muted small">No reviews yet</span>
-                        </div>
-                    {% endif %}
-                    
-                    <!-- Registration date -->
-                    <div class="mb-3">
-                        <small class="text-muted">
-                            <i class="fas fa-calendar me-1"></i>
-                            Member since {{ trade.created_at.strftime('%B %Y') }}
-                        </small>
+        <!-- Trade Cards -->
+        {% if trades.items %}
+        <div class="categories-grid">
+            {% for trade in trades.items %}
+            <div class="category-card" style="min-height: auto;">
+                <div style="display: flex; justify-content: between; align-items: start; margin-bottom: 16px;">
+                    <h3 style="font-size: 18px; font-weight: 600; margin-bottom: 0; color: var(--tradesos-black);">{{ trade.company }}</h3>
+                    <div style="display: flex; gap: 8px;">
+                        {% if trade.verified %}
+                            <span style="background: #28a745; color: white; padding: 4px 8px; border-radius: 12px; font-size: 12px; font-weight: 500;">
+                                <i class="fas fa-check-circle" style="margin-right: 4px;"></i>Verified
+                            </span>
+                        {% endif %}
+                        {% if trade.plan_tier == 'premium' %}
+                            <span style="background: #ffc107; color: #212529; padding: 4px 8px; border-radius: 12px; font-size: 12px; font-weight: 500;">
+                                <i class="fas fa-crown" style="margin-right: 4px;"></i>Premium
+                            </span>
+                        {% endif %}
                     </div>
                 </div>
                 
-                <!-- Footer -->
-                <div class="card-footer bg-transparent">
-                    {% if current_user.is_authenticated and current_user.role == 'customer' %}
-                        <a href="{{ url_for('create_job') }}" class="btn btn-emergency w-100">
-                            <i class="fas fa-plus-circle me-1"></i>Create Emergency Job
-                        </a>
-                    {% elif not current_user.is_authenticated %}
-                        <a href="{{ url_for('register') }}" class="btn btn-outline-emergency w-100">
-                            <i class="fas fa-user-plus me-1"></i>Sign Up to Contact
-                        </a>
-                    {% else %}
-                        <div class="text-center">
-                            <small class="text-muted">Contact via emergency job system</small>
+                <!-- Skills -->
+                {% if trade.get_skills() %}
+                    <div style="margin-bottom: 16px;">
+                        <h4 style="font-size: 14px; font-weight: 600; color: var(--tradesos-gray-text); margin-bottom: 8px; text-transform: uppercase;">Specialties</h4>
+                        <div>
+                            {% for skill in trade.get_skills()[:6] %}
+                                <span style="background: var(--tradesos-gray-light); color: var(--tradesos-black); padding: 4px 8px; border-radius: 12px; font-size: 12px; margin-right: 8px; margin-bottom: 4px; display: inline-block;">{{ skill.title() }}</span>
+                            {% endfor %}
+                            {% if trade.get_skills()|length > 6 %}
+                                <span style="color: var(--tradesos-gray-text); font-size: 12px;">+{{ trade.get_skills()|length - 6 }} more</span>
+                            {% endif %}
                         </div>
-                    {% endif %}
+                    </div>
+                {% endif %}
+                
+                <!-- Coverage Areas -->
+                {% if trade.get_coverage_areas() %}
+                    <div style="margin-bottom: 16px;">
+                        <h4 style="font-size: 14px; font-weight: 600; color: var(--tradesos-gray-text); margin-bottom: 8px; text-transform: uppercase;">Coverage Areas</h4>
+                        <div>
+                            {% for area in trade.get_coverage_areas()[:5] %}
+                                <span style="background: #e3f2fd; color: #1976d2; padding: 4px 8px; border-radius: 12px; font-size: 12px; margin-right: 8px; margin-bottom: 4px; display: inline-block;">{{ area }}</span>
+                            {% endfor %}
+                            {% if trade.get_coverage_areas()|length > 5 %}
+                                <span style="color: var(--tradesos-gray-text); font-size: 12px;">+{{ trade.get_coverage_areas()|length - 5 }} more</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endif %}
+                
+                <!-- Rating -->
+                {% if trade.review_count > 0 %}
+                    <div style="margin-bottom: 16px;">
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            {% for i in range(1, 6) %}
+                                {% if i <= trade.rating_avg %}
+                                    <i class="fas fa-star" style="color: #ffc107; font-size: 14px;"></i>
+                                {% else %}
+                                    <i class="far fa-star" style="color: var(--tradesos-gray-dark); font-size: 14px;"></i>
+                                {% endif %}
+                            {% endfor %}
+                            <span style="color: var(--tradesos-gray-text); font-size: 14px;">
+                                {{ "%.1f"|format(trade.rating_avg) }} ({{ trade.review_count }} reviews)
+                            </span>
+                        </div>
+                    </div>
+                {% else %}
+                    <div style="margin-bottom: 16px;">
+                        <span style="color: var(--tradesos-gray-text); font-size: 14px;">No reviews yet</span>
+                    </div>
+                {% endif %}
+                
+                <!-- Registration date -->
+                <div style="margin-bottom: 20px;">
+                    <small style="color: var(--tradesos-gray-text); font-size: 12px;">
+                        <i class="fas fa-calendar" style="margin-right: 4px;"></i>
+                        Member since {{ trade.created_at.strftime('%B %Y') }}
+                    </small>
                 </div>
+                
+                <!-- Action Button -->
+                {% if current_user.is_authenticated and current_user.role == 'customer' %}
+                    <a href="{{ url_for('create_job') }}" class="category-btn" style="text-align: center;">
+                        <i class="fas fa-plus-circle" style="margin-right: 8px;"></i>Create Emergency Job
+                    </a>
+                {% elif not current_user.is_authenticated %}
+                    <a href="{{ url_for('register') }}" class="category-btn" style="text-align: center; background: transparent; color: var(--tradesos-red); border: 2px solid var(--tradesos-red);">
+                        <i class="fas fa-user-plus" style="margin-right: 8px;"></i>Sign Up to Contact
+                    </a>
+                {% else %}
+                    <div style="text-align: center; padding: 12px; color: var(--tradesos-gray-text); font-size: 14px;">
+                        Contact via emergency job system
+                    </div>
+                {% endif %}
             </div>
+            {% endfor %}
         </div>
-        {% endfor %}
-    </div>
 
-    <!-- Pagination -->
-    {% if trades.pages > 1 %}
-    <div class="row">
-        <div class="col-12">
+        <!-- Pagination -->
+        {% if trades.pages > 1 %}
+        <div style="text-align: center; margin-top: 48px;">
             <nav aria-label="Trade directory pagination">
-                <ul class="pagination justify-content-center">
+                <div style="display: inline-flex; gap: 8px; align-items: center;">
                     {% if trades.has_prev %}
-                        <li class="page-item">
-                            <a class="page-link" href="{{ url_for('trade_directory', page=trades.prev_num, search=search, area=area) }}">
-                                <i class="fas fa-chevron-left"></i> Previous
-                            </a>
-                        </li>
+                        <a href="{{ url_for('trade_directory', page=trades.prev_num, search=search, area=area) }}" 
+                           style="padding: 8px 16px; background: var(--tradesos-white); border: 1px solid var(--tradesos-gray-dark); border-radius: 6px; text-decoration: none; color: var(--tradesos-black); font-size: 14px;">
+                            <i class="fas fa-chevron-left"></i> Previous
+                        </a>
                     {% endif %}
                     
                     {% for page_num in trades.iter_pages() %}
                         {% if page_num %}
                             {% if page_num != trades.page %}
-                                <li class="page-item">
-                                    <a class="page-link" href="{{ url_for('trade_directory', page=page_num, search=search, area=area) }}">
-                                        {{ page_num }}
-                                    </a>
-                                </li>
+                                <a href="{{ url_for('trade_directory', page=page_num, search=search, area=area) }}" 
+                                   style="padding: 8px 12px; background: var(--tradesos-white); border: 1px solid var(--tradesos-gray-dark); border-radius: 6px; text-decoration: none; color: var(--tradesos-black); font-size: 14px; min-width: 40px; text-align: center;">
+                                    {{ page_num }}
+                                </a>
                             {% else %}
-                                <li class="page-item active">
-                                    <span class="page-link">{{ page_num }}</span>
-                                </li>
+                                <span style="padding: 8px 12px; background: var(--tradesos-red); border: 1px solid var(--tradesos-red); border-radius: 6px; color: var(--tradesos-white); font-size: 14px; min-width: 40px; text-align: center;">
+                                    {{ page_num }}
+                                </span>
                             {% endif %}
                         {% else %}
-                            <li class="page-item disabled">
-                                <span class="page-link">...</span>
-                            </li>
+                            <span style="padding: 8px 12px; color: var(--tradesos-gray-text); font-size: 14px;">...</span>
                         {% endif %}
                     {% endfor %}
                     
                     {% if trades.has_next %}
-                        <li class="page-item">
-                            <a class="page-link" href="{{ url_for('trade_directory', page=trades.next_num, search=search, area=area) }}">
-                                Next <i class="fas fa-chevron-right"></i>
-                            </a>
-                        </li>
+                        <a href="{{ url_for('trade_directory', page=trades.next_num, search=search, area=area) }}" 
+                           style="padding: 8px 16px; background: var(--tradesos-white); border: 1px solid var(--tradesos-gray-dark); border-radius: 6px; text-decoration: none; color: var(--tradesos-black); font-size: 14px;">
+                            Next <i class="fas fa-chevron-right"></i>
+                        </a>
                     {% endif %}
-                </ul>
+                </div>
             </nav>
         </div>
-    </div>
-    {% endif %}
+        {% endif %}
 
-{% else %}
-    <!-- No Results -->
-    <div class="row">
-        <div class="col-12">
-            <div class="card border-warning">
-                <div class="card-body text-center py-5">
-                    <i class="fas fa-search text-muted" style="font-size: 4rem;"></i>
-                    <h4 class="mt-3">No Trade Professionals Found</h4>
-                    <p class="text-muted mb-4">
-                        {% if search or area %}
-                            No verified trade professionals match your search criteria. Try adjusting your filters.
-                        {% else %}
-                            No verified trade professionals are currently listed in our directory.
-                        {% endif %}
-                    </p>
-                    
-                    <div class="row justify-content-center">
-                        <div class="col-md-6">
-                            {% if search or area %}
-                                <a href="{{ url_for('trade_directory') }}" class="btn btn-outline-primary me-2">
-                                    <i class="fas fa-undo me-1"></i>Clear Filters
-                                </a>
-                            {% endif %}
-                            
-                            {% if not current_user.is_authenticated or current_user.role == 'customer' %}
-                                <a href="{{ url_for('create_job') if current_user.is_authenticated else url_for('register') }}" 
-                                   class="btn btn-emergency">
-                                    <i class="fas fa-{{ 'plus-circle' if current_user.is_authenticated else 'user-plus' }} me-1"></i>
-                                    {{ 'Create Emergency Job' if current_user.is_authenticated else 'Sign Up as Customer' }}
-                                </a>
-                            {% endif %}
-                        </div>
-                    </div>
-                </div>
+        {% else %}
+        <!-- No Results -->
+        <div style="text-align: center; padding: 80px 20px; border: 2px solid var(--tradesos-gray-dark); border-radius: 8px; background: var(--tradesos-gray-light);">
+            <i class="fas fa-search" style="font-size: 64px; color: var(--tradesos-gray-text); margin-bottom: 24px;"></i>
+            <h3 style="color: var(--tradesos-black); margin-bottom: 16px; font-size: 24px;">No Trade Professionals Found</h3>
+            <p style="color: var(--tradesos-gray-text); margin-bottom: 32px; font-size: 16px; max-width: 400px; margin-left: auto; margin-right: auto;">
+                {% if search or area %}
+                    No verified trade professionals match your search criteria. Try adjusting your filters.
+                {% else %}
+                    No verified trade professionals are currently listed in our directory.
+                {% endif %}
+            </p>
+            
+            <div style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;">
+                {% if search or area %}
+                    <a href="{{ url_for('trade_directory') }}" class="btn btn-outline">
+                        <i class="fas fa-undo" style="margin-right: 8px;"></i>Clear Filters
+                    </a>
+                {% endif %}
+                
+                {% if not current_user.is_authenticated or current_user.role == 'customer' %}
+                    <a href="{{ url_for('create_job') if current_user.is_authenticated else url_for('register') }}" 
+                       class="btn btn-primary">
+                        <i class="fas fa-{{ 'plus-circle' if current_user.is_authenticated else 'user-plus' }}" style="margin-right: 8px;"></i>
+                        {{ 'Create Emergency Job' if current_user.is_authenticated else 'Sign Up as Customer' }}
+                    </a>
+                {% endif %}
             </div>
         </div>
+        {% endif %}
     </div>
-{% endif %}
+</section>
 
 <!-- Call to Action for Trades -->
 {% if not current_user.is_authenticated or current_user.role != 'trade' %}
-<div class="row mt-5">
-    <div class="col-12">
-        <div class="card bg-emergency text-white">
-            <div class="card-body text-center py-4">
-                <h3>Are you a Trade Professional?</h3>
-                <p class="lead mb-4">Join TradeSOS and start receiving emergency job notifications in your area.</p>
-                <div class="row justify-content-center">
-                    <div class="col-md-8">
-                        <div class="row">
-                            <div class="col-md-4 mb-2">
-                                <div class="text-center">
-                                    <i class="fas fa-bell fa-2x mb-2"></i>
-                                    <h6>Instant Notifications</h6>
-                                    <small>Get notified of emergency jobs in your area</small>
-                                </div>
-                            </div>
-                            <div class="col-md-4 mb-2">
-                                <div class="text-center">
-                                    <i class="fas fa-crown fa-2x mb-2"></i>
-                                    <h6>Premium Benefits</h6>
-                                    <small>Priority access and higher rankings</small>
-                                </div>
-                            </div>
-                            <div class="col-md-4 mb-2">
-                                <div class="text-center">
-                                    <i class="fas fa-star fa-2x mb-2"></i>
-                                    <h6>Build Reputation</h6>
-                                    <small>Customer reviews and ratings</small>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+<section class="categories-section" style="background: var(--tradesos-red); color: var(--tradesos-white);">
+    <div class="container">
+        <div style="text-align: center; max-width: 800px; margin: 0 auto;">
+            <h2 style="font-size: 32px; font-weight: 600; margin-bottom: 16px; color: var(--tradesos-white);">Are you a Trade Professional?</h2>
+            <p style="font-size: 18px; margin-bottom: 48px; color: var(--tradesos-white); opacity: 0.9;">Join TradeSOS and start receiving emergency job notifications in your area.</p>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 32px; margin-bottom: 48px;">
+                <div style="text-align: center;">
+                    <i class="fas fa-bell" style="font-size: 32px; margin-bottom: 16px; color: var(--tradesos-white);"></i>
+                    <h3 style="font-size: 18px; font-weight: 600; margin-bottom: 8px; color: var(--tradesos-white);">Instant Notifications</h3>
+                    <p style="font-size: 14px; color: var(--tradesos-white); opacity: 0.8;">Get notified of emergency jobs in your area</p>
                 </div>
-                <a href="{{ url_for('register') }}?role=trade" class="btn btn-light btn-lg mt-3">
-                    <i class="fas fa-tools me-2"></i>Join as Trade Professional
-                </a>
+                <div style="text-align: center;">
+                    <i class="fas fa-crown" style="font-size: 32px; margin-bottom: 16px; color: var(--tradesos-white);"></i>
+                    <h3 style="font-size: 18px; font-weight: 600; margin-bottom: 8px; color: var(--tradesos-white);">Premium Benefits</h3>
+                    <p style="font-size: 14px; color: var(--tradesos-white); opacity: 0.8;">Priority access and higher rankings</p>
+                </div>
+                <div style="text-align: center;">
+                    <i class="fas fa-star" style="font-size: 32px; margin-bottom: 16px; color: var(--tradesos-white);"></i>
+                    <h3 style="font-size: 18px; font-weight: 600; margin-bottom: 8px; color: var(--tradesos-white);">Build Reputation</h3>
+                    <p style="font-size: 14px; color: var(--tradesos-white); opacity: 0.8;">Customer reviews and ratings</p>
+                </div>
             </div>
+            
+            <a href="{{ url_for('register') }}?role=trade" style="background: var(--tradesos-white); color: var(--tradesos-red); padding: 16px 32px; border-radius: 8px; text-decoration: none; font-size: 18px; font-weight: 600; display: inline-flex; align-items: center;">
+                <i class="fas fa-tools" style="margin-right: 12px;"></i>Join as Trade Professional
+            </a>
         </div>
     </div>
-</div>
+</section>
 {% endif %}
 {% endblock %}
 
 {% block scripts %}
 <style>
-.trade-professional-card {
-    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
-}
-
-.trade-professional-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1) !important;
+.search-card {
+    background: var(--tradesos-white);
+    border: 2px solid var(--tradesos-gray-dark);
+    border-radius: 8px;
+    padding: 24px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 .rating .fa-star {
     font-size: 0.9rem;
+}
+
+@media (max-width: 768px) {
+    .search-card form {
+        display: block !important;
+    }
+    
+    .search-card form > div {
+        margin-bottom: 16px;
+    }
 }
 </style>
 {% endblock %}
