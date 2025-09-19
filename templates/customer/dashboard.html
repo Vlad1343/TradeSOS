@@ -3,7 +3,9 @@
 {% block title %}Customer Dashboard - TradeSOS{% endblock %}
 
 {% block content %}
-<div class="row mb-4">
+<div class="customer-dashboard">
+
+<div class="row mb-4 customer-dashboard-header">
     <div class="col-12">
         <h1>Customer Dashboard</h1>
         <p class="text-muted">Welcome back, {{ customer.name }}!</p>
@@ -11,34 +13,32 @@
 </div>
 
 <!-- Quick Actions -->
-<div class="row mb-4">
-    <div class="col-md-6 mb-3">
-        <div class="card bg-emergency text-white">
+<div class="row mb-4 quick-actions-row">
+    <div class="col-md-6 mb-3 quick-action-col">
+        <div class="card quick-action">
             <div class="card-body text-center">
                 <i class="fas fa-exclamation-triangle fa-3x mb-3"></i>
                 <h4>Emergency Callout</h4>
-                <p>Need immediate assistance? Create an emergency job request.</p>
-                <a href="{{ url_for('create_job') }}" class="btn btn-light btn-lg">
-                    <i class="fas fa-plus-circle me-2"></i>Create Emergency Job
-                </a>
+                <p>Need immediate assistance? Create an emergency job request</p>
+                <a href="{{ url_for('job_request') }}" class="btn btn-emergency btn-lg">Create Request</a>
             </div>
         </div>
     </div>
-    <div class="col-md-6 mb-3">
-        <div class="card bg-info text-white">
+    <div class="col-md-6 mb-3 quick-action-col">
+        <div class="card quick-action">
             <div class="card-body text-center">
                 <i class="fas fa-search fa-3x mb-3"></i>
                 <h4>Find Trades</h4>
-                <p>Browse verified trade professionals in your area.</p>
-                <a href="{{ url_for('trade_directory') }}" class="btn btn-light btn-lg">
-                    <i class="fas fa-users me-2"></i>Browse Directory
-                </a>
+                <p>Browse verified trade professionals in your area</p>
+                <a href="{{ url_for('trade_directory') }}" class="btn btn-emergency btn-lg">Browse Directory</a>
             </div>
         </div>
     </div>
 </div>
 
 <!-- Recent Jobs -->
+{% if jobs %}
+<!-- Recent Jobs (has items) -->
 <div class="row mb-4">
     <div class="col-12">
         <div class="card">
@@ -46,85 +46,89 @@
                 <h5 class="mb-0">
                     <i class="fas fa-clipboard-list me-2"></i>Recent Jobs
                 </h5>
-                <a href="{{ url_for('create_job') }}" class="btn btn-emergency btn-sm">
-                    <i class="fas fa-plus me-1"></i>New Job
-                </a>
+                <a href="{{ url_for('job_request') }}" class="btn btn-emergency btn-sm">New Job</a>
             </div>
             <div class="card-body">
-                {% if jobs %}
-                    <div class="table-responsive">
-                        <table class="table table-hover">
-                            <thead>
-                                <tr>
-                                    <th>Job</th>
-                                    <th>Category</th>
-                                    <th>Urgency</th>
-                                    <th>Status</th>
-                                    <th>Created</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for job in jobs %}
-                                <tr>
-                                    <td>
-                                        <strong>{{ job.title }}</strong><br>
-                                        <small class="text-muted">{{ job.postcode_full }}</small>
-                                    </td>
-                                    <td>
-                                        <span class="badge bg-secondary">{{ job.category.title() }}</span>
-                                    </td>
-                                    <td>
-                                        {% set urgency_info = job.urgency %}
-                                        {% if job.urgency == 'emergency_now' %}
-                                            <span class="badge bg-danger">Emergency Now</span>
-                                        {% elif job.urgency == 'urgent_2h' %}
-                                            <span class="badge bg-warning">Urgent (2h)</span>
-                                        {% elif job.urgency == 'same_day' %}
-                                            <span class="badge bg-info">Same Day</span>
-                                        {% elif job.urgency == 'next_day' %}
-                                            <span class="badge bg-success">Next Day</span>
-                                        {% endif %}
-                                    </td>
-                                    <td>
-                                        {% if job.status == 'posted' %}
-                                            <span class="badge bg-primary">Posted</span>
-                                        {% elif job.status == 'accepted' %}
-                                            <span class="badge bg-warning">Accepted</span>
-                                        {% elif job.status == 'in_progress' %}
-                                            <span class="badge bg-info">In Progress</span>
-                                        {% elif job.status == 'completed' %}
-                                            <span class="badge bg-success">Completed</span>
-                                        {% elif job.status == 'canceled' %}
-                                            <span class="badge bg-danger">Canceled</span>
-                                        {% endif %}
-                                    </td>
-                                    <td>
-                                        <small>{{ job.created_at.strftime('%d/%m/%Y %H:%M') }}</small>
-                                    </td>
-                                    <td>
-                                        <a href="{{ url_for('job_detail', job_id=job.id) }}" class="btn btn-outline-primary btn-sm">
-                                            <i class="fas fa-eye me-1"></i>View
-                                        </a>
-                                    </td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-                {% else %}
-                    <div class="text-center py-4">
-                        <i class="fas fa-clipboard text-muted" style="font-size: 3rem;"></i>
-                        <h5 class="mt-3 text-muted">No jobs yet</h5>
-                        <p class="text-muted">Create your first emergency job request to get started.</p>
-                        <a href="{{ url_for('create_job') }}" class="btn btn-emergency">
-                            <i class="fas fa-plus-circle me-2"></i>Create First Job
-                        </a>
-                    </div>
-                {% endif %}
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Job</th>
+                                <th>Category</th>
+                                <th>Urgency</th>
+                                <th>Status</th>
+                                <th>Created</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for job in jobs %}
+                            <tr>
+                                <td>
+                                    <strong>{{ job.title }}</strong><br>
+                                    <small class="text-muted">{{ job.postcode_full }}</small>
+                                </td>
+                                <td>
+                                    <span class="badge bg-secondary">{{ job.category.title() }}</span>
+                                </td>
+                                <td>
+                                    {% if job.urgency == 'emergency_now' %}
+                                        <span class="badge bg-danger">Emergency Now</span>
+                                    {% elif job.urgency == 'urgent_2h' %}
+                                        <span class="badge bg-warning">Urgent (2h)</span>
+                                    {% elif job.urgency == 'same_day' %}
+                                        <span class="badge bg-info">Same Day</span>
+                                    {% elif job.urgency == 'next_day' %}
+                                        <span class="badge bg-success">Next Day</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if job.status == 'posted' %}
+                                        <span class="badge bg-primary">Posted</span>
+                                    {% elif job.status == 'accepted' %}
+                                        <span class="badge bg-warning">Accepted</span>
+                                    {% elif job.status == 'in_progress' %}
+                                        <span class="badge bg-info">In Progress</span>
+                                    {% elif job.status == 'completed' %}
+                                        <span class="badge bg-success">Completed</span>
+                                    {% elif job.status == 'canceled' %}
+                                        <span class="badge bg-danger">Canceled</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <small>{{ job.created_at.strftime('%d/%m/%Y %H:%M') }}</small>
+                                </td>
+                                <td>
+                                    <a href="{{ url_for('job_detail', job_id=job.id) }}" class="btn btn-outline-primary btn-sm">
+                                        <i class="fas fa-eye me-1"></i>View
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
+</div>
+{% else %}
+<!-- Empty state: show only a clean CTA card -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card text-center py-5 empty-jobs-card">
+            <div class="card-body">
+                <i class="fas fa-clipboard text-muted" style="font-size: 3rem;"></i>
+                <h3 class="mt-3" style="font-weight:700; color:var(--tradesos-black);">No requests yet</h3>
+                <p class="mt-2" style="color:var(--tradesos-gray-text); max-width:700px; margin:0 auto;">Create your first emergency job request to get started</p>
+                <div style="margin-top:20px;">
+                    <a href="{{ url_for('job_request') }}" class="btn btn-emergency btn-lg" style="min-width:220px;">Create First Request</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
 </div>
 
 <!-- Active Advertisements -->
@@ -193,4 +197,112 @@
         </div>
     </div>
 </div>
+    </div>
 {% endblock %}
+
+{% block scripts %}
+<style>
+/* Customer dashboard visual cleanup */
+.customer-dashboard-header h1 { font-size: 28px; font-weight: 800; margin-bottom: 4px; color: var(--tradesos-black); }
+.customer-dashboard-header p { font-size: 15px; color: var(--tradesos-gray-text); margin-top: 8px; margin-bottom: 20px; }
+
+/* Quick action cards */
+.card.bg-emergency, .card.bg-info { border-radius: 10px; min-height: 200px; display: flex; align-items: center; }
+.card.bg-emergency .card-body, .card.bg-info .card-body { padding: 22px; }
+.card.bg-emergency h4, .card.bg-info h4 { font-size: 20px; font-weight: 700; margin-bottom: 6px; }
+.card.bg-emergency p, .card.bg-info p { font-size: 14px; margin-bottom: 12px; color: rgba(255,255,255,0.95); }
+.btn.btn-light.btn-lg { font-weight: 700; padding: 10px 16px; border-radius: 8px; }
+.btn .me-2 { margin-right: 8px; }
+
+/* Customer dashboard layout wrapper */
+.customer-dashboard { padding: 24px 20px 40px; max-width: 1200px; margin: 0 auto; }
+.customer-dashboard .quick-actions-row { display: flex; gap: 20px; align-items: stretch; }
+.customer-dashboard .quick-action-col { display: flex; }
+    /* Center quick-action rectangles: ensure content is in the geometric center */
+    .customer-dashboard .quick-action { display: flex; flex:1; align-items: center; justify-content: center; box-shadow: 0 8px 20px rgba(15,15,15,0.04); border: 2px solid var(--tradesos-red); border-radius: 10px; min-height: 220px; }
+    .customer-dashboard .quick-action .card-body { display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding: 28px 32px; width:100%; gap:12px; }
+    /* Remove default margins on headings and paragraphs so vertical centering is accurate */
+    .customer-dashboard .quick-action .card-body h4 { margin: 0; padding: 0; }
+    .customer-dashboard .quick-action .card-body p { margin: 0; padding: 0; color: var(--tradesos-gray-text); }
+    /* Tame icon spacing so the stacked content centers as expected */
+    .customer-dashboard .quick-action i.fas { font-size: 36px; color: var(--tradesos-red); margin-bottom: 10px; }
+    /* Ensure the CTA sits centered and does not introduce extra offsets */
+    .customer-dashboard .quick-action .btn.btn-emergency { display:inline-flex; align-items:center; justify-content:center; text-align:center; margin: 0 auto; }
+    .customer-dashboard a { text-decoration: none; color: inherit; }
+    .customer-dashboard a.btn { text-decoration: none; }
+    .customer-dashboard .btn.btn-light { background: #fff; color: #222; border: 1px solid rgba(0,0,0,0.06); }
+    .customer-dashboard .quick-action i.fas { color: #fff; }
+    .customer-dashboard .card-header { padding-left: 28px; padding-right: 28px; }
+    .customer-dashboard .card { border-radius: 10px; }
+    .customer-dashboard h5, .customer-dashboard h6 { margin-left: 0; }
+
+/* Quick-action card visual: white tile with red accent and solid red CTA */
+.customer-dashboard .quick-action { background: var(--tradesos-white); color: var(--tradesos-black); }
+.customer-dashboard .quick-action .card-body p { color: var(--tradesos-gray-text); }
+    .customer-dashboard .quick-action .btn { color: #fff; border: none; display:inline-flex; align-items:center; justify-content:center; }
+    /* Emergency CTA: use inline-flex centering without positional transforms */
+    .customer-dashboard .quick-action .btn.btn-emergency { background: var(--tradesos-red); color: #fff; padding: 10px 18px; font-weight: 700; border-radius: 8px; min-width: 180px; display:inline-flex; align-items:center; justify-content:center; gap:8px; margin: 0 auto; position: static; transform: none; }
+    /* Buttons now contain only text to guarantee perfect centering across browsers */
+    .customer-dashboard .quick-action .btn.btn-emergency i { display: none; }
+    .customer-dashboard .quick-action .btn .btn-label { display: inline-block; }
+.customer-dashboard .quick-action i.fas { font-size: 36px; color: var(--tradesos-red); margin-bottom: 6px; }
+
+/* Empty state spacing */
+.empty-jobs-card { padding-bottom: 36px; margin-bottom: 36px; }
+/* Restore the empty-state CTA to the original emergency style: red background with white text */
+.empty-jobs-card .btn-emergency { background: var(--tradesos-red) !important; color: #fff !important; border: none !important; padding: 10px 18px !important; border-radius: 8px !important; font-weight: 700 !important; }
+
+/* Emergency Guidelines modern styling */
+.emergency-guidelines { display:flex; gap:20px; align-items:flex-start; padding:20px; background: linear-gradient(180deg,#fff,#fbfbff); border-radius:10px; box-shadow: 0 6px 18px rgba(15,15,15,0.04); }
+.emergency-guidelines .col-md-6 { padding:0; }
+.emergency-guidelines h6 { font-size:16px; font-weight:800; margin-bottom:10px; }
+.emergency-guidelines ul.small { margin:0; padding-left:18px; }
+
+@media (max-width: 767px) {
+    .emergency-guidelines { flex-direction:column; }
+}
+
+@media (max-width: 767px) {
+    .customer-dashboard .quick-actions-row { flex-direction: column; }
+}
+
+/* Jobs table compactness */
+.table.table-hover { margin-bottom: 0; }
+.table th { font-size: 14px; font-weight: 700; color: var(--tradesos-black); }
+.table td, .table th { vertical-align: middle; }
+.table td small { color: var(--tradesos-gray-text); }
+.badge { font-weight: 700; padding: 6px 8px; border-radius: 6px; }
+
+/* Card header actions */
+.card-header h5 { font-size: 16px; font-weight: 700; }
+.btn-emergency { background: var(--tradesos-red); color: #fff; border: none; padding: 6px 10px; border-radius: 6px; font-weight: 700; }
+
+/* No jobs area */
+.text-center.py-4 i.fas { color: var(--tradesos-gray-text); }
+.text-center.py-4 h5 { font-weight: 700; color: var(--tradesos-gray-text); }
+.text-center.py-4 p { color: var(--tradesos-gray-text); }
+.btn-emergency { display: inline-flex; align-items: center; gap: 8px; }
+
+/* Ads card adjustments */
+.card.border-warning .card-body { display:flex; flex-direction:column; gap:10px; }
+.card.border-warning .card-title { font-size: 16px; font-weight: 700; }
+
+/* Emergency Guidelines */
+.card.border-info { margin-top: 28px; border-radius: 10px; }
+.card.border-info .card-header { padding-left: 28px; }
+.card.border-info .card-header h6 { font-size: 15px; font-weight: 700; display:flex; align-items:center; }
+.card.border-info .card-header .fa-info-circle { margin-right: 14px; }
+.card.border-info .card-body { padding: 22px 24px; }
+.card.border-info .card-body h6 { font-size: 15px; font-weight: 700; }
+.card.border-info .card-body ul.small li { margin-bottom: 6px; }
+.card.border-info .card-body .col-md-6 { padding-left: 20px; padding-right: 20px; }
+
+/* Responsive tweaks */
+@media (max-width: 767px) {
+    .card.bg-emergency, .card.bg-info { min-height: auto; }
+    .customer-dashboard-header h1 { font-size: 22px; }
+}
+</style>
+{% endblock %}
+
+
