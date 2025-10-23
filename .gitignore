@@ -1,1 +1,4 @@
 *.txt
+replit.md
+uv.lock
+pyproject.toml
