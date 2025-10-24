@@ -1,0 +1,23 @@
+{% extends "base_checkatrade.html" %}
+
+{% block title %}Server Error - TradeSOS{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6 text-center">
+        <div class="card shadow">
+            <div class="card-body p-5">
+                <i class="fas fa-exclamation-circle fa-4x text-danger mb-3"></i>
+                <h1 class="display-4">500</h1>
+                <h4 class="mb-3">Server Error</h4>
+                <p class="text-muted mb-4">
+                    Something went wrong on our end. Our team has been notified and we're working to fix it.
+                </p>
+                <a href="{{ url_for('index') }}" class="btn btn-emergency">
+                    <i class="fas fa-home me-2"></i>Return Home
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
