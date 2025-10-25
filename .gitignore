@@ -2,3 +2,6 @@
 replit.md
 uv.lock
 pyproject.toml
+.config/pulse
+docs
+Etc
