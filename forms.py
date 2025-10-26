@@ -7,7 +7,7 @@ class LoginForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()])
     password = PasswordField('Password', validators=[DataRequired()])
     remember_me = BooleanField('Remember Me')
-    submit = SubmitField('Sign In')
+    submit = SubmitField('Log In')
 
 class RegisterForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()])
@@ -56,6 +56,55 @@ class RegisterForm(FlaskForm):
                                     validators=[Optional(), FileAllowed(['pdf', 'doc', 'docx', 'jpg', 'png'])])
     
     submit = SubmitField('Register')
+
+    def validate(self, **kwargs):
+        # First run the default validators
+        rv = super().validate(**kwargs)
+        # If base validators already failed, continue to add conditional errors
+        is_trade = (self.role.data == 'trade')
+        if is_trade:
+            # For trade professionals, enforce additional required fields
+            # VAT number
+            if not (self.vat_number.data and str(self.vat_number.data).strip()):
+                self.vat_number.errors.append('VAT number is required')
+                rv = False
+            # Companies House number
+            if not (self.companies_house_number.data and str(self.companies_house_number.data).strip()):
+                self.companies_house_number.errors.append('Companies House registration number is required for trade professionals.')
+                rv = False
+            # Skills
+            if not (self.skills.data and str(self.skills.data).strip()):
+                self.skills.errors.append('Please select at least one primary trade skill.')
+                rv = False
+            # Insurance document (FileField) - ensure a file was uploaded
+            ins = self.insurance_document.data
+            has_insurance = False
+            if ins:
+                # FileField returns a FileStorage; check filename
+                try:
+                    filename = getattr(ins, 'filename', None)
+                    if filename:
+                        has_insurance = True
+                except Exception:
+                    has_insurance = False
+            if not has_insurance:
+                self.insurance_document.errors.append('Public liability insurance certificate is required for trade professionals.')
+                rv = False
+            # Qualification documents (MultipleFileField) - ensure at least one file
+            quals = self.qualification_documents.data
+            has_quals = False
+            if quals:
+                try:
+                    # MultipleFileField provides a list of FileStorage objects
+                    if isinstance(quals, (list, tuple)) and len([f for f in quals if getattr(f, 'filename', None)]) > 0:
+                        has_quals = True
+                except Exception:
+                    has_quals = False
+            if not has_quals:
+                self.qualification_documents.errors.append('Please upload at least one qualification or certification document')
+                rv = False
+
+        return rv
 
 class CustomerProfileForm(FlaskForm):
     name = StringField('Full Name', validators=[DataRequired(), Length(min=2, max=100)])

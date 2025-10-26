@@ -57,9 +57,10 @@ class Trade(db.Model):
     companies_house_number = db.Column(db.String(20), nullable=True)
     vat_number = db.Column(db.String(20))
     utr_number = db.Column(db.String(20))
-    skills = db.Column(db.Text)  # JSON array of skills
-    coverage_areas = db.Column(db.Text)  # JSON array of postcode areas (e.g., ["M", "SK"])
-    coverage_districts = db.Column(db.Text)  # JSON array of postcode districts (e.g., ["M1", "M3"])
+    # Prefer JSON columns for structured lists. JSON is supported by both SQLite (as text) and PostgreSQL.
+    skills = db.Column(db.JSON, nullable=True)  # JSON array of skills
+    coverage_areas = db.Column(db.JSON, nullable=True)  # JSON array of postcode areas (e.g., ["M", "SK"])
+    coverage_districts = db.Column(db.JSON, nullable=True)  # JSON array of postcode districts (e.g., ["M1", "M3"])
     radius_km = db.Column(db.Float)
     insurance_document_url = db.Column(db.String(255))
     rating_avg = db.Column(db.Float, default=0.0)
@@ -74,24 +75,32 @@ class Trade(db.Model):
     # Relationships
     accepted_jobs = db.relationship('Job', backref='accepted_trade', lazy=True)
     reviews_received = db.relationship('Review', backref='trade', lazy=True)
+    documents = db.relationship('TradeDocument', backref='trade', lazy=True, cascade='all, delete-orphan')
     
     def get_skills(self):
-        return json.loads(self.skills) if self.skills else []
-    
+        return self.skills if self.skills else []
+
     def set_skills(self, skills_list):
-        self.skills = json.dumps(skills_list)
-    
+        # Accept either a list or a comma-separated string
+        if isinstance(skills_list, str):
+            skills_list = [s.strip() for s in skills_list.split(',') if s.strip()]
+        self.skills = skills_list
+
     def get_coverage_areas(self):
-        return json.loads(self.coverage_areas) if self.coverage_areas else []
-    
+        return self.coverage_areas if self.coverage_areas else []
+
     def set_coverage_areas(self, areas_list):
-        self.coverage_areas = json.dumps(areas_list)
-    
+        if isinstance(areas_list, str):
+            areas_list = [a.strip().upper() for a in areas_list.split(',') if a.strip()]
+        self.coverage_areas = areas_list
+
     def get_coverage_districts(self):
-        return json.loads(self.coverage_districts) if self.coverage_districts else []
-    
+        return self.coverage_districts if self.coverage_districts else []
+
     def set_coverage_districts(self, districts_list):
-        self.coverage_districts = json.dumps(districts_list)
+        if isinstance(districts_list, str):
+            districts_list = [d.strip().upper() for d in districts_list.split(',') if d.strip()]
+        self.coverage_districts = districts_list
 
 class Job(db.Model):
     __tablename__ = 'jobs'
@@ -232,3 +241,19 @@ class WebhookEvent(db.Model):
     payload = db.Column(db.Text, nullable=False)  # JSON payload
     processed = db.Column(db.Boolean, default=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+
+class TradeDocument(db.Model):
+    __tablename__ = 'trade_documents'
+
+    id = db.Column(db.Integer, primary_key=True)
+    trade_id = db.Column(db.Integer, db.ForeignKey('trades.id'), nullable=False)
+    filename = db.Column(db.String(255), nullable=False)
+    file_type = db.Column(db.String(50), nullable=False)  # insurance, qualification, gas_safe, other
+    uploaded_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    def url(self):
+        # Return the public URL path for the uploaded file
+        if self.filename.startswith('/uploads/'):
+            return self.filename
+        return f"/uploads/{self.filename}"

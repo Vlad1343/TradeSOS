@@ -8,6 +8,7 @@ from flask_mail import Mail
 from flask_wtf.csrf import CSRFProtect
 from werkzeug.middleware.proxy_fix import ProxyFix
 from sqlalchemy.orm import DeclarativeBase
+from flask_migrate import Migrate
 
 # Configure logging
 logging.basicConfig(level=logging.DEBUG)
@@ -20,6 +21,7 @@ db = SQLAlchemy(model_class=Base)
 login_manager = LoginManager()
 mail = Mail()
 csrf = CSRFProtect()
+migrate = None
 
 def create_app():
     app = Flask(__name__)
@@ -81,16 +83,25 @@ def create_app():
         except:
             return None
     
+    # Initialize migrations
+    global migrate
+    migrate = Migrate(app, db)
+
     # Create upload directory
     os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
-    
+
     with app.app_context():
         # Import models to ensure they're registered
         import models
-        
-        # Create tables
-        db.create_all()
-        
+
+        # For development convenience, create tables if they don't exist.
+        # In production use Flask-Migrate (alembic) commands: `flask db init/migrate/upgrade`.
+        try:
+            db.create_all()
+        except Exception:
+            # If migrations are in use, creation may be handled by Alembic; ignore errors here.
+            logging.info('db.create_all() skipped (migrations may manage schema)')
+
         logging.info("TradeSOS application initialized successfully")
     
     return app
