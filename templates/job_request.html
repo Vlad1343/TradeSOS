@@ -59,16 +59,16 @@
             {% endfor %}
         </div>
 
-        <div id="err_category" style="color:#b00020;font-size:13px;display:none;text-align:center;margin-top:8px;">Please choose the service you need</div>
+        <div id="err_category" style="color:#b00020;font-size:13px;display:none;text-align:center;margin-top:8px;">Please select the service you need</div>
 
         {# Urgency question also on step 1 per request. Black centered question and 4 options, 2 per row. #}
     <h2 style="text-align:center;margin:36px 0 8px;color:var(--tradesos-black);font-size:22px;font-weight:800;">How urgent is your problem?</h2>
         <div style="max-width:720px;margin:0 auto 12px;text-align:center;color:var(--tradesos-gray-text);"></div>
         <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px;max-width:720px;margin:0 auto 18px;">
-            <button type="button" class="urgency-btn" data-urgency="emergency_now" style="padding:14px 18px;border-radius:8px;border:2px solid var(--tradesos-gray-dark);background:var(--tradesos-white);text-align:left;font-size:18px;font-family:'Good Times Rg','Open Sans',Arial, sans-serif;min-height:84px;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;font-weight:800;"> <strong style="font-size:18px;">🚨 Emergency</strong><div class="tile-desc" style="font-size:14px;color:var(--tradesos-gray-text);margin-top:6px;">Immediate danger or security risk.</div></button>
-            <button type="button" class="urgency-btn" data-urgency="urgent_2h" style="padding:14px 18px;border-radius:8px;border:2px solid var(--tradesos-gray-dark);background:var(--tradesos-white);text-align:left;font-size:18px;font-family:'Good Times Rg','Open Sans',Arial, sans-serif;min-height:84px;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;font-weight:800;"> <strong style="font-size:18px;">⏰ Urgent</strong><div class="tile-desc" style="font-size:14px;color:var(--tradesos-gray-text);margin-top:6px;">Needs attention within 2 hours.</div></button>
-            <button type="button" class="urgency-btn" data-urgency="same_day" style="padding:14px 18px;border-radius:8px;border:2px solid var(--tradesos-gray-dark);background:var(--tradesos-white);text-align:left;font-size:18px;font-family:'Good Times Rg','Open Sans',Arial, sans-serif;min-height:84px;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;font-weight:800;"> <strong style="font-size:18px;">📅 Same day</strong><div class="tile-desc" style="font-size:14px;color:var(--tradesos-gray-text);margin-top:6px;">Required today.</div></button>
-            <button type="button" class="urgency-btn" data-urgency="next_day" style="padding:14px 18px;border-radius:8px;border:2px solid var(--tradesos-gray-dark);background:var(--tradesos-white);text-align:left;font-size:18px;font-family:'Good Times Rg','Open Sans',Arial, sans-serif;min-height:84px;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;font-weight:800;"> <strong style="font-size:18px;">📋 Next day</strong><div class="tile-desc" style="font-size:14px;color:var(--tradesos-gray-text);margin-top:6px;">Can wait until tomorrow.</div></button>
+            <button type="button" class="urgency-btn" data-urgency="emergency_now" style="padding:14px 18px;border-radius:8px;border:2px solid var(--tradesos-gray-dark);background:var(--tradesos-white);text-align:left;font-size:18px;font-family:'Good Times Rg','Open Sans',Arial, sans-serif;min-height:84px;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;font-weight:800;"> <strong style="font-size:18px;">🚨 Emergency</strong><div class="tile-desc" style="font-size:14px;color:var(--tradesos-gray-text);margin-top:6px;">Immediate danger or security risk</div></button>
+            <button type="button" class="urgency-btn" data-urgency="urgent_2h" style="padding:14px 18px;border-radius:8px;border:2px solid var(--tradesos-gray-dark);background:var(--tradesos-white);text-align:left;font-size:18px;font-family:'Good Times Rg','Open Sans',Arial, sans-serif;min-height:84px;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;font-weight:800;"> <strong style="font-size:18px;">⏰ Urgent</strong><div class="tile-desc" style="font-size:14px;color:var(--tradesos-gray-text);margin-top:6px;">Needs attention within 2 hours</div></button>
+            <button type="button" class="urgency-btn" data-urgency="same_day" style="padding:14px 18px;border-radius:8px;border:2px solid var(--tradesos-gray-dark);background:var(--tradesos-white);text-align:left;font-size:18px;font-family:'Good Times Rg','Open Sans',Arial, sans-serif;min-height:84px;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;font-weight:800;"> <strong style="font-size:18px;">📅 Same day</strong><div class="tile-desc" style="font-size:14px;color:var(--tradesos-gray-text);margin-top:6px;">Required today</div></button>
+            <button type="button" class="urgency-btn" data-urgency="next_day" style="padding:14px 18px;border-radius:8px;border:2px solid var(--tradesos-gray-dark);background:var(--tradesos-white);text-align:left;font-size:18px;font-family:'Good Times Rg','Open Sans',Arial, sans-serif;min-height:84px;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;font-weight:800;"> <strong style="font-size:18px;">📋 Next day</strong><div class="tile-desc" style="font-size:14px;color:var(--tradesos-gray-text);margin-top:6px;">Can wait until tomorrow</div></button>
         </div>
 
         <div id="err_urgency" style="color:#b00020;font-size:13px;display:none;text-align:center;margin-top:8px;">Please select the urgency</div>
@@ -86,24 +86,24 @@
             <div class="form-group" style="text-align:left;margin-bottom:20px;">
                 <label for="short_desc" style="font-size:14px;color:var(--tradesos-black);font-weight:700;">Brief description of the problem</label>
                  <input type="text" id="short_desc" name="short_desc" placeholder="Short summary (e.g., Burst pipe in kitchen)" style="width:100%;padding:10px;border:2px solid var(--tradesos-gray-dark);border-radius:6px;font-size:14px;">
-                 <div id="err_short_desc" style="color:#b00020;font-size:13px;display:none;margin-top:6px;">Please provide a short description.</div>
+                 <div id="err_short_desc" style="color:#b00020;font-size:13px;display:none;margin-top:6px;">Please provide a short description</div>
             </div>
 
             <div class="form-group" style="text-align:left;margin-bottom:20px;">
                 <label for="long_desc" style="font-size:14px;color:var(--tradesos-black);font-weight:700;">Detailed description of the problem</label>
                  <textarea id="long_desc" name="long_desc" rows="6" placeholder="Add more details here (what happened, any safety concerns, exact location in property)" style="width:100%;padding:10px;border:2px solid var(--tradesos-gray-dark);border-radius:6px;font-size:14px;"></textarea>
-                 <div id="err_long_desc" style="color:#b00020;font-size:13px;display:none;margin-top:6px;">Please provide a detailed description.</div>
+                 <div id="err_long_desc" style="color:#b00020;font-size:13px;display:none;margin-top:6px;">Please provide a detailed description</div>
             </div>
             
             <div class="form-group" style="text-align:left;margin-bottom:20px;">
                 <label for="full_address" style="font-size:14px;color:var(--tradesos-black);font-weight:700;">Full address</label>
                  <input type="text" id="full_address" name="full_address" placeholder="House number/name, street, town" style="width:100%;padding:10px;border:2px solid var(--tradesos-gray-dark);border-radius:6px;font-size:14px;">
-                 <div id="err_full_address" style="color:#b00020;font-size:13px;display:none;margin-top:6px;">Please provide the full address.</div>
+                 <div id="err_full_address" style="color:#b00020;font-size:13px;display:none;margin-top:6px;">Please provide the full address</div>
             </div>
             <div class="form-group" style="text-align:left;margin-bottom:20px;max-width:320px;">
                 <label for="postcode" style="font-size:14px;color:var(--tradesos-black);font-weight:700;">Postcode</label>
                  <input type="text" id="postcode" name="postcode" placeholder="e.g., M1 1AA" style="width:100%;padding:10px;border:2px solid var(--tradesos-gray-dark);border-radius:6px;font-size:14px;">
-                 <div id="err_postcode" style="color:#b00020;font-size:13px;display:none;margin-top:6px;">Please provide a postcode.</div>
+                 <div id="err_postcode" style="color:#b00020;font-size:13px;display:none;margin-top:6px;">Please provide a postcode</div>
             </div>
             
             
@@ -127,12 +127,151 @@
         </div>
 
     {% elif step == 3 %}
-        <h3 style="text-align:center;margin-bottom:12px;">Step 3 — More details (placeholder)</h3>
-        <div class="tradesos-info text-center mb-3">We'll add extra questions here (photos, quick filters). For now continue to the final form.</div>
-        <div style="display:flex;justify-content:space-between;">
-            <a href="{{ url_for('job_request', step=2, category=selected_category, urgency=urgency) }}" class="tradesos-btn tradesos-btn-outline">Back</a>
-            <a href="{{ url_for('job_request', step=4, category=selected_category, urgency=urgency) }}" class="tradesos-btn tradesos-btn-primary">Proceed to Submit</a>
+        <!-- Step 3: Contact details (simplified) -->
+        <div style="max-width:720px;margin:0 auto 8px;text-align:center;">
+            <div style="min-height:56px;display:flex;align-items:center;justify-content:center;">
+                <h3 style="margin:0;color:var(--tradesos-black);font-size:22px;font-weight:800;">Your contact details</h3>
+            </div>
         </div>
+
+        <div style="max-width:720px;margin:0 auto 8px;text-align:left;">
+            <div class="form-group" style="margin-bottom:16px;">
+                <label for="step3_phone" style="font-size:14px;color:var(--tradesos-black);font-weight:700;display:block;">Phone number</label>
+                <input type="tel" id="step3_phone" name="step3_phone" placeholder="e.g., 5712 456789" style="width:100%;padding:10px;border:2px solid var(--tradesos-gray-dark);border-radius:6px;font-size:14px;">
+                <div id="err_step3_phone" style="color:#b00020;font-size:13px;display:none;margin-top:6px;">Please provide a phone number</div>
+            </div>
+            <div class="form-group" style="margin-bottom:16px;">
+                <label for="step3_email" style="font-size:14px;color:var(--tradesos-black);font-weight:700;display:block;">Email address</label>
+                <input type="email" id="step3_email" name="step3_email" placeholder="you@example.com" style="width:100%;padding:10px;border:2px solid var(--tradesos-gray-dark);border-radius:6px;font-size:14px;">
+                <div id="err_step3_email" style="color:#b00020;font-size:13px;display:none;margin-top:6px;">Please provide an email address</div>
+            </div>
+            <div class="form-group" style="margin-bottom:6px;">
+                <label for="role_selector" style="font-size:14px;color:var(--tradesos-black);font-weight:700;display:block;margin-bottom:8px;">I am a...</label>
+                <div style="max-width:520px;">
+                    <div id="role_selector" tabindex="0" style="padding:10px;border-radius:8px;border:2px solid var(--tradesos-gray-dark);background:var(--tradesos-white);cursor:pointer;display:flex;align-items:center;justify-content:space-between;font-family:'Good Times Rg','Open Sans',Arial,sans-serif;">
+                        <span id="role_selected_label" style="color:var(--tradesos-gray-text);">Select...</span>
+                        <span style="font-size:12px;color:var(--tradesos-gray-text);">▾</span>
+                    </div>
+                    <div id="role_options" style="display:none;border:1px solid var(--tradesos-gray-dark);border-radius:8px;padding:6px;margin-top:8px;background:var(--tradesos-white);box-shadow:0 6px 18px rgba(11,22,38,0.04);">
+                        <div class="role-option" data-role="homeowner" style="padding:8px;border-radius:6px;cursor:pointer;font-family:'Good Times Rg','Open Sans',Arial,sans-serif;">Homeowner</div>
+                        <div class="role-option" data-role="tenant" style="padding:8px;border-radius:6px;cursor:pointer;font-family:'Good Times Rg','Open Sans',Arial,sans-serif;">Tenant</div>
+                        <div class="role-option" data-role="landlord" style="padding:8px;border-radius:6px;cursor:pointer;font-family:'Good Times Rg','Open Sans',Arial,sans-serif;">Landlord</div>
+                        <div class="role-option" data-role="business" style="padding:8px;border-radius:6px;cursor:pointer;font-family:'Good Times Rg','Open Sans',Arial,sans-serif;">Business</div>
+                    </div>
+                    <div id="err_step3_role" style="color:#b00020;font-size:13px;display:none;margin-top:6px;">Please select one of the options</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="step3-controls" style="display:flex;justify-content:center;gap:16px;margin:28px auto 0;max-width:720px;">
+            <button type="button" id="wizard-back-step3" class="tradesos-btn tradesos-btn-primary" style="opacity:1;">Back</button>
+            <button type="button" id="wizard-continue-step3" class="tradesos-btn tradesos-btn-primary" style="cursor:pointer;">Continue</button>
+        </div>
+
+        <script>
+        // Step 3: persist phone/email and navigate to step 4
+        document.addEventListener('DOMContentLoaded', function(){
+            const cont = document.getElementById('wizard-continue-step3');
+            if(!cont) return;
+
+            // prefill from sessionStorage if present
+            try{
+                const p = sessionStorage.getItem('job_phone'); if(p) document.getElementById('step3_phone').value = p;
+                const e = sessionStorage.getItem('job_email'); if(e) document.getElementById('step3_email').value = e;
+                const r = sessionStorage.getItem('job_role'); if(r){
+                    document.querySelectorAll('.role-btn').forEach(b=>{
+                        if(b.dataset.role === r){ b.style.background = '#C62828'; b.style.color = '#ffffff'; b.style.borderColor = '#C62828'; }
+                        else { b.style.background = 'var(--tradesos-white)'; b.style.color = 'var(--tradesos-black)'; b.style.borderColor = 'var(--tradesos-gray-dark)'; }
+                    });
+                }
+            }catch(_){}
+
+            // role selector behavior (single dropdown-like control)
+            const roleSelector = document.getElementById('role_selector');
+            const roleOptions = document.getElementById('role_options');
+            const roleLabel = document.getElementById('role_selected_label');
+            let selectedRole = null;
+            if(roleSelector){
+                roleSelector.addEventListener('click', function(e){
+                    e.stopPropagation();
+                    if(roleOptions.style.display === 'none') roleOptions.style.display = 'block';
+                    else roleOptions.style.display = 'none';
+                });
+                // keyboard support: enter/space toggles
+                roleSelector.addEventListener('keydown', function(e){ if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); roleSelector.click(); } });
+            }
+            document.addEventListener('click', function(){ if(roleOptions) roleOptions.style.display = 'none'; });
+            const roleItems = document.querySelectorAll('.role-option');
+            roleItems.forEach(item=>{
+                item.addEventListener('click', function(e){
+                    const r = item.dataset.role;
+                    selectedRole = r;
+                    roleLabel.textContent = item.textContent;
+                    roleLabel.style.color = 'var(--tradesos-black)';
+                    roleOptions.style.display = 'none';
+                    try{ sessionStorage.setItem('job_role', r); }catch(_){}
+                });
+            });
+
+            // validation helper for step3
+            function showStep3Errors(phoneVal, emailVal, roleVal){
+                // clear previous
+                ['err_step3_phone','err_step3_email','err_step3_role'].forEach(id=>{ const el=document.getElementById(id); if(el) el.style.display='none'; });
+                const controlsRow = document.getElementById('step3-controls');
+                const existing = document.getElementById('step3_general_err'); if(existing) existing.remove();
+
+                if(!phoneVal && !emailVal && !roleVal){
+                    const ep = document.getElementById('err_step3_phone'); if(ep) ep.style.display='block';
+                    const ee = document.getElementById('err_step3_email'); if(ee) ee.style.display='block';
+                    const er = document.getElementById('err_step3_role'); if(er) er.style.display='block';
+                    if(controlsRow && controlsRow.parentNode){
+                        const err = document.createElement('div'); err.id='step3_general_err'; err.style.color='#b00020'; err.style.textAlign='center'; err.style.marginTop='12px'; err.style.width='100%'; err.textContent='Please complete the required fields before continuing';
+                        controlsRow.parentNode.insertBefore(err, controlsRow.nextSibling);
+                    }
+                    return false;
+                }
+                return true;
+            }
+
+            cont.addEventListener('click', function(){
+                const phone = (document.getElementById('step3_phone')||{value:''}).value.trim();
+                const email = (document.getElementById('step3_email')||{value:''}).value.trim();
+                const roleVal = selectedRole || sessionStorage.getItem('job_role') || '';
+
+                // validate: require at least one of phone/email/role
+                if(!showStep3Errors(phone, email, roleVal)){
+                    // focus first field
+                    if(!phone) { const el=document.getElementById('step3_phone'); if(el) el.focus(); }
+                    return;
+                }
+
+                try{ if(phone) sessionStorage.setItem('job_phone', phone); else sessionStorage.removeItem('job_phone'); }catch(_){}
+                try{ if(email) sessionStorage.setItem('job_email', email); else sessionStorage.removeItem('job_email'); }catch(_){}
+                try{ if(roleVal) sessionStorage.setItem('job_role', roleVal); }catch(_){}
+
+                const url = new URL(window.location.href);
+                url.searchParams.set('step','4');
+                const selectedCategory = {{ (selected_category or '')|tojson }};
+                const selectedUrgency = {{ (urgency or '')|tojson }};
+                if(selectedCategory) url.searchParams.set('category', selectedCategory);
+                if(selectedUrgency) url.searchParams.set('urgency', selectedUrgency);
+                window.location.href = url.toString();
+            });
+            // back button behavior (like step2)
+            const backBtn3 = document.getElementById('wizard-back-step3');
+            if(backBtn3){
+                backBtn3.addEventListener('click', function(){
+                    const url = new URL(window.location.href);
+                    url.searchParams.set('step','2');
+                    const selectedCategory = {{ (selected_category or '')|tojson }};
+                    const selectedUrgency = {{ (urgency or '')|tojson }};
+                    if(selectedCategory) url.searchParams.set('category', selectedCategory);
+                    if(selectedUrgency) url.searchParams.set('urgency', selectedUrgency);
+                    window.location.href = url.toString();
+                });
+            }
+        });
+        </script>
 
     {% else %}
         {# step == 4: show the full form (existing submission form). Prefill category & urgency from query params. #}
@@ -310,6 +449,9 @@ document.addEventListener('DOMContentLoaded', function(){
             try{ sessionStorage.removeItem('job_long_desc'); }catch(_){}
             try{ sessionStorage.removeItem('job_full_address'); }catch(_){}
             try{ sessionStorage.removeItem('job_postcode'); }catch(_){}
+            try{ sessionStorage.removeItem('job_phone'); }catch(_){}
+            try{ sessionStorage.removeItem('job_email'); }catch(_){}
+            try{ sessionStorage.removeItem('job_role'); }catch(_){}
             // clear UI selections
             try{
                 document.querySelectorAll('.category-btn').forEach(b=>{
@@ -331,6 +473,10 @@ document.addEventListener('DOMContentLoaded', function(){
                     const el = document.getElementById(id); if(el) el.value = '';
                     const err = document.getElementById('err_'+id); if(err) err.style.display='none';
                 });
+                // clear step3 inputs if present
+                try{ const sp = document.getElementById('step3_phone'); if(sp) sp.value = ''; }catch(_){ }
+                try{ const se = document.getElementById('step3_email'); if(se) se.value = ''; }catch(_){ }
+                try{ document.querySelectorAll('.role-btn').forEach(b=>{ b.style.background = 'var(--tradesos-white)'; b.style.color='var(--tradesos-black)'; b.style.borderColor='var(--tradesos-gray-dark)'; }); }catch(_){ }
                 const photosInput = document.getElementById('photos_step2'); if(photosInput) photosInput.value = '';
                 const photosPreview = document.getElementById('photosPreviewStep2'); if(photosPreview) photosPreview.innerHTML = '';
             }catch(_){}
@@ -344,6 +490,11 @@ document.addEventListener('DOMContentLoaded', function(){
     const cont = document.getElementById('wizard-continue');
     let selectedCategory = {{ (selected_category or '')|tojson }};
     let selectedUrgency = {{ (urgency or '')|tojson }};
+    // persist any initial selection coming from server so nav guards see it
+    try{
+        if(selectedCategory) sessionStorage.setItem('job_category', selectedCategory);
+        if(selectedUrgency) sessionStorage.setItem('job_urgency', selectedUrgency);
+    }catch(_){ }
 
     function updateContinueState(){
         if(!cont) return;
@@ -403,6 +554,7 @@ document.addEventListener('DOMContentLoaded', function(){
             selectedCategory = b.dataset.category;
             markSelectedButtons();
             updateContinueState();
+            try{ sessionStorage.setItem('job_category', selectedCategory); }catch(_){ }
         });
     });
 
@@ -411,6 +563,7 @@ document.addEventListener('DOMContentLoaded', function(){
             selectedUrgency = b.dataset.urgency;
             markSelectedButtons();
             updateContinueState();
+            try{ sessionStorage.setItem('job_urgency', selectedUrgency); }catch(_){ }
         });
     });
     // validator for step 1 (mirrors step 2 behavior)
@@ -727,6 +880,72 @@ document.addEventListener('DOMContentLoaded', function(){
     window.addEventListener('resize', alignLabel);
     // also realign when fonts/images load (small delay)
     setTimeout(alignLabel,200);
+});
+</script>
+<script>
+// Prevent jumping ahead using the step indicator if prior steps aren't completed
+document.addEventListener('DOMContentLoaded', function(){
+    const stepLinks = document.querySelectorAll('.job-rim a[href*="step="]');
+    if(!stepLinks || stepLinks.length === 0) return;
+
+    function canNavigateTo(step){
+        step = Number(step);
+        if(isNaN(step)) return true;
+        if(step <= 1) return true;
+        try{
+            if(step === 2){
+                return !!sessionStorage.getItem('job_category') && !!sessionStorage.getItem('job_urgency');
+            }
+            if(step === 3 || step === 4){
+                return !!sessionStorage.getItem('job_short_desc') && !!sessionStorage.getItem('job_long_desc') && !!sessionStorage.getItem('job_full_address') && !!sessionStorage.getItem('job_postcode');
+            }
+        }catch(e){
+            return false;
+        }
+        return true;
+    }
+
+    function showNavErr(msg){
+        const rim = document.querySelector('.job-rim');
+        if(!rim) return;
+        let el = document.getElementById('step_nav_err');
+        if(el){ el.textContent = msg; return; }
+        el = document.createElement('div');
+        el.id = 'step_nav_err';
+        el.style.color = '#b00020';
+        el.style.textAlign = 'center';
+        el.style.marginTop = '12px';
+        el.style.width = '100%';
+        el.textContent = msg;
+        rim.parentNode.insertBefore(el, rim.nextSibling);
+        setTimeout(()=>{ const e = document.getElementById('step_nav_err'); if(e) e.remove(); }, 4200);
+    }
+
+    stepLinks.forEach(a => {
+        a.addEventListener('click', function(e){
+            try{
+                const url = new URL(a.href);
+                const target = url.searchParams.get('step');
+                if(!target) return;
+                if(!canNavigateTo(Number(target))){
+                    e.preventDefault();
+                    showNavErr('Please complete the previous steps before jumping ahead.');
+                }
+                // additional check: if navigating to step 4, ensure step3 has at least one contact
+                if(Number(target) === 4){
+                    try{
+                        const phone = sessionStorage.getItem('job_phone');
+                        const email = sessionStorage.getItem('job_email');
+                        const role = sessionStorage.getItem('job_role');
+                        if(!(phone || email || role)){
+                            e.preventDefault();
+                            showNavErr('Please complete your contact details (step 3) before proceeding.');
+                        }
+                    }catch(_){ /* ignore */ }
+                }
+            }catch(err){ /* ignore */ }
+        }, {capture: true});
+    });
 });
 </script>
 {% endblock %}
