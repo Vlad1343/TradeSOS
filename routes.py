@@ -7,7 +7,7 @@ from flask_login import login_required, current_user, login_user, logout_user
 from werkzeug.utils import secure_filename
 from werkzeug.exceptions import RequestEntityTooLarge
 from app import db, login_manager, app
-from models import User, Customer, Trade, Job, Message, Review, AdPlacement, PartsBasket, WebhookEvent
+from models import User, Customer, Trade, Job, Message, Review, AdPlacement, PartsBasket, WebhookEvent, TradeDocument
 from forms import LoginForm, RegisterForm, CustomerProfileForm, TradeProfileForm, JobForm, ReviewForm
 from utils import parse_postcode, geocode_postcode, find_matching_trades, send_job_notification
 
@@ -78,95 +78,131 @@ def login():
         else:
             flash('Please fill in all fields', 'error')
     
-    return render_template('auth/simple_login.html')
+    return render_template('auth/login.html')
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
-    if request.method == 'POST':
-        email = request.form.get('email', '').strip().lower()
-        password = request.form.get('password', '')
-        company = request.form.get('company', '').strip()
-        role = request.form.get('role', 'trade')
-        
-        if email and password and company:
-            # Check if user exists
-            if User.query.filter_by(email=email).first():
-                flash('Email already exists', 'error')
-                return render_template('auth/simple_register.html')
-            
-            # Create user
-            user = User(email=email, role=role)
-            user.set_password(password)
-            db.session.add(user)
+    form = RegisterForm()
+    if form.validate_on_submit():
+        email = form.email.data.strip().lower()
+        password = form.password.data
+        name = form.name.data.strip()
+        role = form.role.data or 'customer'
+
+        # Check if user exists
+        if User.query.filter_by(email=email).first():
+            flash('Email already exists', 'error')
+            return render_template('auth/register.html', form=form)
+
+        # Create user
+        user = User(email=email, role=role)
+        user.set_password(password)
+        db.session.add(user)
+        db.session.flush()
+
+        # Create role-specific profile
+        if role == 'trade':
+            companies_house_number = (form.companies_house_number.data or '').strip()
+            vat_number = (form.vat_number.data or '').strip()
+            skills = form.skills.data or ''
+            coverage_areas = (form.coverage_areas.data or '').strip()
+
+            # Handle file uploads and ensure upload directory exists
+            upload_dir = current_app.config.get('UPLOAD_FOLDER') or os.path.join(app.root_path, 'uploads')
+            if not os.path.isabs(upload_dir):
+                upload_dir = os.path.join(app.root_path, upload_dir)
+            if not os.path.exists(upload_dir):
+                os.makedirs(upload_dir, exist_ok=True)
+
+            insurance_doc_url = None
+            gas_safe_doc_url = None
+
+            # insurance from WTForms field
+            if form.insurance_document.data:
+                insurance_file = form.insurance_document.data
+                if insurance_file and getattr(insurance_file, 'filename', None) and allowed_file(insurance_file.filename):
+                    filename = secure_filename(f"insurance_{user.id}_{datetime.utcnow().strftime('%Y%m%d_%H%M%S')}_{insurance_file.filename}")
+                    file_path = os.path.join(upload_dir, filename)
+                    insurance_file.save(file_path)
+                    insurance_doc_url = f"/uploads/{filename}"
+
+            # gas safe
+            if form.gas_safe_certificate.data:
+                gas_safe_file = form.gas_safe_certificate.data
+                if gas_safe_file and getattr(gas_safe_file, 'filename', None) and allowed_file(gas_safe_file.filename):
+                    filename = secure_filename(f"gas_safe_{user.id}_{datetime.utcnow().strftime('%Y%m%d_%H%M%S')}_{gas_safe_file.filename}")
+                    file_path = os.path.join(upload_dir, filename)
+                    gas_safe_file.save(file_path)
+                    gas_safe_doc_url = f"/uploads/{filename}"
+
+            # qualification documents (multiple) - persist each as a TradeDocument row
+            qualification_docs = []
+            if form.qualification_documents.data:
+                for qfile in form.qualification_documents.data:
+                    if qfile and getattr(qfile, 'filename', None) and allowed_file(qfile.filename):
+                        qname = secure_filename(f"qualification_{user.id}_{datetime.utcnow().strftime('%Y%m%d_%H%M%S')}_{qfile.filename}")
+                        qpath = os.path.join(upload_dir, qname)
+                        qfile.save(qpath)
+                        qualification_docs.append(qname)
+
+            # Process coverage areas into list
+            areas_list = []
+            if coverage_areas:
+                areas_list = [area.strip().upper() for area in coverage_areas.split(',') if area.strip()]
+
+            # Create trade profile; use JSON/list fields via model helpers
+            trade = Trade(
+                user_id=user.id,
+                company=name,
+                companies_house_number=companies_house_number or '',
+                vat_number=vat_number or '',
+                utr_number='',
+                coverage_districts=[],
+                radius_km=0.0,
+                insurance_document_url=insurance_doc_url
+            )
+            # set skills and coverage areas using helpers which accept lists or CSV strings
+            trade.set_skills(skills or '')
+            trade.set_coverage_areas(areas_list)
+            db.session.add(trade)
             db.session.flush()
-            
-            # Create role-specific profile
-            if role == 'trade':
-                # Get trade-specific fields
-                companies_house_number = request.form.get('companies_house_number', '').strip()
-                vat_number = request.form.get('vat_number', '').strip()
-                skills = request.form.get('skills', '')
-                coverage_areas = request.form.get('coverage_areas', '').strip()
-                
-                # Handle file uploads
-                insurance_doc_url = None
-                gas_safe_doc_url = None
-                
-                # Upload insurance document
-                if 'insurance_document' in request.files:
-                    insurance_file = request.files['insurance_document']
-                    if insurance_file and insurance_file.filename and allowed_file(insurance_file.filename):
-                        filename = secure_filename(f"insurance_{user.id}_{insurance_file.filename}")
-                        file_path = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
-                        insurance_file.save(file_path)
-                        insurance_doc_url = filename
-                
-                # Upload Gas Safe certificate
-                if 'gas_safe_certificate' in request.files:
-                    gas_safe_file = request.files['gas_safe_certificate']
-                    if gas_safe_file and gas_safe_file.filename and allowed_file(gas_safe_file.filename):
-                        filename = secure_filename(f"gas_safe_{user.id}_{gas_safe_file.filename}")
-                        file_path = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
-                        gas_safe_file.save(file_path)
-                        gas_safe_doc_url = filename
-                
-                # Process coverage areas
-                areas_list = []
-                if coverage_areas:
-                    areas_list = [area.strip().upper() for area in coverage_areas.split(',')]
-                
-                # Create trade profile
-                trade = Trade(
-                    user_id=user.id, 
-                    company=company,
-                    companies_house_number=companies_house_number or '',
-                    vat_number=vat_number or '',
-                    utr_number='',
-                    skills=f'["{skills}"]' if skills else '[]',
-                    coverage_areas=str(areas_list).replace("'", '"') if areas_list else '[]',
-                    coverage_districts='[]',
-                    insurance_document_url=insurance_doc_url
-                )
-                db.session.add(trade)
-            
-            elif role == 'customer':
-                # Create customer profile
-                customer = Customer(
-                    user_id=user.id,
-                    name=company,  # Use company as name for now
-                    phone='',
-                    postcode='',
-                    addresses='[]'
-                )
-                db.session.add(customer)
-            
-            db.session.commit()
-            flash('Registration successful! Trade professionals will be verified before accessing job offers.', 'success')
-            return redirect('/login')
+
+            # Persist qualification document records
+            for qname in qualification_docs:
+                doc = TradeDocument(trade_id=trade.id, filename=qname, file_type='qualification')
+                db.session.add(doc)
+
+            # If insurance/gas_safe files exist, add document rows for them too (helps admin listing)
+            if insurance_doc_url:
+                ins_filename = insurance_doc_url.replace('/uploads/', '')
+                doc = TradeDocument(trade_id=trade.id, filename=ins_filename, file_type='insurance')
+                db.session.add(doc)
+
+            if gas_safe_doc_url:
+                gas_filename = gas_safe_doc_url.replace('/uploads/', '')
+                doc = TradeDocument(trade_id=trade.id, filename=gas_filename, file_type='gas_safe')
+                db.session.add(doc)
+
         else:
-            flash('Please fill in all required fields', 'error')
-    
-    return render_template('auth/simple_register.html')
+            # Customer
+            customer = Customer(
+                user_id=user.id,
+                name=name,
+                phone='',
+                postcode='',
+                addresses='[]'
+            )
+            db.session.add(customer)
+
+        db.session.commit()
+        flash('Registration successful! Trade professionals will be verified before accessing job offers.', 'success')
+        return redirect('/login')
+
+    # If POST but form didn't validate, WTForms will have populated errors we render
+    if request.method == 'POST' and not form.validate_on_submit():
+        flash('Please fix the highlighted errors and try again.', 'error')
+
+    return render_template('auth/register.html', form=form)
 
 @app.route('/logout')
 @login_required
@@ -554,7 +590,8 @@ def admin_dashboard():
     recent_jobs = Job.query.order_by(Job.created_at.desc()).limit(5).all()
     recent_trades = Trade.query.order_by(Trade.created_at.desc()).limit(5).all()
     
-    return render_template('admin/dashboard_checkatrade.html', stats=stats, recent_jobs=recent_jobs, recent_trades=recent_trades)
+    # Render the consolidated admin dashboard template (merged and restyled)
+    return render_template('admin/dashboard.html', stats=stats, recent_jobs=recent_jobs, recent_trades=recent_trades)
 
 @app.route('/admin/trades')
 @login_required
