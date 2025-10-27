@@ -1,0 +1,50 @@
+{% extends "base_checkatrade.html" %}
+
+{% block title %}Login - TradeSOS{% endblock %}
+
+{% block content %}
+<div style="background-color: var(--tradesos-gray); min-height: 100vh; padding: 40px 20px; display: flex; align-items: center; justify-content: center;">
+    <div class="tradesos-form" style="max-width: 500px; width: 100%;">
+        <div style="text-align: center; margin-bottom: 40px;">
+            <i class="fas fa-sign-in-alt" style="font-size: 48px; color: var(--tradesos-red); margin-bottom: 20px;"></i>
+            <h2>SIGN IN TO TRADESOS</h2>
+            <p class="tradesos-info" style="color: #666; font-size: 14px; margin: 10px 0 0 0;">
+                Access your emergency trade services account
+            </p>
+        </div>
+        
+        <form method="POST" action="{{ url_for('login') }}">
+            <div class="form-group">
+                <label class="form-label" for="email">Email</label>
+                <input type="email" class="form-control" id="email" name="email" required>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label" for="password">Password</label>
+                <input type="password" class="form-control" id="password" name="password" required>
+            </div>
+            
+            <button type="submit" class="tradesos-btn tradesos-btn-primary tradesos-btn-block" style="padding: 20px; font-size: 16px;">Sign In</button>
+        </form>
+        
+        <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid var(--tradesos-gray-dark);">
+            <p style="margin: 0; color: #666; font-size: 14px;">
+                Don't have an account? 
+                <a href="{{ url_for('register') }}" style="color: var(--tradesos-red); text-decoration: none; font-weight: 700;">Sign up here</a>
+            </p>
+        </div>
+    </div>
+</div>
+
+<!-- Emergency Access Notice -->
+<div style="background-color: #E3F2FD; padding: 30px 20px; text-align: center;">
+    <div style="max-width: 800px; margin: 0 auto;">
+        <h6 style="color: var(--tradesos-red); margin-bottom: 15px; font-family: 'Oswald', Arial, sans-serif; font-weight: 700;">
+            <i class="fas fa-info-circle" style="margin-right: 10px;"></i>EMERGENCY ACCESS
+        </h6>
+        <p style="margin: 0; color: #666; font-size: 14px; line-height: 1.5;">
+            For genuine emergencies requiring immediate assistance, please also contact the relevant emergency services (999) if there is immediate danger to life or property.
+        </p>
+    </div>
+</div>
+{% endblock %}
