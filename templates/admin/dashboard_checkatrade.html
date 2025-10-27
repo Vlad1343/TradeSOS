@@ -1,0 +1,217 @@
+{% extends "base_checkatrade.html" %}
+
+{% block content %}
+<div class="admin-container">
+    <!-- Header -->
+    <div class="admin-header">
+        <h1 class="admin-title">Admin Dashboard</h1>
+        <p class="admin-subtitle">Manage TradeSOS trades, jobs, and system overview</p>
+    </div>
+
+    <!-- Stats Grid -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fas fa-users"></i>
+            </div>
+            <div class="stat-number">{{ stats.total_users }}</div>
+            <div class="stat-label">Total Users</div>
+        </div>
+        
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fas fa-user-friends"></i>
+            </div>
+            <div class="stat-number">{{ stats.total_customers }}</div>
+            <div class="stat-label">Customers</div>
+        </div>
+        
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fas fa-tools"></i>
+            </div>
+            <div class="stat-number">{{ stats.total_trades }}</div>
+            <div class="stat-label">Trade Professionals</div>
+        </div>
+        
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fas fa-shield-check"></i>
+            </div>
+            <div class="stat-number">{{ stats.verified_trades }}</div>
+            <div class="stat-label">Verified Trades</div>
+        </div>
+        
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fas fa-clipboard-list"></i>
+            </div>
+            <div class="stat-number">{{ stats.total_jobs }}</div>
+            <div class="stat-label">Total Jobs</div>
+        </div>
+        
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fas fa-clock"></i>
+            </div>
+            <div class="stat-number">{{ stats.active_jobs }}</div>
+            <div class="stat-label">Active Jobs</div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="content-section">
+        <div class="section-header">
+            <h2 class="section-title-small">Quick Actions</h2>
+        </div>
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
+            <a href="{{ url_for('admin_trades') }}" class="btn btn-primary">
+                <i class="fas fa-users" style="margin-right: 8px;"></i>
+                Manage Trades
+            </a>
+            <a href="#jobs" class="btn btn-secondary">
+                <i class="fas fa-clipboard-list" style="margin-right: 8px;"></i>
+                View All Jobs
+            </a>
+            <a href="#reports" class="btn btn-secondary">
+                <i class="fas fa-chart-bar" style="margin-right: 8px;"></i>
+                Reports
+            </a>
+            <a href="#settings" class="btn btn-secondary">
+                <i class="fas fa-cog" style="margin-right: 8px;"></i>
+                Settings
+            </a>
+        </div>
+    </div>
+
+    <!-- Recent Jobs -->
+    <div class="content-section">
+        <div class="section-header">
+            <h2 class="section-title-small">Recent Jobs</h2>
+            <a href="#all-jobs" class="btn btn-outline">View All</a>
+        </div>
+        
+        {% if recent_jobs %}
+        <div style="overflow-x: auto;">
+            <table style="width: 100%; border-collapse: collapse;">
+                <thead>
+                    <tr style="border-bottom: 2px solid var(--tradesos-gray-dark);">
+                        <th style="text-align: left; padding: 12px 8px; font-weight: 600; color: var(--tradesos-black);">Job ID</th>
+                        <th style="text-align: left; padding: 12px 8px; font-weight: 600; color: var(--tradesos-black);">Customer</th>
+                        <th style="text-align: left; padding: 12px 8px; font-weight: 600; color: var(--tradesos-black);">Category</th>
+                        <th style="text-align: left; padding: 12px 8px; font-weight: 600; color: var(--tradesos-black);">Urgency</th>
+                        <th style="text-align: left; padding: 12px 8px; font-weight: 600; color: var(--tradesos-black);">Status</th>
+                        <th style="text-align: left; padding: 12px 8px; font-weight: 600; color: var(--tradesos-black);">Created</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for job in recent_jobs %}
+                    <tr style="border-bottom: 1px solid var(--tradesos-gray-dark);">
+                        <td style="padding: 12px 8px; font-family: monospace; color: var(--tradesos-gray-text);">#{{ job.id }}</td>
+                        <td style="padding: 12px 8px;">{{ job.customer_name or 'Anonymous' }}</td>
+                        <td style="padding: 12px 8px;">
+                            <span style="background: var(--tradesos-gray); padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: 500;">
+                                {{ job.category.title() if job.category else 'General' }}
+                            </span>
+                        </td>
+                        <td style="padding: 12px 8px;">
+                            {% if job.urgency == 'emergency_now' %}
+                                <span style="background: #dc3545; color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: 500;">🚨 Emergency</span>
+                            {% elif job.urgency == 'urgent_2h' %}
+                                <span style="background: #fd7e14; color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: 500;">⏰ Urgent</span>
+                            {% elif job.urgency == 'same_day' %}
+                                <span style="background: #ffc107; color: black; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: 500;">📅 Same Day</span>
+                            {% else %}
+                                <span style="background: var(--tradesos-gray-text); color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: 500;">📋 Next Day</span>
+                            {% endif %}
+                        </td>
+                        <td style="padding: 12px 8px;">
+                            {% if job.status == 'posted' %}
+                                <span style="background: #17a2b8; color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: 500;">Posted</span>
+                            {% elif job.status == 'accepted' %}
+                                <span style="background: #28a745; color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: 500;">Accepted</span>
+                            {% elif job.status == 'completed' %}
+                                <span style="background: var(--tradesos-gray-text); color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: 500;">Completed</span>
+                            {% else %}
+                                <span style="background: var(--tradesos-gray); color: var(--tradesos-black); padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: 500;">{{ job.status.title() }}</span>
+                            {% endif %}
+                        </td>
+                        <td style="padding: 12px 8px; color: var(--tradesos-gray-text); font-size: 14px;">{{ job.created_at.strftime('%d %b %Y %H:%M') }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div style="text-align: center; padding: 40px; color: var(--tradesos-gray-text);">
+            <i class="fas fa-clipboard-list" style="font-size: 48px; margin-bottom: 16px; opacity: 0.5;"></i>
+            <p>No jobs yet</p>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Recent Trade Applications -->
+    <div class="content-section">
+        <div class="section-header">
+            <h2 class="section-title-small">Recent Trade Applications</h2>
+            <a href="{{ url_for('admin_trades') }}" class="btn btn-outline">Manage All</a>
+        </div>
+        
+        {% if recent_trades %}
+        <div style="overflow-x: auto;">
+            <table style="width: 100%; border-collapse: collapse;">
+                <thead>
+                    <tr style="border-bottom: 2px solid var(--tradesos-gray-dark);">
+                        <th style="text-align: left; padding: 12px 8px; font-weight: 600; color: var(--tradesos-black);">Company</th>
+                        <th style="text-align: left; padding: 12px 8px; font-weight: 600; color: var(--tradesos-black);">Email</th>
+                        <th style="text-align: left; padding: 12px 8px; font-weight: 600; color: var(--tradesos-black);">Skills</th>
+                        <th style="text-align: left; padding: 12px 8px; font-weight: 600; color: var(--tradesos-black);">Status</th>
+                        <th style="text-align: left; padding: 12px 8px; font-weight: 600; color: var(--tradesos-black);">Applied</th>
+                        <th style="text-align: left; padding: 12px 8px; font-weight: 600; color: var(--tradesos-black);">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for trade in recent_trades %}
+                    <tr style="border-bottom: 1px solid var(--tradesos-gray-dark);">
+                        <td style="padding: 12px 8px; font-weight: 500;">{{ trade.company }}</td>
+                        <td style="padding: 12px 8px; color: var(--tradesos-gray-text);">{{ trade.user.email if trade.user else 'No email' }}</td>
+                        <td style="padding: 12px 8px;">
+                            {% set skills = trade.get_skills() %}
+                            {% if skills %}
+                                <span style="background: var(--tradesos-gray); padding: 4px 8px; border-radius: 4px; font-size: 12px;">{{ skills[0] }}{% if skills|length > 1 %} +{{ skills|length - 1 }}{% endif %}</span>
+                            {% else %}
+                                <span style="color: var(--tradesos-gray-text); font-style: italic;">No skills listed</span>
+                            {% endif %}
+                        </td>
+                        <td style="padding: 12px 8px;">
+                            {% if trade.verified %}
+                                <span style="background: #28a745; color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: 500;">
+                                    <i class="fas fa-check" style="margin-right: 4px;"></i>Verified
+                                </span>
+                            {% else %}
+                                <span style="background: #ffc107; color: black; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: 500;">
+                                    <i class="fas fa-clock" style="margin-right: 4px;"></i>Pending
+                                </span>
+                            {% endif %}
+                        </td>
+                        <td style="padding: 12px 8px; color: var(--tradesos-gray-text); font-size: 14px;">{{ trade.created_at.strftime('%d %b %Y') }}</td>
+                        <td style="padding: 12px 8px;">
+                            <a href="{{ url_for('admin_trades') }}" class="btn btn-outline" style="padding: 4px 8px; font-size: 12px;">
+                                View Details
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div style="text-align: center; padding: 40px; color: var(--tradesos-gray-text);">
+            <i class="fas fa-users" style="font-size: 48px; margin-bottom: 16px; opacity: 0.5;"></i>
+            <p>No trade applications yet</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
