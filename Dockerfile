@@ -16,7 +16,7 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1
 
 # Install project dependencies declared in pyproject.toml
-COPY pyproject.toml /app/
+COPY Etc/pyproject.toml /app/
 RUN pip install --upgrade pip setuptools wheel \
     && pip install --no-cache-dir .
 
@@ -25,5 +25,5 @@ COPY . /app
 
 EXPOSE 5000
 
-# Use gunicorn to serve the Flask app (main:app) on port 5000
-CMD ["gunicorn", "--preload", "--bind", "0.0.0.0:5000", "main:app", "--workers", "3"]
+# Use gunicorn to serve the Flask app (main.app:app) on port 5000
+CMD ["gunicorn", "--preload", "--bind", "0.0.0.0:5000", "main.app:app", "--workers", "3"]

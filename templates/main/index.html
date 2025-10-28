@@ -1,4 +1,4 @@
-{% extends "base_checkatrade.html" %}
+{% extends "main/base_checkatrade.html" %}
 
 {% block content %}
 <!-- Hero Section (red background) -->
@@ -48,7 +48,7 @@
             <nav class="top-nav" aria-label="Main navigation">
                 <a href="{{ url_for('index') }}">Home</a>
                 <a href="{{ url_for('job_request') }}">Request Service</a>
-                <a href="{{ url_for('trade_dashboard') if 'trade_dashboard' in globals() else url_for('login') }}">Trade Dashboard</a>
+                <a href="{{ url_for('login') }}">Trade Dashboard</a>
                 <a href="{{ url_for('login') }}">Sign In</a>
             </nav>
         </div>

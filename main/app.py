@@ -25,7 +25,7 @@ mail = Mail()
 csrf = CSRFProtect()
 
 def create_app():
-    app = Flask(__name__)
+    app = Flask(__name__, template_folder='../templates')
     
     # Configuration
     app.secret_key = os.environ.get("SESSION_SECRET", "dev-secret-key-change-in-production")
@@ -78,22 +78,24 @@ def create_app():
     # User loader function - FIXED
     @login_manager.user_loader
     def load_user(user_id):
-        from models import User
+        # Use package-qualified import to avoid ModuleNotFoundError when
+        # running as `FLASK_APP=main.app`.
+        from main.models import User
         try:
             return User.query.get(int(user_id))
-        except:
+        except Exception:
             return None
     
     # Create upload directory
     os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
     
     with app.app_context():
-        # Import models to ensure they're registered
-        import models
-        
+        # Import models to ensure they're registered (package-qualified)
+        import main.models as models
+
         # Create tables
         db.create_all()
-        
+
         logging.info("TradeSOS application initialized successfully")
     
     return app
@@ -103,4 +105,5 @@ app = create_app()
 
 # Import routes after app creation to avoid circular imports
 with app.app_context():
-    import routes
+    # Import routes using package-qualified import to avoid import errors
+    import main.routes as routes
