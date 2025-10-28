@@ -9,8 +9,8 @@ import logging
 from datetime import datetime, timedelta
 from flask import current_app
 from flask_mail import Message
-from app import mail, db
-from models import Trade, Job
+from main.app import mail, db
+from main.models import Trade, Job
 
 def parse_postcode(postcode):
     """Parse a UK postcode into components."""

@@ -9,10 +9,10 @@ from flask import render_template, request, redirect, url_for, flash, jsonify, c
 from flask_login import login_required, current_user, login_user, logout_user
 from werkzeug.utils import secure_filename
 from werkzeug.exceptions import RequestEntityTooLarge
-from app import db, login_manager, app
-from models import User, Customer, Trade, Job, Message, Review, AdPlacement, PartsBasket, WebhookEvent
-from forms import LoginForm, RegisterForm, CustomerProfileForm, TradeProfileForm, JobForm, ReviewForm
-from utils import parse_postcode, geocode_postcode, find_matching_trades, send_job_notification
+from main.app import db, login_manager, app
+from main.models import User, Customer, Trade, Job, Message, Review, AdPlacement, PartsBasket, WebhookEvent
+from main.forms import LoginForm, RegisterForm, CustomerProfileForm, TradeProfileForm, JobForm, ReviewForm
+from main.utils import parse_postcode, geocode_postcode, find_matching_trades, send_job_notification
 
 # Set up Stripe
 stripe.api_key = app.config.get('STRIPE_SECRET_KEY')
@@ -40,7 +40,7 @@ def index():
     
     # Show public trade directory for anonymous users
     verified_trades = Trade.query.filter_by(verified=True).limit(6).all()
-    return render_template('index_checkatrade.html', trades=verified_trades)
+    return render_template('main/index.html', trades=verified_trades)
 
 @app.route('/trade-directory')
 def trade_directory():
@@ -208,7 +208,7 @@ def job_request():
     if request.method == 'GET':
         # Get pre-selected category from URL parameter
         selected_category = request.args.get('category', '')
-        return render_template('job_request_checkatrade.html', selected_category=selected_category)
+        return render_template('job/job_request_checkatrade.html', selected_category=selected_category)
     
     # Handle form submission
     try:
@@ -248,13 +248,13 @@ def job_request():
         # Basic validation
         if not all([name, phone, email, house_number, street, town, urgency, title, category, description, postcode]):
             flash('Please fill in all required fields.', 'danger')
-            return render_template('job_request.html')
+            return render_template('job/job_request.html')
         
         # Parse postcode
         postcode_info = parse_postcode(postcode)
         if not postcode_info:
             flash('Invalid UK postcode format.', 'danger')
-            return render_template('job_request.html')
+            return render_template('job/job_request.html')
         
         # Get coordinates (mock for now)
         lat, lon = geocode_postcode(postcode)
@@ -294,7 +294,7 @@ def job_request():
         
     except Exception as e:
         flash('Something went wrong. Please try again.', 'danger')
-        return render_template('job_request_checkatrade.html')
+        return render_template('job/job_request_checkatrade.html')
 
 @app.route('/create-job', methods=['GET', 'POST'])
 def create_job():
