@@ -1,7 +1,8 @@
-*.txt
-replit.md
-uv.lock
-pyproject.toml
-.config/pulse
-docs
-Etc
+Good Times Rg.otf
+other.txt
+requirements.txt
+docker-compose.yml
+DOCKER.md
+Dockerfile
+.config
+.local/
