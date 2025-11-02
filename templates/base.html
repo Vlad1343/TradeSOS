@@ -24,7 +24,7 @@
             </a>
             
             <div class="tradesos-nav-links">
-                <a href="{{ url_for('index') }}">HOME</a>
+                <a href="{{ url_for('index') }}" id="nav-home">HOME</a>
                 <a href="{{ url_for('job_request') }}" class="nav-button">REQUEST SERVICE</a>
                 <a href="{{ url_for('trade_dashboard') }}">TRADE DASHBOARD</a>
                 {% if current_user.is_authenticated %}
@@ -90,5 +90,18 @@
     {% endif %}
 
     {% block scripts %}{% endblock %}
+    <script>
+    // When the user clicks the global Home link, mark that job_request fields should be cleared
+    (function(){
+        try{
+            const home = document.getElementById('nav-home');
+            if(home){
+                home.addEventListener('click', function(){
+                    try{ sessionStorage.setItem('job_clear_on_return','1'); }catch(_){}
+                }, {capture:true});
+            }
+        }catch(_){}
+    })();
+    </script>
 </body>
 </html>
