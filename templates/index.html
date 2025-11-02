@@ -1,17 +1,17 @@
-{% extends "base_checkatrade.html" %}
+{% extends "base.html" %}
 
 {% block content %}
 <!-- Hero Section -->
 <section class="tradesos-hero">
     <div class="tradesos-hero-content">
         <div class="tradesos-hero-text">
-            <h1>EMERGENCY TRADES<br>WHEN YOU NEED THEM.</h1>
-            <p class="hero-subtitle">CONNECT WITH VETTED EMERGENCY TRADE PROFESSIONALS ACROSS THE UK.</p>
-            <p class="hero-description">FAST RESPONSE, TRUSTED SERVICE, AVAILABLE 24/7.</p>
-            
+            <h1>EMERGENCY TRADES WHEN YOU NEED THEM</h1>
+            <p class="hero-subtitle">CONNECT WITH VETTED EMERGENCY TRADE PROFESSIONALS ACROSS THE UK</p>
+            <p class="hero-description">FAST RESPONSE, TRUSTED SERVICE, AVAILABLE 24/7</p>
+
             <div class="tradesos-hero-features">
-                <div><i class="fas fa-check"></i> FULLY INSURED TRADES PROFESSIONALS</div>
-                <div><i class="fas fa-check"></i> AVERAGE RESPONSE TIME 15MINS</div>
+                <div style="font-size:13px;"><img src="{{ url_for('static', filename='images/key.png') }}" alt="icon" class="feature-icon"> FULLY INSURED TRADES PROFESSIONALS</div>
+                <div style="font-size:13px;"><img src="{{ url_for('static', filename='images/key.png') }}" alt="icon" class="feature-icon"> AVERAGE RESPONSE TIME - 15 MINS</div>
             </div>
             
             <!-- Mobile Buttons -->
@@ -27,27 +27,27 @@
         
         <!-- Desktop Action Card -->
         <div class="tradesos-action-card">
-            <h3>GET HELP NOW IN 3 SIMPLE STEPS.</h3>
-            
+            <h3>GET HELP NOW IN 3 SIMPLE STEPS</h3>
+
             <div class="tradesos-step">
                 <div class="tradesos-step-number">1</div>
                 <div>DESCRIBE YOUR ISSUE</div>
             </div>
-            
+
             <div class="tradesos-step">
                 <div class="tradesos-step-number">2</div>
                 <div>MATCH WITH LOCAL TRADE</div>
             </div>
-            
+
             <div class="tradesos-step">
                 <div class="tradesos-step-number">3</div>
                 <div>TRACK ARRIVAL & GET HELP</div>
             </div>
-            
+
             <a href="{{ url_for('job_request') }}" class="tradesos-btn tradesos-btn-primary tradesos-btn-block mt-2">
-                <i class="fas fa-wrench" style="margin-right: 10px;"></i>GET EMERGENCY HELP NOW
+                GET EMERGENCY HELP NOW
             </a>
-            
+
             <a href="{{ url_for('register') }}?role=trade" class="tradesos-btn tradesos-btn-black tradesos-btn-block">
                 JOIN AS A TRADE PROFESSIONAL
             </a>

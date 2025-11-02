@@ -37,7 +37,8 @@ def index():
     
     # Show public trade directory for anonymous users
     verified_trades = Trade.query.filter_by(verified=True).limit(6).all()
-    return render_template('index_checkatrade.html', trades=verified_trades)
+    # Use the modern `index.html` template (updated design)
+    return render_template('index.html', trades=verified_trades)
 
 @app.route('/trade-directory')
 def trade_directory():
@@ -203,9 +204,17 @@ def customer_dashboard():
 @app.route('/job-request', methods=['GET', 'POST'])
 def job_request():
     if request.method == 'GET':
-        # Get pre-selected category from URL parameter
+        # Get pre-selected category and step from URL parameters
         selected_category = request.args.get('category', '')
-        return render_template('job_request_checkatrade.html', selected_category=selected_category)
+        step = request.args.get('step', '1')
+        try:
+            step = int(step)
+        except ValueError:
+            step = 1
+        if step < 1 or step > 4:
+            step = 1
+        urgency = request.args.get('urgency', '')
+        return render_template('job_request.html', selected_category=selected_category, step=step, urgency=urgency)
     
     # Handle form submission
     try:
@@ -286,12 +295,12 @@ def job_request():
         # Find and notify matching trades
         matching_trades = find_matching_trades(job)
         send_job_notification(job, matching_trades)
-        
-        return render_template('job_request_checkatrade.html', success=True)
-        
+
+        return render_template('job_request.html', success=True)
+
     except Exception as e:
         flash('Something went wrong. Please try again.', 'danger')
-        return render_template('job_request_checkatrade.html')
+        return render_template('job_request.html')
 
 @app.route('/create-job', methods=['GET', 'POST'])
 def create_job():

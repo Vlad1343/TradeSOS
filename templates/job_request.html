@@ -1,15 +1,9 @@
-{% extends "base_checkatrade.html" %}
+{% extends "base.html" %}
 
 {% block content %}
-<div style="background-color: var(--tradesos-gray); min-height: 100vh; padding: 40px 20px;">
+<div class="container">
     <div class="tradesos-form">
-        <div style="text-align: center; margin-bottom: 40px;">
-            <i class="fas fa-exclamation-triangle" style="font-size: 48px; color: var(--tradesos-red); margin-bottom: 20px;"></i>
-            <h2>REQUEST EMERGENCY TRADE HELP</h2>
-            <p class="tradesos-info" style="color: #666; font-size: 14px; margin: 10px 0 0 0;">
-                Fill in your details below - no registration needed
-            </p>
-        </div>
+        {# top icon and title are now shown inside the rim below so remove duplicate here #}
         
         {% if success %}
         <div class="tradesos-success">
@@ -18,9 +12,125 @@
         </div>
         {% endif %}
 
+    {# Top rim: emergency sign, title and step indicators (static across steps) #}
+    <div class="job-rim" style="max-width:1100px;margin:0 auto 22px;border-radius:10px;padding:20px;background:linear-gradient(180deg,#ffffff,#fbfbfb);box-shadow:0 6px 18px rgba(11,22,38,0.04);border:1px solid rgba(11,22,38,0.06);">
+        <div style="text-align:center;">
+            <i class="fas fa-exclamation-triangle" style="font-size:96px;color:var(--tradesos-red);margin-bottom:8px;" aria-hidden="true"></i>
+            <h2 style="margin:0;font-size:20px;font-weight:800;color:var(--tradesos-black);">EMERGENCY SERVICE REQUEST</h2>
+        </div>
+
+        <div style="display:flex;justify-content:center;gap:14px;margin-top:14px;align-items:center;">
+            {% for i in range(1,5) %}
+                {% set active = (step == i) %}
+                <a href="{{ url_for('job_request', step=i, category=selected_category, urgency=urgency) }}" style="text-decoration:none;">
+                    <div style="width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:2px solid {{ 'var(--tradesos-red)' if active else 'var(--tradesos-gray-dark)' }};background: {{ 'var(--tradesos-red)' if active else 'transparent' }};color: {{ 'var(--tradesos-white)' if active else 'var(--tradesos-black)' }};font-weight:700;font-size:16px;">{{ i }}</div>
+                </a>
+                {% if i < 4 %}
+                    <div style="width:28px;text-align:center;color:var(--tradesos-gray-text);">—</div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+
+    {# Step-specific content #}
+    {% if step == 1 %}
+        {# Show the main question after the header and steps #}
+        <div style="max-width:980px;margin:0 auto 24px;">
+            <h2 style="text-align:center;margin:0 0 24px;color:var(--tradesos-black);font-size:22px;">What type of service do you need?</h2>
+        </div>
+        {# Categories grid as square buttons (not blue links). Each tile: emoji top-right, large title, short bottom-left description. #}
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;max-width:980px;margin:0 auto 18px;">
+            {% set categories = [
+                ('plumbing','Plumber','🔧','Burst pipes, blocked drains, heating'),
+                ('electrical','Electrician','⚡','Power outages, dangerous wiring, electrical faults'),
+                ('locksmith','Locksmith','🔐','Locked out, broken locks, security issues'),
+                ('heating','Gas / Heating','🔥','Boiler breakdowns, gas leaks'),
+                ('glazing','Glazier','🪟','Smashed windows, emergency boarding, security glazing'),
+                ('roofing','Roofer','🏠','Roof replacement, storm damage, drain maintenance')
+            ] %}
+            {% for key, title, emoji, desc in categories %}
+                <button type="button" class="category-btn" data-category="{{ key }}" style="position:relative;background:var(--tradesos-white);border:2px solid var(--tradesos-gray-dark);border-radius:8px;padding:14px 18px;min-height:84px;display:flex;flex-direction:column;align-items:stretch;justify-content:flex-start;font-weight:800;cursor:pointer;font-family: 'Good Times Rg', 'Open Sans', Arial, sans-serif;">
+                        <div style="display:flex;justify-content:space-between;align-items:center;">
+                            <div class="tile-title" style="font-size:18px;">{{ title }}</div>
+                            <div style="font-size:22px;line-height:1;">{{ emoji }}</div>
+                        </div>
+                    <div class="tile-desc" style="margin-top:8px;font-size:13px;color:var(--tradesos-gray-text);text-align:left;">{{ desc }}</div>
+                </button>
+            {% endfor %}
+        </div>
+
+        {# Urgency question also on step 1 per request. Black centered question and 4 options, 2 per row. #}
+    <h2 style="text-align:center;margin:36px 0 8px;color:var(--tradesos-black);font-size:22px;font-weight:800;">How urgent is your problem?</h2>
+        <div style="max-width:720px;margin:0 auto 12px;text-align:center;color:var(--tradesos-gray-text);"></div>
+        <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px;max-width:720px;margin:0 auto 18px;">
+            <button type="button" class="urgency-btn" data-urgency="emergency_now" style="padding:14px 18px;border-radius:8px;border:2px solid var(--tradesos-gray-dark);background:var(--tradesos-white);text-align:left;font-size:18px;font-family:'Good Times Rg','Open Sans',Arial, sans-serif;min-height:84px;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;font-weight:800;"> <strong style="font-size:18px;">🚨 Emergency</strong><div class="tile-desc" style="font-size:14px;color:var(--tradesos-gray-text);margin-top:6px;">Immediate danger or security risk.</div></button>
+            <button type="button" class="urgency-btn" data-urgency="urgent_2h" style="padding:14px 18px;border-radius:8px;border:2px solid var(--tradesos-gray-dark);background:var(--tradesos-white);text-align:left;font-size:18px;font-family:'Good Times Rg','Open Sans',Arial, sans-serif;min-height:84px;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;font-weight:800;"> <strong style="font-size:18px;">⏰ Urgent</strong><div class="tile-desc" style="font-size:14px;color:var(--tradesos-gray-text);margin-top:6px;">Needs attention within 2 hours.</div></button>
+            <button type="button" class="urgency-btn" data-urgency="same_day" style="padding:14px 18px;border-radius:8px;border:2px solid var(--tradesos-gray-dark);background:var(--tradesos-white);text-align:left;font-size:18px;font-family:'Good Times Rg','Open Sans',Arial, sans-serif;min-height:84px;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;font-weight:800;"> <strong style="font-size:18px;">📅 Same day</strong><div class="tile-desc" style="font-size:14px;color:var(--tradesos-gray-text);margin-top:6px;">Required today.</div></button>
+            <button type="button" class="urgency-btn" data-urgency="next_day" style="padding:14px 18px;border-radius:8px;border:2px solid var(--tradesos-gray-dark);background:var(--tradesos-white);text-align:left;font-size:18px;font-family:'Good Times Rg','Open Sans',Arial, sans-serif;min-height:84px;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;font-weight:800;"> <strong style="font-size:18px;">📋 Next day</strong><div class="tile-desc" style="font-size:14px;color:var(--tradesos-gray-text);margin-top:6px;">Can wait until tomorrow.</div></button>
+        </div>
+
+    <div style="display:flex;justify-content:center;gap:12px;margin-top:40px;">
+                <div style="width:100%;display:flex;justify-content:center;">
+                    <button type="button" id="wizard-continue" class="tradesos-btn tradesos-btn-primary" disabled style="opacity:0.6;cursor:not-allowed;">Continue</button>
+                </div>
+            </div>
+
+
+    {% elif step == 2 %}
+        {# Step 2: start with brief and detailed description fields (left-aligned). Remove old urgency buttons. #}
+    <div style="max-width:720px;margin:0 0 20px 0;text-align:left;">
+            <div class="form-group" style="text-align:left;margin-bottom:20px;">
+                <label for="short_desc" style="font-size:14px;color:var(--tradesos-black);font-weight:700;">Brief description of the problem</label>
+                <input type="text" id="short_desc" name="short_desc" placeholder="Short summary (e.g., Burst pipe in kitchen)" style="width:100%;padding:10px;border:2px solid var(--tradesos-gray-dark);border-radius:6px;font-size:14px;">
+            </div>
+
+            <div class="form-group" style="text-align:left;margin-bottom:20px;">
+                <label for="long_desc" style="font-size:14px;color:var(--tradesos-black);font-weight:700;">Detailed description of the problem</label>
+                <textarea id="long_desc" name="long_desc" rows="6" placeholder="Add more details here (what happened, any safety concerns, exact location in property)" style="width:100%;padding:10px;border:2px solid var(--tradesos-gray-dark);border-radius:6px;font-size:14px;"></textarea>
+            </div>
+            
+            <div class="form-group" style="text-align:left;margin-bottom:20px;">
+                <label for="full_address" style="font-size:14px;color:var(--tradesos-black);font-weight:700;">Full address</label>
+                <input type="text" id="full_address" name="full_address" placeholder="House number/name, street, town" style="width:100%;padding:10px;border:2px solid var(--tradesos-gray-dark);border-radius:6px;font-size:14px;">
+            </div>
+            <div class="form-group" style="text-align:left;margin-bottom:20px;max-width:320px;">
+                <label for="postcode" style="font-size:14px;color:var(--tradesos-black);font-weight:700;">Postcode</label>
+                <input type="text" id="postcode" name="postcode" placeholder="e.g., M1 1AA" style="width:100%;padding:10px;border:2px solid var(--tradesos-gray-dark);border-radius:6px;font-size:14px;">
+            </div>
+            
+            
+                <div class="form-group" style="text-align:left;margin-bottom:20px;">
+                    <label style="font-size:14px;color:var(--tradesos-black);font-weight:700;display:block;margin-bottom:8px;">Photos of the problem (Optional)</label>
+                    <div style="max-width:720px;margin:0 auto;text-align:center;">
+                        <label id="photosLabel" for="photos_step2" style="display:inline-block;padding:22px;border:2px dashed var(--tradesos-gray-dark);border-radius:10px;text-align:center;cursor:pointer;background:var(--tradesos-white);width:100%;max-width:520px;">
+                            <div style="font-size:16px;color:var(--tradesos-black);font-weight:700;">Click to upload photos</div>
+                            <div style="font-size:12px;color:var(--tradesos-gray-text);margin-top:6px;">Png, jpg up to 10 mb each</div>
+                            <input type="file" id="photos_step2" name="photos_step2" accept="image/png, image/jpeg" multiple style="display:none;">
+                        </label>
+                        <div id="photosPreviewStep2" style="margin-top:16px;text-align:center;"></div>
+                    </div>
+                </div>
+        </div>
+
+    <div id="step2-controls" style="display:flex;justify-content:center;gap:16px;margin:48px auto 0;max-width:720px;">
+                <button type="button" id="wizard-back" class="tradesos-btn tradesos-btn-primary" style="opacity:1;">Back</button>
+                <button type="button" id="wizard-continue" class="tradesos-btn tradesos-btn-primary" disabled style="opacity:0.6;cursor:not-allowed;">Continue</button>
+            </div>
+        </div>
+
+    {% elif step == 3 %}
+        <h3 style="text-align:center;margin-bottom:12px;">Step 3 — More details (placeholder)</h3>
+        <div class="tradesos-info text-center mb-3">We'll add extra questions here (photos, quick filters). For now continue to the final form.</div>
+        <div style="display:flex;justify-content:space-between;">
+            <a href="{{ url_for('job_request', step=2, category=selected_category, urgency=urgency) }}" class="tradesos-btn tradesos-btn-outline">Back</a>
+            <a href="{{ url_for('job_request', step=4, category=selected_category, urgency=urgency) }}" class="tradesos-btn tradesos-btn-primary">Proceed to Submit</a>
+        </div>
+
+    {% else %}
+        {# step == 4: show the full form (existing submission form). Prefill category & urgency from query params. #}
         <form method="POST" action="/job-request" enctype="multipart/form-data">
             <!-- Contact Details Section -->
-            <div style="margin-bottom: 40px;">
+            <div class="mb-3">
                 <h3>
                     <i class="fas fa-user"></i>Your Contact Details
                 </h3>
@@ -42,7 +152,7 @@
             </div>
 
             <!-- Emergency Details Section -->
-            <div style="margin-bottom: 40px;">
+            <div class="mb-3">
                 <h3>
                     <i class="fas fa-exclamation-circle"></i>Emergency Details
                 </h3>
@@ -51,10 +161,10 @@
                     <label for="urgency">How urgent is this? *</label>
                     <select id="urgency" name="urgency" required>
                         <option value="">Choose urgency level...</option>
-                        <option value="emergency_now">🚨 Emergency Now - Immediate help needed</option>
-                        <option value="urgent_2h">⏰ Urgent - Within 2 hours</option>
-                        <option value="same_day">📅 Same Day - Within 8 hours</option>
-                        <option value="next_day">📋 Next Day - Within 24 hours</option>
+                        <option value="emergency_now" {% if urgency == 'emergency_now' %}selected{% endif %}>🚨 Emergency Now - Immediate help needed</option>
+                        <option value="urgent_2h" {% if urgency == 'urgent_2h' %}selected{% endif %}>⏰ Urgent - Within 2 hours</option>
+                        <option value="same_day" {% if urgency == 'same_day' %}selected{% endif %}>📅 Same Day - Within 8 hours</option>
+                        <option value="next_day" {% if urgency == 'next_day' %}selected{% endif %}>📋 Next Day - Within 24 hours</option>
                     </select>
                 </div>
 
@@ -86,10 +196,10 @@
                     <label for="description">Describe the problem in detail *</label>
                     <textarea id="description" name="description" rows="4" placeholder="What happened? What's not working? Any safety concerns?" required></textarea>
                 </div>
-            </div>
+                </div>
 
-            <!-- Address Section -->
-            <div style="margin-bottom: 40px;">
+                <!-- Address Section -->
+                <div class="mb-3">
                 <h3>
                     <i class="fas fa-map-marker-alt"></i>Your Full Address
                 </h3>
@@ -117,39 +227,39 @@
                 </div>
                 
                 <div class="tradesos-info">
-                    <i class="fas fa-info-circle" style="margin-right: 5px;"></i>
+                    <i class="fas fa-info-circle" aria-hidden="true" style="margin-right:5px;"></i>
                     Provide your complete address so the tradesperson can find you
                 </div>
             </div>
-
             <!-- Photo Upload Section -->
-            <div style="margin-bottom: 40px;">
+            <div class="mb-3">
                 <h3>
                     <i class="fas fa-camera"></i>Photos or Videos (Optional)
                 </h3>
                 
                 <div class="form-group">
-                    <input type="file" id="photos" name="photos" multiple accept="image/*,video/*" onchange="previewFiles()" style="padding: 20px; border: 2px dashed var(--tradesos-gray-dark); background-color: #f9f9f9;">
+                    <input type="file" id="photos" name="photos" multiple accept="image/*,video/*" onchange="previewFiles()">
                     <div class="tradesos-info">
-                        <i class="fas fa-info-circle" style="margin-right: 5px;"></i>
+                        <i class="fas fa-info-circle" aria-hidden="true" style="margin-right:5px;"></i>
                         Upload photos or videos to help trades understand the problem better. Max 16MB per file.
                     </div>
-                    <div id="filePreview" style="margin-top: 15px;"></div>
+                    <div id="filePreview" style="margin-top:15px;"></div>
                 </div>
             </div>
 
             <!-- Terms and Submit -->
-            <div style="margin-bottom: 30px;">
-                <label style="display: flex; align-items: center; font-size: 14px; color: #666; cursor: pointer;">
+            <div class="mb-2">
+                <label style="display: flex; align-items: center; font-size: 14px; color: var(--tradesos-gray-text); cursor: pointer;">
                     <input type="checkbox" id="terms" name="terms" required style="margin-right: 10px; transform: scale(1.2);">
                     I agree to share my contact details with verified trade professionals
                 </label>
             </div>
 
-            <button type="submit" class="tradesos-btn tradesos-btn-primary tradesos-btn-block" style="padding: 20px; font-size: 16px;">
+            <button type="submit" class="tradesos-btn tradesos-btn-primary tradesos-btn-block">
                 <i class="fas fa-paper-plane" style="margin-right: 10px;"></i>GET EMERGENCY HELP NOW
             </button>
         </form>
+    {% endif %}
     </div>
 </div>
 
@@ -170,8 +280,8 @@ function previewFiles() {
         
         previewHtml += `
             <div style="background-color: white; padding: 15px; border-radius: 4px; border: 2px solid var(--tradesos-gray-dark); text-align: center;">
-                <i class="fas ${icon}" style="font-size: 24px; color: var(--tradesos-red); margin-bottom: 8px;"></i>
-                <div style="font-size: 11px; color: #666;">${fileName}</div>
+                <i class="fas ${icon}" style="font-size:24px;color:var(--tradesos-red);margin-bottom:8px;"></i>
+                <div style="font-size:11px;color:var(--tradesos-gray-text);">${fileName}</div>
             </div>
         `;
     }
@@ -183,5 +293,269 @@ function previewFiles() {
     previewHtml += '</div>';
     preview.innerHTML = previewHtml;
 }
+</script>
+<script>
+// Wizard behavior for step 1: select category and urgency, enable Continue
+document.addEventListener('DOMContentLoaded', function(){
+    const categoryBtns = document.querySelectorAll('.category-btn');
+    const urgencyBtns = document.querySelectorAll('.urgency-btn');
+    const cont = document.getElementById('wizard-continue');
+    let selectedCategory = {{ (selected_category or '')|tojson }};
+    let selectedUrgency = {{ (urgency or '')|tojson }};
+
+    function updateContinueState(){
+        if(!cont) return;
+        if(selectedCategory && selectedUrgency){
+            // enable (visual + attribute)
+            cont.disabled = false;
+            cont.removeAttribute('disabled');
+            cont.style.opacity = '1';
+            cont.style.cursor = 'pointer';
+            cont.style.pointerEvents = 'auto';
+        } else {
+            // disable (visual + attribute)
+            cont.disabled = true;
+            cont.setAttribute('disabled','disabled');
+            cont.style.opacity = '0.6';
+            cont.style.cursor = 'not-allowed';
+            cont.style.pointerEvents = 'none';
+        }
+    }
+
+    function markSelectedButtons(){
+        categoryBtns.forEach(b=>{
+            const desc = b.querySelector('.tile-desc');
+            const title = b.querySelector('.tile-title');
+            if(b.dataset.category === selectedCategory){
+                // selected state: rgb(198,40,40)
+                b.style.background = '#C62828';
+                b.style.color = '#ffffff';
+                b.style.borderColor = '#C62828';
+                if(title) title.style.color = '#ffffff';
+                if(desc) desc.style.color = '#e9e9e9';
+            } else {
+                b.style.background = 'var(--tradesos-white)';
+                b.style.color = 'var(--tradesos-black)';
+                b.style.borderColor = 'var(--tradesos-gray-dark)';
+                if(title) title.style.color = 'var(--tradesos-black)';
+                if(desc) desc.style.color = 'var(--tradesos-gray-text)';
+            }
+        });
+
+        urgencyBtns.forEach(b=>{
+            const desc = b.querySelector('.tile-desc');
+            const title = b.querySelector('strong');
+            if(b.dataset.urgency === selectedUrgency){
+                b.style.background = '#C62828';
+                b.style.color = '#ffffff';
+                b.style.borderColor = '#C62828';
+                if(title) title.style.color = '#ffffff';
+                if(desc) desc.style.color = '#e9e9e9';
+            } else {
+                b.style.background = 'var(--tradesos-white)';
+                b.style.color = 'var(--tradesos-black)';
+                b.style.borderColor = 'var(--tradesos-gray-dark)';
+                if(title) title.style.color = 'var(--tradesos-black)';
+                if(desc) desc.style.color = 'var(--tradesos-gray-text)';
+            }
+        });
+    }
+
+    categoryBtns.forEach(b=>{
+        b.addEventListener('click', ()=>{
+            selectedCategory = b.dataset.category;
+            markSelectedButtons();
+            updateContinueState();
+        });
+    });
+
+    urgencyBtns.forEach(b=>{
+        b.addEventListener('click', ()=>{
+            selectedUrgency = b.dataset.urgency;
+            markSelectedButtons();
+            updateContinueState();
+        });
+    });
+
+    if(cont){
+            cont.addEventListener('click', ()=>{
+            if(!selectedCategory || !selectedUrgency) return; // blocked by disabled state
+            // go to step 2 and pass params
+            const url = new URL(window.location.href);
+            url.searchParams.set('step','2');
+            url.searchParams.set('category', selectedCategory);
+            url.searchParams.set('urgency', selectedUrgency);
+            // navigate
+            window.location.href = url.toString();
+        });
+    }
+
+    // Back button behavior (step 2): navigate back to step 1, preserve selected category
+    const backBtn = document.getElementById('wizard-back');
+    if(backBtn){
+        backBtn.addEventListener('click', ()=>{
+            const url = new URL(window.location.href);
+            url.searchParams.set('step','1');
+            // preserve category selection if available
+            if(selectedCategory) url.searchParams.set('category', selectedCategory);
+            window.location.href = url.toString();
+        });
+    }
+
+    // initial mark if values came from server
+    if(selectedCategory || selectedUrgency){
+        markSelectedButtons();
+        updateContinueState();
+    }
+});
+</script>
+<script>
+// Step 2 photos preview and validation (max 10 MB each)
+document.addEventListener('DOMContentLoaded', function(){
+    const photosInput = document.getElementById('photos_step2');
+    const preview = document.getElementById('photosPreviewStep2');
+    if(!photosInput || !preview) return;
+
+    // keep files in an array so subsequent selections append instead of replace
+    let step2Files = [];
+
+    function renderPreview(){
+        preview.innerHTML = '';
+        if(step2Files.length === 0) return;
+
+        const grid = document.createElement('div');
+        grid.style.display = 'grid';
+        grid.style.gridTemplateColumns = 'repeat(auto-fill, minmax(120px, 1fr))';
+        grid.style.gap = '12px';
+    grid.style.margin = '0 auto';
+
+        step2Files.forEach((file, idx) => {
+            const tile = document.createElement('div');
+            tile.style.position = 'relative';
+            tile.style.background = 'white';
+            tile.style.padding = '10px';
+            tile.style.borderRadius = '6px';
+            tile.style.border = '2px solid var(--tradesos-gray-dark)';
+            tile.style.textAlign = 'center';
+            tile.style.fontSize = '12px';
+
+            const removeBtn = document.createElement('button');
+            removeBtn.type = 'button';
+            removeBtn.innerHTML = '&times;';
+            removeBtn.style.position = 'absolute';
+            removeBtn.style.top = '6px';
+            removeBtn.style.right = '6px';
+            removeBtn.style.background = 'transparent';
+            removeBtn.style.border = 'none';
+            removeBtn.style.fontSize = '18px';
+            removeBtn.style.cursor = 'pointer';
+            removeBtn.style.color = 'var(--tradesos-gray-text)';
+            removeBtn.addEventListener('click', function(){
+                step2Files.splice(idx,1);
+                renderPreview();
+            });
+
+            if(file.type && file.type.startsWith('image/')){
+                const img = document.createElement('img');
+                img.style.maxWidth = '100%';
+                img.style.maxHeight = '80px';
+                img.style.borderRadius = '4px';
+                img.style.display = 'block';
+                img.style.margin = '0 auto';
+                const reader = new FileReader();
+                reader.onload = function(ev){ img.src = ev.target.result; };
+                reader.readAsDataURL(file);
+                tile.appendChild(img);
+            } else {
+                const icon = document.createElement('i');
+                icon.className = 'fas fa-file-image';
+                icon.style.fontSize = '28px';
+                icon.style.color = 'var(--tradesos-red)';
+                tile.appendChild(icon);
+            }
+
+            const name = document.createElement('div');
+            name.textContent = file.name.length > 20 ? file.name.substring(0,20) + '...' : file.name;
+            name.style.marginTop = '8px';
+            name.style.color = 'var(--tradesos-black)';
+
+            const sizeKb = Math.round(file.size / 1024);
+            const sizeText = document.createElement('div');
+            sizeText.textContent = `${sizeKb} KB`;
+            sizeText.style.fontSize = '11px';
+            sizeText.style.color = 'var(--tradesos-gray-text)';
+
+            tile.appendChild(removeBtn);
+            tile.appendChild(name);
+            tile.appendChild(sizeText);
+            grid.appendChild(tile);
+        });
+
+        preview.appendChild(grid);
+    }
+
+    photosInput.addEventListener('change', function(e){
+        const files = Array.from(e.target.files || []);
+        if(files.length === 0) return;
+
+        const errors = [];
+
+        files.forEach(file => {
+            // validate size
+            if(file.size > 10 * 1024 * 1024){
+                errors.push(`${file.name} (too large)`);
+                return;
+            }
+            // avoid duplicates by name+size
+            const exists = step2Files.some(f => f.name === file.name && f.size === file.size && f.lastModified === file.lastModified);
+            if(exists) return;
+
+            step2Files.push(file);
+        });
+
+        // clear input so user can re-select same file name if desired
+        photosInput.value = '';
+
+        renderPreview();
+
+        if(errors.length){
+            const errBox = document.createElement('div');
+            errBox.style.color = '#b00020';
+            errBox.style.marginTop = '8px';
+            errBox.textContent = `Some files were not accepted: ${errors.join(', ')}`;
+            preview.appendChild(errBox);
+        }
+    });
+});
+</script>
+<script>
+// Align photos upload label width to the exact centerline of the Back/Continue buttons
+document.addEventListener('DOMContentLoaded', function(){
+    const controls = document.getElementById('step2-controls');
+    const photosLabel = document.getElementById('photosLabel');
+    if(!controls || !photosLabel) return;
+
+    function alignLabel(){
+        // set the photos label width to match the controls container width but not exceed 90% of viewport
+        const controlsWidth = controls.offsetWidth;
+        const maxAllowed = Math.min(Math.round(window.innerWidth * 0.9), 720);
+        const width = Math.min(controlsWidth, maxAllowed);
+        photosLabel.style.width = width + 'px';
+        photosLabel.style.margin = '0 auto';
+        // nudge slightly to the right relative to the controls center for visual balance on desktop,
+        // compute an offset as a small fraction of controls width so it's responsive on phones
+        const nudge = Math.round(Math.max(0, controlsWidth * 0.06)); // ~6% to the right
+        // cap nudge to 40px on very large screens and to 6px on very small screens
+        const capped = Math.min(Math.max(nudge, 6), 40);
+        photosLabel.style.transform = `translateX(${capped}px)`;
+        photosLabel.style.transition = 'transform 160ms ease';
+    }
+
+    // initial align and on resize
+    alignLabel();
+    window.addEventListener('resize', alignLabel);
+    // also realign when fonts/images load (small delay)
+    setTimeout(alignLabel,200);
+});
 </script>
 {% endblock %}
