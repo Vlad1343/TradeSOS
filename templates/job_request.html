@@ -59,6 +59,8 @@
             {% endfor %}
         </div>
 
+        <div id="err_category" style="color:#b00020;font-size:13px;display:none;text-align:center;margin-top:8px;">Please choose the service you need</div>
+
         {# Urgency question also on step 1 per request. Black centered question and 4 options, 2 per row. #}
     <h2 style="text-align:center;margin:36px 0 8px;color:var(--tradesos-black);font-size:22px;font-weight:800;">How urgent is your problem?</h2>
         <div style="max-width:720px;margin:0 auto 12px;text-align:center;color:var(--tradesos-gray-text);"></div>
@@ -69,9 +71,11 @@
             <button type="button" class="urgency-btn" data-urgency="next_day" style="padding:14px 18px;border-radius:8px;border:2px solid var(--tradesos-gray-dark);background:var(--tradesos-white);text-align:left;font-size:18px;font-family:'Good Times Rg','Open Sans',Arial, sans-serif;min-height:84px;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;font-weight:800;"> <strong style="font-size:18px;">📋 Next day</strong><div class="tile-desc" style="font-size:14px;color:var(--tradesos-gray-text);margin-top:6px;">Can wait until tomorrow.</div></button>
         </div>
 
+        <div id="err_urgency" style="color:#b00020;font-size:13px;display:none;text-align:center;margin-top:8px;">Please select the urgency</div>
+
     <div style="display:flex;justify-content:center;gap:12px;margin-top:40px;">
                 <div style="width:100%;display:flex;justify-content:center;">
-                    <button type="button" id="wizard-continue" class="tradesos-btn tradesos-btn-primary" disabled style="opacity:0.6;cursor:not-allowed;">Continue</button>
+                    <button type="button" id="wizard-continue" class="tradesos-btn tradesos-btn-primary" style="opacity:0.6;cursor:pointer;" onclick="validateStep1(event)">Continue</button>
                 </div>
             </div>
 
@@ -81,21 +85,25 @@
     <div style="max-width:720px;margin:0 0 20px 0;text-align:left;">
             <div class="form-group" style="text-align:left;margin-bottom:20px;">
                 <label for="short_desc" style="font-size:14px;color:var(--tradesos-black);font-weight:700;">Brief description of the problem</label>
-                <input type="text" id="short_desc" name="short_desc" placeholder="Short summary (e.g., Burst pipe in kitchen)" style="width:100%;padding:10px;border:2px solid var(--tradesos-gray-dark);border-radius:6px;font-size:14px;">
+                 <input type="text" id="short_desc" name="short_desc" placeholder="Short summary (e.g., Burst pipe in kitchen)" style="width:100%;padding:10px;border:2px solid var(--tradesos-gray-dark);border-radius:6px;font-size:14px;">
+                 <div id="err_short_desc" style="color:#b00020;font-size:13px;display:none;margin-top:6px;">Please provide a short description.</div>
             </div>
 
             <div class="form-group" style="text-align:left;margin-bottom:20px;">
                 <label for="long_desc" style="font-size:14px;color:var(--tradesos-black);font-weight:700;">Detailed description of the problem</label>
-                <textarea id="long_desc" name="long_desc" rows="6" placeholder="Add more details here (what happened, any safety concerns, exact location in property)" style="width:100%;padding:10px;border:2px solid var(--tradesos-gray-dark);border-radius:6px;font-size:14px;"></textarea>
+                 <textarea id="long_desc" name="long_desc" rows="6" placeholder="Add more details here (what happened, any safety concerns, exact location in property)" style="width:100%;padding:10px;border:2px solid var(--tradesos-gray-dark);border-radius:6px;font-size:14px;"></textarea>
+                 <div id="err_long_desc" style="color:#b00020;font-size:13px;display:none;margin-top:6px;">Please provide a detailed description.</div>
             </div>
             
             <div class="form-group" style="text-align:left;margin-bottom:20px;">
                 <label for="full_address" style="font-size:14px;color:var(--tradesos-black);font-weight:700;">Full address</label>
-                <input type="text" id="full_address" name="full_address" placeholder="House number/name, street, town" style="width:100%;padding:10px;border:2px solid var(--tradesos-gray-dark);border-radius:6px;font-size:14px;">
+                 <input type="text" id="full_address" name="full_address" placeholder="House number/name, street, town" style="width:100%;padding:10px;border:2px solid var(--tradesos-gray-dark);border-radius:6px;font-size:14px;">
+                 <div id="err_full_address" style="color:#b00020;font-size:13px;display:none;margin-top:6px;">Please provide the full address.</div>
             </div>
             <div class="form-group" style="text-align:left;margin-bottom:20px;max-width:320px;">
                 <label for="postcode" style="font-size:14px;color:var(--tradesos-black);font-weight:700;">Postcode</label>
-                <input type="text" id="postcode" name="postcode" placeholder="e.g., M1 1AA" style="width:100%;padding:10px;border:2px solid var(--tradesos-gray-dark);border-radius:6px;font-size:14px;">
+                 <input type="text" id="postcode" name="postcode" placeholder="e.g., M1 1AA" style="width:100%;padding:10px;border:2px solid var(--tradesos-gray-dark);border-radius:6px;font-size:14px;">
+                 <div id="err_postcode" style="color:#b00020;font-size:13px;display:none;margin-top:6px;">Please provide a postcode.</div>
             </div>
             
             
@@ -114,7 +122,7 @@
 
     <div id="step2-controls" style="display:flex;justify-content:center;gap:16px;margin:48px auto 0;max-width:720px;">
                 <button type="button" id="wizard-back" class="tradesos-btn tradesos-btn-primary" style="opacity:1;">Back</button>
-                <button type="button" id="wizard-continue" class="tradesos-btn tradesos-btn-primary" disabled style="opacity:0.6;cursor:not-allowed;">Continue</button>
+                <button type="button" id="wizard-continue-step2" class="tradesos-btn tradesos-btn-primary" style="opacity:1;cursor:pointer;" onclick="validateStep2(event)">Continue</button>
             </div>
         </div>
 
@@ -283,13 +291,7 @@ function previewFiles() {
                 <i class="fas ${icon}" style="font-size:24px;color:var(--tradesos-red);margin-bottom:8px;"></i>
                 <div style="font-size:11px;color:var(--tradesos-gray-text);">${fileName}</div>
             </div>
-        `;
-    }
-    
-    if (files.length > 5) {
-        previewHtml += `<div style="background-color: #f9f9f9; padding: 15px; border-radius: 4px; border: 2px dashed var(--tradesos-gray-dark); text-align: center; display: flex; align-items: center; justify-content: center;"><small style="color: #666;">+${files.length - 5} more files</small></div>`;
-    }
-    
+
     previewHtml += '</div>';
     preview.innerHTML = previewHtml;
 }
@@ -297,6 +299,46 @@ function previewFiles() {
 <script>
 // Wizard behavior for step 1: select category and urgency, enable Continue
 document.addEventListener('DOMContentLoaded', function(){
+    // If user clicked Home before returning, clear stored job request fields now.
+    try{
+        const shouldClear = sessionStorage.getItem('job_clear_on_return');
+        if(shouldClear){
+            // remove persisted values but do not clear on ordinary reloads
+            try{ sessionStorage.removeItem('job_category'); }catch(_){}
+            try{ sessionStorage.removeItem('job_urgency'); }catch(_){}
+            try{ sessionStorage.removeItem('job_short_desc'); }catch(_){}
+            try{ sessionStorage.removeItem('job_long_desc'); }catch(_){}
+            try{ sessionStorage.removeItem('job_full_address'); }catch(_){}
+            try{ sessionStorage.removeItem('job_postcode'); }catch(_){}
+            // clear UI selections
+            try{
+                document.querySelectorAll('.category-btn').forEach(b=>{
+                    b.style.background = 'var(--tradesos-white)';
+                    b.style.color = 'var(--tradesos-black)';
+                    b.style.borderColor = 'var(--tradesos-gray-dark)';
+                    const title = b.querySelector('.tile-title'); if(title) title.style.color='var(--tradesos-black)';
+                    const desc = b.querySelector('.tile-desc'); if(desc) desc.style.color='var(--tradesos-gray-text)';
+                });
+                document.querySelectorAll('.urgency-btn').forEach(b=>{
+                    b.style.background = 'var(--tradesos-white)';
+                    b.style.color = 'var(--tradesos-black)';
+                    b.style.borderColor = 'var(--tradesos-gray-dark)';
+                    const title = b.querySelector('strong'); if(title) title.style.color='var(--tradesos-black)';
+                    const desc = b.querySelector('.tile-desc'); if(desc) desc.style.color='var(--tradesos-gray-text)';
+                });
+                // clear inputs and previews on step 2 if present
+                ['short_desc','long_desc','full_address','postcode'].forEach(id=>{
+                    const el = document.getElementById(id); if(el) el.value = '';
+                    const err = document.getElementById('err_'+id); if(err) err.style.display='none';
+                });
+                const photosInput = document.getElementById('photos_step2'); if(photosInput) photosInput.value = '';
+                const photosPreview = document.getElementById('photosPreviewStep2'); if(photosPreview) photosPreview.innerHTML = '';
+            }catch(_){}
+            // remove the flag so reloads won't clear again
+            try{ sessionStorage.removeItem('job_clear_on_return'); }catch(_){}
+        }
+    }catch(_){}
+
     const categoryBtns = document.querySelectorAll('.category-btn');
     const urgencyBtns = document.querySelectorAll('.urgency-btn');
     const cont = document.getElementById('wizard-continue');
@@ -305,20 +347,15 @@ document.addEventListener('DOMContentLoaded', function(){
 
     function updateContinueState(){
         if(!cont) return;
+        // Visual-only state: leave the button clickable so validator can run and show errors
         if(selectedCategory && selectedUrgency){
-            // enable (visual + attribute)
-            cont.disabled = false;
-            cont.removeAttribute('disabled');
             cont.style.opacity = '1';
             cont.style.cursor = 'pointer';
-            cont.style.pointerEvents = 'auto';
+            cont.dataset.enabled = '1';
         } else {
-            // disable (visual + attribute)
-            cont.disabled = true;
-            cont.setAttribute('disabled','disabled');
             cont.style.opacity = '0.6';
-            cont.style.cursor = 'not-allowed';
-            cont.style.pointerEvents = 'none';
+            cont.style.cursor = 'pointer';
+            cont.dataset.enabled = '0';
         }
     }
 
@@ -376,19 +413,52 @@ document.addEventListener('DOMContentLoaded', function(){
             updateContinueState();
         });
     });
+    // validator for step 1 (mirrors step 2 behavior)
+    window.validateStep1 = function(e){
+        try{ console.debug('validateStep1 called'); }catch(_){}
+        if(e){ try{ e.preventDefault(); }catch(_){}; try{ if(typeof e.stopImmediatePropagation === 'function') e.stopImmediatePropagation(); }catch(_){}; try{ e.stopPropagation(); }catch(_){} }
 
-    if(cont){
-            cont.addEventListener('click', ()=>{
-            if(!selectedCategory || !selectedUrgency) return; // blocked by disabled state
-            // go to step 2 and pass params
-            const url = new URL(window.location.href);
-            url.searchParams.set('step','2');
-            url.searchParams.set('category', selectedCategory);
-            url.searchParams.set('urgency', selectedUrgency);
-            // navigate
-            window.location.href = url.toString();
-        });
-    }
+        // clear previous errors
+        const gen = document.getElementById('step1_general_err'); if(gen) gen.remove();
+        const ec = document.getElementById('err_category'); if(ec) ec.style.display = 'none';
+        const eu = document.getElementById('err_urgency'); if(eu) eu.style.display = 'none';
+
+        let ok = true;
+        if(!selectedCategory){ if(ec) ec.style.display = 'block'; ok = false; }
+        if(!selectedUrgency){ if(eu) eu.style.display = 'block'; ok = false; }
+
+        if(!ok){
+            // focus first missing group
+            if(!selectedCategory && categoryBtns.length) categoryBtns[0].focus();
+            else if(!selectedUrgency && urgencyBtns.length) urgencyBtns[0].focus();
+
+            // place general error below the entire controls row (not inside the flex cells)
+            const controlsRow = cont ? (cont.parentNode && cont.parentNode.parentNode ? cont.parentNode.parentNode : cont.parentNode) : null;
+            if(controlsRow && controlsRow.parentNode){
+                const err = document.createElement('div');
+                err.id = 'step1_general_err';
+                err.style.color = '#b00020';
+                err.style.textAlign = 'center';
+                err.style.marginTop = '12px';
+                err.style.width = '100%';
+                err.textContent = 'Please complete the required fields before continuing';
+                if(!document.getElementById('step1_general_err')) controlsRow.parentNode.insertBefore(err, controlsRow.nextSibling);
+            }
+            return false;
+        }
+
+        // ok -> persist and navigate to step 2
+        try{ sessionStorage.setItem('job_category', selectedCategory); sessionStorage.setItem('job_urgency', selectedUrgency); }catch(_){}
+        const url = new URL(window.location.href);
+        url.searchParams.set('step','2');
+        url.searchParams.set('category', selectedCategory);
+        url.searchParams.set('urgency', selectedUrgency);
+        window.location.href = url.toString();
+        return true;
+    };
+
+    // attach as fallback so clicks always run validator
+    if(cont) cont.addEventListener('click', validateStep1, {capture: true});
 
     // Back button behavior (step 2): navigate back to step 1, preserve selected category
     const backBtn = document.getElementById('wizard-back');
@@ -526,6 +596,107 @@ document.addEventListener('DOMContentLoaded', function(){
             preview.appendChild(errBox);
         }
     });
+});
+</script>
+<script>
+// Step 2 validation: require fields (photos are optional). Show per-field errors and a general
+// message; on success navigate to step 3 and preserve category/urgency and the filled fields.
+document.addEventListener('DOMContentLoaded', function(){
+    const cont = document.getElementById('wizard-continue-step2');
+    if(!cont) return;
+
+    // repopulate fields from sessionStorage (in case a previous navigation cleared them)
+    ['short_desc','long_desc','full_address','postcode'].forEach(id=>{
+        const el = document.getElementById(id);
+        if(!el) return;
+        try{ const v = sessionStorage.getItem('job_'+id); if(v) el.value = v; }catch(err){}
+        // persist on input
+        el.addEventListener('input', function(){ try{ sessionStorage.setItem('job_'+id, this.value); }catch(err){} });
+    });
+
+    // global validator function (also wired via onclick attribute) to ensure it runs
+    window.validateStep2 = function(e){
+        try{ console.debug('validateStep2 called'); }catch(_){}
+        if(e){
+            try{ e.preventDefault(); }catch(_){}
+            try{ if(typeof e.stopImmediatePropagation === 'function') e.stopImmediatePropagation(); }catch(_){}
+            try{ e.stopPropagation(); }catch(_){}
+        }
+
+        const shortEl = document.getElementById('short_desc');
+        if(!shortEl) return false;
+
+        // clear previous general error if present
+        const genErr = document.getElementById('step2_general_err');
+        if(genErr) genErr.remove();
+
+        // hide field errors
+        ['short_desc','long_desc','full_address','postcode'].forEach(id=>{
+            const fe = document.getElementById('err_'+id);
+            if(fe) fe.style.display = 'none';
+        });
+
+        let ok = true;
+        const shortVal = shortEl.value.trim();
+        const longVal = (document.getElementById('long_desc')||{value:''}).value.trim();
+        const addrVal = (document.getElementById('full_address')||{value:''}).value.trim();
+        const postVal = (document.getElementById('postcode')||{value:''}).value.trim();
+
+        if(!shortVal){ document.getElementById('err_short_desc').style.display = 'block'; ok = false; }
+        if(!longVal){ document.getElementById('err_long_desc').style.display = 'block'; ok = false; }
+        if(!addrVal){ document.getElementById('err_full_address').style.display = 'block'; ok = false; }
+        if(!postVal){ document.getElementById('err_postcode').style.display = 'block'; ok = false; }
+
+        if(!ok){
+            // focus first invalid field
+            if(!shortVal) shortEl.focus();
+            else if(!longVal) document.getElementById('long_desc').focus();
+            else if(!addrVal) document.getElementById('full_address').focus();
+            else if(!postVal) document.getElementById('postcode').focus();
+
+            // show small centered general message below the controls if not present
+            const controls = document.getElementById('step2-controls');
+            if(controls){
+                const err = document.createElement('div');
+                err.id = 'step2_general_err';
+                err.style.color = '#b00020';
+                err.style.textAlign = 'center';
+                err.style.marginTop = '12px';
+                err.textContent = 'Please complete the required fields before continuing';
+                // avoid adding duplicate
+                if(!document.getElementById('step2_general_err')) controls.parentNode.insertBefore(err, controls.nextSibling);
+            }
+            return false;
+        }
+
+        // build URL to step 3 and include values as query params
+        const url = new URL(window.location.href);
+        url.searchParams.set('step','3');
+        // preserve category & urgency from server if available
+        const selectedCategory = {{ (selected_category or '')|tojson }};
+        const selectedUrgency = {{ (urgency or '')|tojson }};
+        if(selectedCategory) url.searchParams.set('category', selectedCategory);
+        if(selectedUrgency) url.searchParams.set('urgency', selectedUrgency);
+        url.searchParams.set('short_desc', shortVal);
+        url.searchParams.set('long_desc', longVal);
+        url.searchParams.set('full_address', addrVal);
+        url.searchParams.set('postcode', postVal);
+
+        // persist values to sessionStorage (in case navigation or other scripts run)
+        try{
+            sessionStorage.setItem('job_short_desc', shortVal);
+            sessionStorage.setItem('job_long_desc', longVal);
+            sessionStorage.setItem('job_full_address', addrVal);
+            sessionStorage.setItem('job_postcode', postVal);
+        }catch(err){}
+
+        // navigate
+        window.location.href = url.toString();
+        return true;
+    };
+
+    // also attach as an event listener as a fallback
+    cont.addEventListener('click', validateStep2, {capture: true});
 });
 </script>
 <script>
