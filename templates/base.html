@@ -7,6 +7,8 @@
     
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Good Times font (CDN) -->
+    <link href="https://fonts.cdnfonts.com/css/good-times-2" rel="stylesheet">
     
     <!-- Custom TradeSOS CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/tradesos-style.css') }}">
@@ -18,15 +20,13 @@
     <header class="tradesos-header">
         <nav class="tradesos-nav">
             <a href="{{ url_for('index') }}" class="tradesos-logo">
-                <img src="{{ url_for('static', filename='images/tradesos-logo.png') }}" alt="TradeSOS Logo">
+                <img src="{{ url_for('static', filename='images/tradesos-logo1.png') }}" alt="TradeSOS Logo">
             </a>
             
             <div class="tradesos-nav-links">
                 <a href="{{ url_for('index') }}">HOME</a>
                 <a href="{{ url_for('job_request') }}" class="nav-button">REQUEST SERVICE</a>
-                {% if current_user.is_authenticated and current_user.role == 'trade' %}
-                    <a href="{{ url_for('trade_dashboard') }}">TRADE DASHBOARD</a>
-                {% endif %}
+                <a href="{{ url_for('trade_dashboard') }}">TRADE DASHBOARD</a>
                 {% if current_user.is_authenticated %}
                     <a href="{{ url_for('logout') }}">SIGN OUT</a>
                 {% else %}
@@ -58,7 +58,14 @@
         {% block content %}{% endblock %}
     </main>
 
-    <!-- Footer -->
+    <!-- Footer: full on most pages, simplified on job_request only -->
+    {% if request.endpoint == 'job_request' %}
+    <footer class="tradesos-footer">
+        <div class="tradesos-footer-content" style="padding:18px 0;">
+            <p style="margin: 0; color: #ccc; font-size: 14px; text-align:center;">&copy; 2025 TradeSOS. All rights reserved | Emergency Trade Services UK</p>
+        </div>
+    </footer>
+    {% else %}
     <footer class="tradesos-footer">
         <div class="tradesos-footer-content">
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; margin-bottom: 30px;">
@@ -77,9 +84,10 @@
                 </div>
             </div>
             <hr style="border-color: #555; margin: 30px 0;">
-            <p style="margin: 0; color: #ccc; font-size: 14px;">&copy; 2024 TradeSOS. All rights reserved. | Emergency Trade Services UK</p>
+            <p style="margin: 0; color: #ccc; font-size: 14px;">&copy; 2025 TradeSOS. All rights reserved | Emergency Trade Services UK</p>
         </div>
     </footer>
+    {% endif %}
 
     {% block scripts %}{% endblock %}
 </body>
