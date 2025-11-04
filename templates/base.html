@@ -28,9 +28,9 @@
                 <a href="{{ url_for('job_request') }}" class="nav-button">REQUEST SERVICE</a>
                 <a href="{{ url_for('trade_dashboard') }}">TRADE DASHBOARD</a>
                 {% if current_user.is_authenticated %}
-                    <a href="{{ url_for('logout') }}">SIGN OUT</a>
+                    <a href="{{ url_for('logout') }}">LOG OUT</a>
                 {% else %}
-                    <a href="{{ url_for('login') }}">SIGN IN</a>
+                    <a href="{{ url_for('login') }}">LOG IN</a>
                 {% endif %}
             </div>
             
