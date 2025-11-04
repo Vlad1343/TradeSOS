@@ -3,48 +3,60 @@
 {% block title %}Login - TradeSOS{% endblock %}
 
 {% block content %}
-<div style="background-color: var(--tradesos-gray); min-height: 100vh; padding: 40px 20px; display: flex; align-items: center; justify-content: center;">
-    <div class="tradesos-form" style="max-width: 500px; width: 100%;">
-        <div style="text-align: center; margin-bottom: 40px;">
-            <i class="fas fa-sign-in-alt" style="font-size: 48px; color: var(--tradesos-red); margin-bottom: 20px;"></i>
-            <h2>SIGN IN TO TRADESOS</h2>
-            <p class="tradesos-info" style="color: #666; font-size: 14px; margin: 10px 0 0 0;">
-                Access your emergency trade services account
-            </p>
+<style>
+    /* Local login styles - keep scoped to this page */
+    .ts-body { background: var(--tradesos-gray, #f6f7f9); min-height: 100vh; padding: 40px 20px; }
+        .ts-card { max-width: 480px; margin: 0 auto; background: #fff; padding: 28px; border-radius: 8px; box-shadow: 0 6px 24px rgba(12,20,30,0.06); }
+        .ts-title { text-align: center; color: var(--tradesos-red, #d73027); font-family: 'Good Times Rg', 'Open Sans', Arial, sans-serif; margin-bottom: 8px; }
+    .ts-sub { text-align: center; color: #666; font-size: 14px; margin-bottom: 22px; }
+    .ts-form-group { margin-bottom: 16px; }
+    .ts-label { display:block; font-weight:600; margin-bottom:6px; color:#333; }
+    .ts-input { width:100%; padding:12px; border:1px solid #e2e6ea; border-radius:6px; box-sizing:border-box; font-family: 'Good Times Rg', 'Open Sans', Arial, sans-serif; font-size:18px; }
+        .ts-btn { width:100%; padding:18px; background:var(--tradesos-red, #d73027); color:#fff; border:none; border-radius:8px; font-weight:800; cursor:pointer; font-size:20px; font-family: 'Good Times Rg', 'Open Sans', Arial, sans-serif; }
+        .ts-btn:hover { background:#b92620; }
+    .ts-link { text-align:center; margin-top:18px; font-size:14px; }
+    .flash { padding:10px; border-radius:6px; margin-bottom:12px; }
+    .flash.error { background:#ffebee; color:#c62828; }
+    .flash.success { background:#e8f5e8; color:#2e7d32; }
+    .emergency { background:#E3F2FD; padding:18px; margin-top:18px; border-radius:6px; text-align:center; }
+</style>
+
+<div class="ts-body">
+    <div class="ts-card">
+        <div>
+            <h2 class="ts-title">Log in to TradeSOS</h2>
+            <p class="ts-sub">Access your emergency trade services account</p>
         </div>
-        
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="flash {{ 'error' if category=='error' else 'success' }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+        {% endwith %}
+
         <form method="POST" action="{{ url_for('login') }}">
-            <div class="form-group">
-                <label class="form-label" for="email">Email</label>
-                <input type="email" class="form-control" id="email" name="email" required>
+            <div class="ts-form-group">
+                <label class="ts-label" for="email">Email</label>
+                <input class="ts-input" type="email" id="email" name="email" required>
             </div>
-            
-            <div class="form-group">
-                <label class="form-label" for="password">Password</label>
-                <input type="password" class="form-control" id="password" name="password" required>
+            <div class="ts-form-group">
+                <label class="ts-label" for="password">Password</label>
+                <input class="ts-input" type="password" id="password" name="password" required>
             </div>
-            
-            <button type="submit" class="tradesos-btn tradesos-btn-primary tradesos-btn-block" style="padding: 20px; font-size: 16px;">Sign In</button>
+            <button type="submit" class="ts-btn">Log in</button>
         </form>
-        
-        <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid var(--tradesos-gray-dark);">
-            <p style="margin: 0; color: #666; font-size: 14px;">
-                Don't have an account? 
-                <a href="{{ url_for('register') }}" style="color: var(--tradesos-red); text-decoration: none; font-weight: 700;">Sign up here</a>
-            </p>
+
+        <div class="ts-link">
+            <a href="{{ url_for('register') }}" style="color:var(--tradesos-red, #d73027); font-weight:700; text-decoration:none;">Don't have an account? Sign up</a>
+        </div>
+
+        <div class="emergency">
+            <strong style="color:var(--tradesos-red, #d73027);">EMERGENCY ACCESS</strong>
+            <p style="margin:6px 0 0 0; color:#444;">For genuine emergencies requiring immediate assistance, please call 999 if there is immediate danger to life or property</p>
         </div>
     </div>
 </div>
 
-<!-- Emergency Access Notice -->
-<div style="background-color: #E3F2FD; padding: 30px 20px; text-align: center;">
-    <div style="max-width: 800px; margin: 0 auto;">
-        <h6 style="color: var(--tradesos-red); margin-bottom: 15px; font-family: 'Oswald', Arial, sans-serif; font-weight: 700;">
-            <i class="fas fa-info-circle" style="margin-right: 10px;"></i>EMERGENCY ACCESS
-        </h6>
-        <p style="margin: 0; color: #666; font-size: 14px; line-height: 1.5;">
-            For genuine emergencies requiring immediate assistance, please also contact the relevant emergency services (999) if there is immediate danger to life or property.
-        </p>
-    </div>
-</div>
 {% endblock %}
