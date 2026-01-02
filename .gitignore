@@ -9,3 +9,7 @@ Dockerfile
 migrations/
 other/
 uploads/
+
+static/
+templates/
+attached_assets/
