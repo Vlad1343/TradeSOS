@@ -31,16 +31,14 @@ class RegisterForm(FlaskForm):
                                         render_kw={'placeholder': 'e.g., 12345678'})
     vat_number = StringField('VAT Number', validators=[Optional(), Length(max=20)], 
                             render_kw={'placeholder': 'e.g., GB123456789'})
+    # Limit register-time primary skills to the 6 core service types used in directory/search
     skills = SelectField('Primary Trade Skills', choices=[
-        ('plumbing', 'Plumbing & Drainage'),
-        ('heating', 'Heating & Boilers'),
-        ('electrical', 'Electrical Services'),
-        ('locksmith', 'Locksmith Services'),
-        ('roofing', 'Roofing & Guttering'),
-        ('security', 'Security Systems'),
-        ('glazing', 'Emergency Glazier'),
-        ('gas', 'Gas Safety'),
-        ('other', 'Other Emergency Services')
+        ('plumbing', 'Plumbing'),
+        ('electrical', 'Electrical'),
+        ('heating', 'Gas / Heating'),
+        ('locksmith', 'Locksmith'),
+        ('glazing', 'Glazing'),
+        ('roofing', 'Roofing')
     ], validators=[Optional()])
     coverage_areas = StringField('Coverage Areas (UK Postcode Areas)', validators=[Optional()],
                                 render_kw={'placeholder': 'e.g., M, SK, WA, OL'})
