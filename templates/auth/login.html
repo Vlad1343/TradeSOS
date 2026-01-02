@@ -28,14 +28,6 @@
             <p class="ts-sub">Access your emergency trade services account</p>
         </div>
 
-        {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-            {% for category, message in messages %}
-                <div class="flash {{ 'error' if category=='error' else 'success' }}">{{ message }}</div>
-            {% endfor %}
-        {% endif %}
-        {% endwith %}
-
         <form method="POST" action="{{ url_for('login') }}">
             <div class="ts-form-group">
                 <label class="ts-label" for="email">Email</label>
