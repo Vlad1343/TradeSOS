@@ -52,12 +52,12 @@
 .list-main strong{display:block}
 .muted{color:var(--muted);font-size:13px}
 .list-meta{min-width:110px;text-align:right}
-.badge{display:inline-block;padding:6px 8px;border-radius:6px;font-weight:700;font-size:12px}
+.badge{display:inline-block;padding:6px 8px;border-radius:6px;font-weight:700;font-size:13px}
 .badge.danger{background:var(--tradesos-red);color:#fff}
 .badge.warn{background:#ffc107;color:#000}
 .badge.info{background:#17a2b8;color:#fff}
 .badge.success{background:#28a745;color:#fff}
-.action-link{background:var(--tradesos-red);color:#fff;padding:6px 8px;border-radius:6px;text-decoration:none}
+.action-link{background:var(--tradesos-red);color:#fff;padding:6px 8px;border-radius:6px;text-decoration:none;font-size:14px}
 .empty{padding:28px;text-align:center;color:var(--muted)}
 
 .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
@@ -68,7 +68,7 @@
 .health-card{background:#fff;padding:14px;border-radius:8px;text-align:center;border:1px solid #f3f3f3}
 .health-title{color:var(--tradesos-gray-text);font-size:13px}
 .health-value{font-weight:800;font-size:20px;color:var(--tradesos-red)}
-.status-online{background:#28a745;color:#fff;padding:6px 12px;border-radius:16px;display:inline-block}
+.status-online{background:#28a745;color:#fff;padding:4px 8px;border-radius:10px;display:inline-block;font-size:13px}
 
 .activity-timeline{display:flex;flex-direction:column;gap:12px}
 .activity-item{display:flex;gap:12px;align-items:flex-start;padding:12px;border-radius:8px;border:1px solid #f3f3f3}
