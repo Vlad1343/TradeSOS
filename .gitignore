@@ -6,3 +6,6 @@ DOCKER.md
 Dockerfile
 .config
 .local/
+migrations/
+other/
+uploads/
