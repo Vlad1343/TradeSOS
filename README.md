@@ -62,14 +62,11 @@ FastAPI + Jinja2 UI (Bootstrap 5)
 ## 🛠️ Tech Stack
 | Layer | Technologies |
 | --- | --- |
-| Web | FastAPI, Jinja2, Bootstrap 5, Vanilla JS |
-| Data | SQLAlchemy ORM, Alembic migrations, PostgreSQL + PostGIS (spatial indexing) |
-| Geospatial | PostGIS spatial indexing, <200ms radius-based matching |
-| Auth | RBAC with role isolation, password hashing, session management |
-| Billing | Stripe subscriptions, idempotent webhook processing, plan pricing config |
-| Forms | WTForms, CSRF protection |
-| Messaging & Files | In-app messaging, uploads with secure filenames |
-| Infra | Docker + docker-compose, environment-driven config |
+| Web & UI | FastAPI, Jinja, Bootstrap, JavaScript |
+| Database | PostgreSQL, PostGIS, SQLAlchemy, Alembic |
+| Billing & API | Stripe, SMTP, OpenStreetMap |
+| Security | RBAC, Password Hashing, CSRF Protection |
+| Deployment | Docker, Docker Compose |
 
 ## 🌟 What Sets It Apart
 - **<200ms Geospatial Dispatch**: PostGIS spatial indexing matches professionals to emergency requests in under 200ms, reducing average response latency by 40%.
